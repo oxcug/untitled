@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		27020DE428F6C49C00C94312 /* CrateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020DE328F6C49C00C94312 /* CrateApp.swift */; };
-		27020DE628F6C49C00C94312 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020DE528F6C49C00C94312 /* ContentView.swift */; };
+		27020DE628F6C49C00C94312 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020DE528F6C49C00C94312 /* HomeView.swift */; };
 		27020DE828F6C49C00C94312 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27020DE728F6C49C00C94312 /* Assets.xcassets */; };
 		27020DEB28F6C49C00C94312 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27020DEA28F6C49C00C94312 /* Preview Assets.xcassets */; };
 		27020DED28F6C49C00C94312 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020DEC28F6C49C00C94312 /* Persistence.swift */; };
@@ -38,7 +38,7 @@
 /* Begin PBXFileReference section */
 		27020DE028F6C49C00C94312 /* Crate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Crate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27020DE328F6C49C00C94312 /* CrateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrateApp.swift; sourceTree = "<group>"; };
-		27020DE528F6C49C00C94312 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		27020DE528F6C49C00C94312 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		27020DE728F6C49C00C94312 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27020DEA28F6C49C00C94312 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		27020DEC28F6C49C00C94312 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				27020DE328F6C49C00C94312 /* CrateApp.swift */,
-				27020DE528F6C49C00C94312 /* ContentView.swift */,
+				27020DE528F6C49C00C94312 /* HomeView.swift */,
 				27020DE728F6C49C00C94312 /* Assets.xcassets */,
 				27020DEC28F6C49C00C94312 /* Persistence.swift */,
 				27020DF128F6C49C00C94312 /* Info.plist */,
@@ -267,7 +267,7 @@
 			files = (
 				27020DED28F6C49C00C94312 /* Persistence.swift in Sources */,
 				27020DF028F6C49C00C94312 /* Crate.xcdatamodeld in Sources */,
-				27020DE628F6C49C00C94312 /* ContentView.swift in Sources */,
+				27020DE628F6C49C00C94312 /* HomeView.swift in Sources */,
 				27020DE428F6C49C00C94312 /* CrateApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
