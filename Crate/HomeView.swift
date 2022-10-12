@@ -10,11 +10,11 @@ import CoreData
 
 struct HomeView: View {
     @Environment(\.managedObjectContext) private var viewContext
-
-    @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
-        animation: .default)
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)], animation: .default)
     private var items: FetchedResults<Item>
+    
+    @State private var showingImagePicker = false
+    @State private var inputImages: [UIImage] = []
 
     var body: some View {
         NavigationStack {
@@ -28,7 +28,7 @@ struct HomeView: View {
                 .listStyle(.plain)
                 
                 Button {
-                    
+                    showingImagePicker = true
                 } label: {
                     Image(systemName: "plus")
                         .font(.system(size: 28, weight: .semibold, design: .default))
@@ -45,6 +45,12 @@ struct HomeView: View {
                         .font(.system(size: 16, weight: .bold, design: .monospaced))
                 }
             }
+        }
+        .sheet(isPresented: $showingImagePicker) {
+            ImagePicker(images: $inputImages)
+        }
+        .onChange(of: inputImages) { newValue in
+            print(newValue)
         }
     }
     

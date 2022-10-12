@@ -16,6 +16,7 @@
 		27020DFB28F6C49C00C94312 /* CrateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020DFA28F6C49C00C94312 /* CrateTests.swift */; };
 		27020E0528F6C49C00C94312 /* CrateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E0428F6C49C00C94312 /* CrateUITests.swift */; };
 		27020E0728F6C49C00C94312 /* CrateUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E0628F6C49C00C94312 /* CrateUITestsLaunchTests.swift */; };
+		27020E1428F6D39A00C94312 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E1328F6D39A00C94312 /* ImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		27020E0028F6C49C00C94312 /* CrateUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CrateUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		27020E0428F6C49C00C94312 /* CrateUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrateUITests.swift; sourceTree = "<group>"; };
 		27020E0628F6C49C00C94312 /* CrateUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrateUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		27020E1328F6D39A00C94312 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 			children = (
 				27020DE328F6C49C00C94312 /* CrateApp.swift */,
 				27020DE528F6C49C00C94312 /* HomeView.swift */,
+				27020E1328F6D39A00C94312 /* ImagePicker.swift */,
 				27020DE728F6C49C00C94312 /* Assets.xcassets */,
 				27020DEC28F6C49C00C94312 /* Persistence.swift */,
 				27020DF128F6C49C00C94312 /* Info.plist */,
@@ -267,6 +270,7 @@
 			files = (
 				27020DED28F6C49C00C94312 /* Persistence.swift in Sources */,
 				27020DF028F6C49C00C94312 /* Crate.xcdatamodeld in Sources */,
+				27020E1428F6D39A00C94312 /* ImagePicker.swift in Sources */,
 				27020DE628F6C49C00C94312 /* HomeView.swift in Sources */,
 				27020DE428F6C49C00C94312 /* CrateApp.swift in Sources */,
 			);
