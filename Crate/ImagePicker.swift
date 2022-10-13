@@ -9,8 +9,19 @@ import Combine
 import PhotosUI
 import SwiftUI
 
+struct ImagePayload: Identifiable {
+    let id: UUID
+    let original: UIImage
+    let modified: UIImage?
+}
+
+struct ImagesPayload: Identifiable {
+    let id: UUID
+    let images: [ImagePayload]
+}
+
 struct ImagePicker: UIViewControllerRepresentable {
-    @Binding var images: [UIImage]
+    @Binding var imagesPayload: ImagesPayload?
 
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
@@ -55,7 +66,10 @@ struct ImagePicker: UIViewControllerRepresentable {
             
             imageFetchCancellable?.cancel()
             imageFetchCancellable = Publishers.MergeMany(imageLoadFutures).collect().sink { [parent] images in
-                parent.images = images.compactMap { $0 }
+                parent.imagesPayload = ImagesPayload(id: UUID(), images: images
+                    .compactMap { $0 }
+                    .map { ImagePayload(id: UUID(), original: $0, modified: ImageProcessor.shared.process(image: $0))}
+                )
             }
         }
     }

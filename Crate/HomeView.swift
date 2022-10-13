@@ -14,7 +14,8 @@ struct HomeView: View {
     private var items: FetchedResults<Item>
     
     @State private var showingImagePicker = false
-    @State private var inputImages: [UIImage] = []
+    @State private var showImageReviewModal = false
+    @State private var imagesPayload: ImagesPayload?
 
     var body: some View {
         NavigationStack {
@@ -47,10 +48,10 @@ struct HomeView: View {
             }
         }
         .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(images: $inputImages)
+            ImagePicker(imagesPayload: $imagesPayload)
         }
-        .onChange(of: inputImages) { newValue in
-            print(newValue)
+        .fullScreenCover(item: $imagesPayload) { payload in
+            ImageReview(images: payload.images)
         }
     }
     
