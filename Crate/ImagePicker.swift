@@ -9,12 +9,6 @@ import Combine
 import PhotosUI
 import SwiftUI
 
-struct ImagePayload: Identifiable {
-    let id: UUID
-    let original: UIImage
-    let modified: UIImage?
-}
-
 struct ImagesPayload: Identifiable {
     let id: UUID
     let images: [ImagePayload]

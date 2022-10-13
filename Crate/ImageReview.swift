@@ -26,15 +26,28 @@ final class ImageReviewViewModel: ObservableObject {
             folders.insert(folder)
         }
     }
+    
+    func save() {
+        folders.forEach {
+            let entry = Entry(id: UUID(),
+                              name: name,
+                              date: Date(),
+                              original: payload.original,
+                              modified: payload.modified)
+            FolderStorage.shared.add(entry: entry, to: $0)
+        }
+    }
 }
 
 struct ImageReview: View {
     let viewModels: [ImageReviewViewModel]
     @StateObject var current: ImageReviewViewModel
-    @State var progress = 1
-    @State private var keyboardHeight: CGFloat = 0
     
-    @FocusState private var isNameFocused: Bool
+    @State var progress = 1
+    @State var keyboardHeight: CGFloat = 0
+    @FocusState var isNameFocused: Bool
+    
+    @EnvironmentObject var storage: FolderStorage
     @Environment(\.presentationMode) var presentationMode
 
     let toggleFeedback = UIImpactFeedbackGenerator(style: .rigid)
@@ -62,10 +75,10 @@ struct ImageReview: View {
                             } label: {
                                 Text("that's fire")
                                     .font(.system(size: 18, weight: .semibold, design: .default))
-                                    .foregroundColor(.white)
+                                    .foregroundColor(Color(uiColor: .systemBackground))
                                     .padding()
                                     .frame(maxWidth: .infinity)
-                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(.black))
+                                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: .label)))
                             }
                             .padding()
                             .padding(20)
@@ -136,6 +149,7 @@ struct ImageReview: View {
                     .onChange(of: progress) { newValue in
                         let idx = progress - 1
                         if idx == viewModels.count {
+                            viewModels.forEach { $0.save() }
                             presentationMode.wrappedValue.dismiss()
                         } else {
                             scrollReader.scrollTo(viewModels[idx].payload.id)
@@ -198,7 +212,7 @@ struct ImageReview: View {
     var categoryPicker: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHGrid(rows: [.init(.flexible())], spacing: 0) {
-                ForEach(Folder.provided) { folder in
+                ForEach(storage.folders) { folder in
                     Button {
                         current.didTapFolder(folder)
                         selectionFeedback.selectionChanged()

@@ -16,15 +16,15 @@ struct HomeView: View {
     @State private var showingImagePicker = false
     @State private var showImageReviewModal = false
     @State private var imagesPayload: ImagesPayload?
+    @StateObject var storage = FolderStorage.shared
 
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 List {
-                    section(with: "📍 Places")
-                    section(with: "🎵 Music")
-                    section(with: "🔗 Links")
-                    section(with: "👕 Outfits")
+                    ForEach(storage.folders) { folder in
+                        section(folder)
+                    }
                 }
                 .listStyle(.plain)
                 
@@ -53,38 +53,42 @@ struct HomeView: View {
         .fullScreenCover(item: $imagesPayload) { payload in
             let models = payload.images.map(ImageReviewViewModel.init)
             ImageReview(viewModels: models, current: models.first!)
+                .environmentObject(storage)
         }
     }
     
     @ViewBuilder
-    func section(with name: String) -> some View {
-        Text(name)
+    func section(_ folder: Folder) -> some View {
+        Text(folder.fullName)
             .font(.system(size: 16, weight: .medium, design: .monospaced))
         
         LazyHGrid(rows: [GridItem(.flexible())]) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 15)
-                    .foregroundColor(Color(uiColor: .systemBackground))
-                    .shadow(radius: 0.6)
-                
-                VStack(alignment: .leading, spacing: 15) {
-                    Image(systemName: "photo.artframe")
-                        .resizable()
-                        .frame(height: 100)
+            ForEach(folder.entries) { entry in
+                ZStack {
+                    RoundedRectangle(cornerRadius: 15)
+                        .foregroundColor(Color(uiColor: .systemBackground))
+                        .shadow(radius: 0.6)
                     
-                    VStack(alignment: .leading, spacing: 5) {
-                        Text("Dishoom")
-                            .font(.system(size: 18, weight: .semibold, design: .default))
+                    VStack(alignment: .leading, spacing: 15) {
+                        Image(uiImage: entry.modified!)
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(height: 100)
                         
-                        Text("2 weeks ago")
-                            .font(.system(size: 13, weight: .regular, design: .rounded))
-                            .foregroundColor(.secondary)
+                        VStack(alignment: .leading, spacing: 5) {
+                            Text(entry.name)
+                                .font(.system(size: 18, weight: .semibold, design: .default))
+                            
+                            Text(entry.date.description)
+                                .font(.system(size: 13, weight: .regular, design: .rounded))
+                                .foregroundColor(.secondary)
+                        }
                     }
+                    .padding()
                 }
-                .padding()
+                .frame(width: 180, height: 160, alignment: .leading)
+                .padding(.vertical)
             }
-            .frame(width: 180, height: 160, alignment: .leading)
-            .padding(.vertical)
         }
         .listRowSeparator(.hidden)
         .padding(.bottom)

@@ -7,17 +7,58 @@
 
 import SwiftUI
 
-struct Folder: Identifiable, Hashable {
-    let id: String
-    let emoji: String?
+struct Entry: Identifiable, Codable, Hashable {
+    let id: UUID
     let name: String
-    let color: Color
+    let date: Date
+    let original: UIImage
+    let modified: UIImage?
     
-    static let provided = [
-        Folder(id: "a", emoji: "🍁", name: "Fall Outfits", color: .orange),
-        Folder(id: "b", emoji: "❄️", name: "Winter Outfits", color: .blue),
-        Folder(id: "c", emoji: "☕", name: "Cafes", color: .brown),
-        Folder(id: "d", emoji: "🎵", name: "Music", color: .black),
-        Folder(id: "e", emoji: "🔗", name: "Links", color: .blue),
-    ]
+    enum CodingKeys: CodingKey {
+        case id, name, date, original, modified
+    }
+}
+
+extension Entry {
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        
+        id = try container.decode(UUID.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        date = try container.decode(Date.self, forKey: .date)
+        
+        let originalData = try container.decode(Data.self, forKey: .original)
+        original = UIImage(data: originalData) ?? UIImage()
+        
+        if let modifiedData = try? container.decode(Data.self, forKey: .modified) {
+            modified = UIImage(data: modifiedData)
+        } else {
+            modified = nil
+        }
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(date, forKey: .date)
+        try container.encode(original.pngData(), forKey: .original)
+        if let modified = modified {
+            try? container.encode(modified.pngData(), forKey: .modified)
+        }
+    }
+}
+
+struct Folder: Identifiable, Hashable, Codable {
+    let id: String
+    let name: String
+    let emoji: String?
+    let color: Color
+    let entries: [Entry]
+}
+
+extension Folder {
+    var fullName: String {
+        [emoji, name].compactMap { $0 }.joined(separator: " ")
+    }
 }
