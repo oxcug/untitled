@@ -51,7 +51,8 @@ struct HomeView: View {
             ImagePicker(imagesPayload: $imagesPayload)
         }
         .fullScreenCover(item: $imagesPayload) { payload in
-            ImageReview(images: payload.images)
+            let models = payload.images.map(ImageReviewViewModel.init)
+            ImageReview(viewModels: models, current: models.first!)
         }
     }
     

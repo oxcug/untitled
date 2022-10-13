@@ -23,6 +23,26 @@ struct Folder: Identifiable, Hashable {
     ]
 }
 
+final class ImageReviewViewModel: ObservableObject {
+    @Published var name: String = ""
+    @Published var isMagicEnabled = true
+    @Published var folders = Set<Folder>()
+    
+    let payload: ImagePayload
+    
+    init(payload: ImagePayload) {
+        self.payload = payload
+    }
+    
+    func didTapFolder(_ folder: Folder) {
+        if folders.contains(folder) {
+            folders.remove(folder)
+        } else {
+            folders.insert(folder)
+        }
+    }
+}
+
 struct Separator: View {
     var body: some View {
         Rectangle()
@@ -32,20 +52,23 @@ struct Separator: View {
 }
 
 struct ImageReview: View {
-    let images: [ImagePayload]
+    let viewModels: [ImageReviewViewModel]
+    @StateObject var current: ImageReviewViewModel
     @State var progress = 1
-    @State var name: String = ""
     @State private var keyboardHeight: CGFloat = 0
     
     @FocusState private var isNameFocused: Bool
     @Environment(\.presentationMode) var presentationMode
 
+    let toggleFeedback = UIImpactFeedbackGenerator(style: .rigid)
+    let selectionFeedback = UISelectionFeedbackGenerator()
+    
     var body: some View {
         NavigationStack {
             GeometryReader { proxy in
                 ZStack(alignment: .bottom) {
                     ScrollView(.vertical) {
-                        editor(proxy: proxy)
+                        editor(size: proxy.size)
                             .offset(y: 15)
                     }.gesture(
                        DragGesture().onChanged { value in
@@ -68,7 +91,7 @@ struct ImageReview: View {
                                     .background(RoundedRectangle(cornerRadius: 10).foregroundColor(.black))
                             }
                             .padding()
-                            .padding(.horizontal, 40)
+                            .padding(20)
                             .background(Rectangle().foregroundColor(Color(uiColor: .systemBackground)))
                         }
                     }
@@ -87,13 +110,13 @@ struct ImageReview: View {
                 }
                 
                 ToolbarItem(placement: .principal) {
-                    Text("\(progress) of \(images.count)")
+                    Text("\(progress) of \(viewModels.count)")
                         .font(.system(size: 14, weight: .semibold, design: .monospaced))
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .onReceive(Publishers.keyboardHeight) { height in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                     withAnimation(.easeInOut(duration: 0.15)) {
                         self.keyboardHeight = height
                     }
@@ -103,34 +126,75 @@ struct ImageReview: View {
     }
     
     @ViewBuilder
-    func editor(proxy: GeometryProxy) -> some View {
+    func editor(size: CGSize) -> some View {
         VStack(spacing: 30) {
-            ScrollViewReader { scrollReader in
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHGrid(rows: [.init(.flexible())]) {
-                        ForEach(images, id: \.id) { image in
-                            let imageHeight = proxy.size.height * 0.6
-                            let textFieldLocation = imageHeight + 55 + 150
-                            let screenHeight = UIScreen.main.bounds.height
-                            let padding = max(0, textFieldLocation - (screenHeight - keyboardHeight))
-                            
-                            Image(uiImage: image.modified ?? image.original)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(width: proxy.size.width, height: imageHeight - padding)
-                                .id(image.id)
+            ZStack(alignment: .bottomTrailing) {
+                ScrollViewReader { scrollReader in
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        LazyHGrid(rows: [.init(.flexible())]) {
+                            ForEach(viewModels, id: \.payload.id) { image in
+                                let imageHeight = size.height * 0.6
+                                let textFieldLocation = imageHeight + 55 + 150
+                                let screenHeight = UIScreen.main.bounds.height
+                                let padding = max(0, textFieldLocation - (screenHeight - keyboardHeight))
+                                
+                                ZStack {
+                                    Image(uiImage: image.payload.original)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .cornerRadius(10)
+                                        .frame(width: size.width, height: imageHeight - padding)
+                                        .opacity(current.isMagicEnabled ? 0 : 1)
+                                    
+                                    Image(uiImage: image.payload.modified ?? image.payload.original)
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .cornerRadius(10)
+                                        .frame(width: size.width, height: imageHeight - padding)
+                                }
+                                .id(image.payload.id)
+                            }
+                        }
+                    }
+                    .onChange(of: progress) { newValue in
+                        let idx = progress - 1
+                        if idx == viewModels.count {
+                            presentationMode.wrappedValue.dismiss()
+                        } else {
+                            scrollReader.scrollTo(viewModels[idx].payload.id)
                         }
                     }
                 }
-                .onChange(of: progress) { newValue in
-                    let idx = progress - 1
-                    scrollReader.scrollTo(images[idx].id)
+                
+                Button {
+                    withAnimation(.easeInOut(duration: 0.15)) {
+                        current.isMagicEnabled.toggle()
+                    }
+                    toggleFeedback.impactOccurred()
+                } label: {
+                    HStack(spacing: 6) {
+                        Image(systemName: "wand.and.rays")
+                            .resizable()
+                            .frame(width: 18, height: 18)
+                            .foregroundColor(.white)
+                        
+                        Text(current.isMagicEnabled ? "X-Ray on" : "X-Ray off")
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
+                            .foregroundColor(.white)
+                    }
+                    .padding(8)
+                    .background(RoundedRectangle(cornerRadius: 8)
+                        .foregroundColor(current.isMagicEnabled ? .red : .black)
+                        .opacity(0.4))
                 }
+                .buttonStyle(.plain)
+                .padding(.horizontal)
+                .padding(.bottom)
             }
-            
+          
             VStack(spacing: 20) {
                 GeometryReader { proxy in
-                    TextField("Name this...", text: $name)
+                    TextField("Name this...", text: $current.name)
                         .frame(maxWidth: .infinity)
                         .padding(.horizontal)
                         .focused($isNameFocused)
@@ -145,6 +209,10 @@ struct ImageReview: View {
                         .font(.system(size: 14, weight: .semibold, design: .rounded))
                     
                     categoryPicker
+                    
+                    Rectangle()
+                        .frame(height: 150)
+                        .foregroundColor(Color(uiColor: .systemBackground))
                 }
             }
         }
@@ -155,18 +223,31 @@ struct ImageReview: View {
             LazyHGrid(rows: [.init(.flexible())], spacing: 0) {
                 ForEach(Folder.provided) { folder in
                     Button {
+                        current.didTapFolder(folder)
+                        selectionFeedback.selectionChanged()
                     } label: {
-                        HStack(spacing: 0) {
-                            if let emoji = folder.emoji {
-                                Text(emoji)
+                        let isSelected = (current.folders.contains(folder))
+                        
+                        HStack(spacing: 4) {
+                            ZStack(alignment: .center) {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.white)
+                                    .font(.system(size: 18))
+                                    .opacity(isSelected ? 1 : 0)
+                                
+                                if let emoji = folder.emoji {
+                                    Text(emoji)
+                                        .font(.system(size: 18))
+                                        .opacity(isSelected ? 0 : 1)
+                                }
                             }
                             
                             Text(folder.name)
-                                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                                .font(.system(size: 15, weight: .semibold, design: .rounded))
                                 .foregroundColor(.white)
                         }
                         .padding(10)
-                        .background(RoundedRectangle(cornerRadius: 10).foregroundColor(folder.color).opacity(0.8))
+                        .background(RoundedRectangle(cornerRadius: 10).foregroundColor(folder.color).opacity(isSelected ? 0.4 : 0.7))
                     }
                     .padding(.leading, 15)
                 }
@@ -174,12 +255,12 @@ struct ImageReview: View {
                 Button {
                 } label: {
                     HStack(spacing: 0) {
-                        Text("+ Create Category")
-                            .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        Text("+ New Category")
+                            .font(.system(size: 15, weight: .semibold, design: .rounded))
                             .foregroundColor(.white)
                     }
                     .padding(10)
-                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(.blue).opacity(0.8))
+                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(.blue).opacity(0.4))
                 }
                 .padding(.horizontal, 15)
             }
@@ -190,9 +271,10 @@ struct ImageReview: View {
 
 struct ImageReview_Previews: PreviewProvider {
     static var previews: some View {
-        ImageReview(images: [
+        ImageReview(viewModels: [
             ImagePayload(id: UUID(), original: UIImage(named: "porter.jpeg")!, modified: UIImage(named: "porter.jpeg")!),
             ImagePayload(id: UUID(), original: UIImage(named: "porter.jpeg")!, modified: UIImage(named: "represent.jpeg")!)
-        ])
+        ].map { ImageReviewViewModel(payload: $0) },
+                    current: ImageReviewViewModel(payload: ImagePayload(id: UUID(), original: UIImage(named: "porter.jpeg")!, modified: UIImage(named: "porter.jpeg")!)))
     }
 }
