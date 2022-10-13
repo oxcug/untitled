@@ -8,21 +8,6 @@
 import Combine
 import SwiftUI
 
-struct Folder: Identifiable, Hashable {
-    let id: String
-    let emoji: String?
-    let name: String
-    let color: Color
-    
-    static let provided = [
-        Folder(id: "a", emoji: "🍁", name: "Fall Outfits", color: .orange),
-        Folder(id: "b", emoji: "❄️", name: "Winter Outfits", color: .blue),
-        Folder(id: "c", emoji: "☕", name: "Cafes", color: .brown),
-        Folder(id: "d", emoji: "🎵", name: "Music", color: .black),
-        Folder(id: "e", emoji: "🔗", name: "Links", color: .blue),
-    ]
-}
-
 final class ImageReviewViewModel: ObservableObject {
     @Published var name: String = ""
     @Published var isMagicEnabled = true
@@ -40,14 +25,6 @@ final class ImageReviewViewModel: ObservableObject {
         } else {
             folders.insert(folder)
         }
-    }
-}
-
-struct Separator: View {
-    var body: some View {
-        Rectangle()
-            .frame(height: 0.2)
-            .foregroundColor(.gray)
     }
 }
 
