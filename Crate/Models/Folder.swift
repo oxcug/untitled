@@ -13,9 +13,10 @@ struct Entry: Identifiable, Codable, Hashable {
     let date: Date
     let original: UIImage
     let modified: UIImage?
+    let colors: [MMCQ.Color]
     
     enum CodingKeys: CodingKey {
-        case id, name, date, original, modified
+        case id, name, date, original, modified, colors
     }
 }
 
@@ -26,6 +27,7 @@ extension Entry {
         id = try container.decode(UUID.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         date = try container.decode(Date.self, forKey: .date)
+        colors = try container.decode([MMCQ.Color].self, forKey: .colors)
         
         let originalData = try container.decode(Data.self, forKey: .original)
         original = UIImage(data: originalData) ?? UIImage()
@@ -42,6 +44,7 @@ extension Entry {
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
         try container.encode(date, forKey: .date)
+        try container.encode(colors, forKey: .colors)
         try container.encode(original.pngData(), forKey: .original)
         if let modified = modified {
             try? container.encode(modified.pngData(), forKey: .modified)

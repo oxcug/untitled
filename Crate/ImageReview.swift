@@ -29,11 +29,14 @@ final class ImageReviewViewModel: ObservableObject {
     
     func save() {
         folders.forEach {
+            let modified = payload.modified?.cropImageByAlpha()
+            let colors = (modified == nil) ? [] : ColorThief.getPalette(from: modified!, colorCount: 4)
             let entry = Entry(id: UUID(),
                               name: name,
                               date: Date(),
                               original: payload.original,
-                              modified: payload.modified)
+                              modified: modified,
+                              colors: colors ?? [])
             FolderStorage.shared.add(entry: entry, to: $0)
         }
     }

@@ -29,6 +29,19 @@
 		27DBE9EE28F8669400B27850 /* FolderStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9ED28F8669400B27850 /* FolderStorage.swift */; };
 		27DBE9F028F8A70D00B27850 /* Color+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9EF28F8A70D00B27850 /* Color+Codable.swift */; };
 		27DBE9F228F8AAE800B27850 /* ImagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9F128F8AAE800B27850 /* ImagePayload.swift */; };
+		27DBE9F628F8BB9100B27850 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */; };
+		27DBE9FC28F8C5B000B27850 /* modified.png in Resources */ = {isa = PBXBuildFile; fileRef = 27DBE9FB28F8C5B000B27850 /* modified.png */; };
+		27DBEA0028F9575D00B27850 /* modified_4.png in Resources */ = {isa = PBXBuildFile; fileRef = 27DBE9FF28F9575D00B27850 /* modified_4.png */; };
+		27DBEA0628F95E2200B27850 /* MMCQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0428F95E2200B27850 /* MMCQ.swift */; };
+		27DBEA0728F95E2200B27850 /* ColorThief.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0528F95E2200B27850 /* ColorThief.swift */; };
+		27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */ = {isa = PBXBuildFile; productRef = 27DBEA0928FAEBB600B27850 /* FloatingPanel */; };
+		27DBEA1528FAECB800B27850 /* View+floatingPanelContentMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0D28FAECB700B27850 /* View+floatingPanelContentMode.swift */; };
+		27DBEA1628FAECB800B27850 /* View+floatingPanelGrabberHandlePadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0E28FAECB700B27850 /* View+floatingPanelGrabberHandlePadding.swift */; };
+		27DBEA1728FAECB800B27850 /* UIHostingController+ignoreKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0F28FAECB700B27850 /* UIHostingController+ignoreKeyboard.swift */; };
+		27DBEA1828FAECB800B27850 /* View+floatingPanelSurfaceAppearance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1028FAECB700B27850 /* View+floatingPanelSurfaceAppearance.swift */; };
+		27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1128FAECB700B27850 /* FloatingPanelView.swift */; };
+		27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1228FAECB700B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift */; };
+		27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,6 +88,18 @@
 		27DBE9ED28F8669400B27850 /* FolderStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderStorage.swift; sourceTree = "<group>"; };
 		27DBE9EF28F8A70D00B27850 /* Color+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Codable.swift"; sourceTree = "<group>"; };
 		27DBE9F128F8AAE800B27850 /* ImagePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePayload.swift; sourceTree = "<group>"; };
+		27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
+		27DBE9FB28F8C5B000B27850 /* modified.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = modified.png; sourceTree = "<group>"; };
+		27DBE9FF28F9575D00B27850 /* modified_4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = modified_4.png; sourceTree = "<group>"; };
+		27DBEA0428F95E2200B27850 /* MMCQ.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MMCQ.swift; sourceTree = "<group>"; };
+		27DBEA0528F95E2200B27850 /* ColorThief.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorThief.swift; sourceTree = "<group>"; };
+		27DBEA0D28FAECB700B27850 /* View+floatingPanelContentMode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanelContentMode.swift"; sourceTree = "<group>"; };
+		27DBEA0E28FAECB700B27850 /* View+floatingPanelGrabberHandlePadding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanelGrabberHandlePadding.swift"; sourceTree = "<group>"; };
+		27DBEA0F28FAECB700B27850 /* UIHostingController+ignoreKeyboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIHostingController+ignoreKeyboard.swift"; sourceTree = "<group>"; };
+		27DBEA1028FAECB700B27850 /* View+floatingPanelSurfaceAppearance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanelSurfaceAppearance.swift"; sourceTree = "<group>"; };
+		27DBEA1128FAECB700B27850 /* FloatingPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanelView.swift; sourceTree = "<group>"; };
+		27DBEA1228FAECB700B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanelContentInsetAdjustmentBehavior.swift"; sourceTree = "<group>"; };
+		27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanel.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +107,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -130,13 +156,17 @@
 				27020DE528F6C49C00C94312 /* HomeView.swift */,
 				27020E1528F6D88C00C94312 /* ImageReview.swift */,
 				27020E1328F6D39A00C94312 /* ImagePicker.swift */,
+				27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */,
 				27DBE9E928F8656500B27850 /* Models */,
 				27020E1F28F7609C00C94312 /* Processors */,
 				27DBE9EC28F8658800B27850 /* UI Elements */,
 				27020E2228F767FE00C94312 /* Extensions */,
+				27DBEA0B28FAEBF800B27850 /* FloatingPanel */,
 				27020E1728F6D8C800C94312 /* porter.jpeg */,
 				27020E1828F6D8C800C94312 /* represent.jpeg */,
 				27020DE728F6C49C00C94312 /* Assets.xcassets */,
+				27DBE9FB28F8C5B000B27850 /* modified.png */,
+				27DBE9FF28F9575D00B27850 /* modified_4.png */,
 				27020DF128F6C49C00C94312 /* Info.plist */,
 				27020DEE28F6C49C00C94312 /* Crate.xcdatamodeld */,
 				27020DE928F6C49C00C94312 /* Preview Content */,
@@ -184,6 +214,8 @@
 				27020E2028F762F800C94312 /* UIImage+Extensions.swift */,
 				27DBE9EF28F8A70D00B27850 /* Color+Codable.swift */,
 				27020E2328F7680600C94312 /* Notification+Extensions.swift */,
+				27DBEA0528F95E2200B27850 /* ColorThief.swift */,
+				27DBEA0428F95E2200B27850 /* MMCQ.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -206,6 +238,20 @@
 			path = "UI Elements";
 			sourceTree = "<group>";
 		};
+		27DBEA0B28FAEBF800B27850 /* FloatingPanel */ = {
+			isa = PBXGroup;
+			children = (
+				27DBEA1128FAECB700B27850 /* FloatingPanelView.swift */,
+				27DBEA0F28FAECB700B27850 /* UIHostingController+ignoreKeyboard.swift */,
+				27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */,
+				27DBEA1228FAECB700B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift */,
+				27DBEA0D28FAECB700B27850 /* View+floatingPanelContentMode.swift */,
+				27DBEA0E28FAECB700B27850 /* View+floatingPanelGrabberHandlePadding.swift */,
+				27DBEA1028FAECB700B27850 /* View+floatingPanelSurfaceAppearance.swift */,
+			);
+			path = FloatingPanel;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -222,6 +268,9 @@
 			dependencies = (
 			);
 			name = Crate;
+			packageProductDependencies = (
+				27DBEA0928FAEBB600B27850 /* FloatingPanel */,
+			);
 			productName = Crate;
 			productReference = 27020DE028F6C49C00C94312 /* Crate.app */;
 			productType = "com.apple.product-type.application";
@@ -294,6 +343,9 @@
 				Base,
 			);
 			mainGroup = 27020DD728F6C49C00C94312;
+			packageReferences = (
+				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
+			);
 			productRefGroup = 27020DE128F6C49C00C94312 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -313,7 +365,9 @@
 				27020E1928F6D8C800C94312 /* porter.jpeg in Resources */,
 				27020DEB28F6C49C00C94312 /* Preview Assets.xcassets in Resources */,
 				27020E1A28F6D8C800C94312 /* represent.jpeg in Resources */,
+				27DBEA0028F9575D00B27850 /* modified_4.png in Resources */,
 				27020DE828F6C49C00C94312 /* Assets.xcassets in Resources */,
+				27DBE9FC28F8C5B000B27850 /* modified.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -338,20 +392,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27DBEA0628F95E2200B27850 /* MMCQ.swift in Sources */,
 				27020DED28F6C49C00C94312 /* Persistence.swift in Sources */,
+				27DBE9F628F8BB9100B27850 /* ImageDetailView.swift in Sources */,
 				27020DF028F6C49C00C94312 /* Crate.xcdatamodeld in Sources */,
+				27DBEA1628FAECB800B27850 /* View+floatingPanelGrabberHandlePadding.swift in Sources */,
 				27020E1E28F75FE500C94312 /* ImageProcessor.swift in Sources */,
 				27020E1428F6D39A00C94312 /* ImagePicker.swift in Sources */,
+				27DBEA1828FAECB800B27850 /* View+floatingPanelSurfaceAppearance.swift in Sources */,
+				27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */,
 				27DBE9E828F8655E00B27850 /* Folder.swift in Sources */,
+				27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */,
 				27DBE9EE28F8669400B27850 /* FolderStorage.swift in Sources */,
 				27020E1628F6D88C00C94312 /* ImageReview.swift in Sources */,
 				27020DE628F6C49C00C94312 /* HomeView.swift in Sources */,
 				27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */,
 				27020E2128F762F800C94312 /* UIImage+Extensions.swift in Sources */,
+				27DBEA1728FAECB800B27850 /* UIHostingController+ignoreKeyboard.swift in Sources */,
+				27DBEA1528FAECB800B27850 /* View+floatingPanelContentMode.swift in Sources */,
+				27DBEA0728F95E2200B27850 /* ColorThief.swift in Sources */,
 				27DBE9F028F8A70D00B27850 /* Color+Codable.swift in Sources */,
 				27DBE9F228F8AAE800B27850 /* ImagePayload.swift in Sources */,
 				27020E1C28F75F6000C94312 /* PersonSegmenter.swift in Sources */,
 				27020DE428F6C49C00C94312 /* CrateApp.swift in Sources */,
+				27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */,
 				27DBE9EB28F8658400B27850 /* Separator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -677,6 +741,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scenee/FloatingPanel#swift-package-manager";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		27DBEA0928FAEBB600B27850 /* FloatingPanel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */;
+			productName = FloatingPanel;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		27020DEE28F6C49C00C94312 /* Crate.xcdatamodeld */ = {
