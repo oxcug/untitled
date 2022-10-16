@@ -62,8 +62,8 @@ struct HomeView: View {
                 .listStyle(.plain)
                 
                 Button {
-//                        showingImagePicker = true
-                    displayEntry = .init(id: UUID(), name: "asdf", date: Date(), original: UIImage(named: "modified.png")!, modified: nil, colors: [])
+                    showingImagePicker = true
+//                    displayEntry = .init(id: UUID(), name: "asdf", date: Date(), original: UIImage(named: "modified.png")!, modified: nil, colors: [])
                     folderName = "⭐ Favorites"
                 } label: {
                     Image(systemName: "plus")
@@ -93,8 +93,7 @@ struct HomeView: View {
         .floatingPanelContentMode(.fitToBounds)
         .floatingPanelContentInsetAdjustmentBehavior(.never)
         .fullScreenCover(item: $imagesPayload) { payload in
-            let models = payload.images.map(ImageReviewViewModel.init)
-            ImageReview(viewModels: models, current: models.first!)
+            ImageReview(images: payload.images)
                 .environmentObject(storage)
         }
     }

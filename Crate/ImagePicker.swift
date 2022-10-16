@@ -11,7 +11,7 @@ import SwiftUI
 
 struct ImagesPayload: Identifiable {
     let id: UUID
-    let images: [ImagePayload]
+    let images: [UIImage]
 }
 
 struct ImagePicker: UIViewControllerRepresentable {
@@ -60,10 +60,7 @@ struct ImagePicker: UIViewControllerRepresentable {
             
             imageFetchCancellable?.cancel()
             imageFetchCancellable = Publishers.MergeMany(imageLoadFutures).collect().sink { [parent] images in
-                parent.imagesPayload = ImagesPayload(id: UUID(), images: images
-                    .compactMap { $0 }
-                    .map { ImagePayload(id: UUID(), original: $0, modified: ImageProcessor.shared.process(image: $0))}
-                )
+                parent.imagesPayload = ImagesPayload(id: UUID(), images: images.compactMap { $0 })
             }
         }
     }
