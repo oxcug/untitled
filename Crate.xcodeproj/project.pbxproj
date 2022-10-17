@@ -25,6 +25,7 @@
 		27020E2128F762F800C94312 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E2028F762F800C94312 /* UIImage+Extensions.swift */; };
 		27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E2328F7680600C94312 /* Notification+Extensions.swift */; };
 		27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27748E3528FCB87C00013857 /* EmojiTextField.swift */; };
+		278F956928FD82920052D319 /* CGRect+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278F956828FD82920052D319 /* CGRect+Extensions.swift */; };
 		27A4452328FD5DFB00BBB91D /* outfit.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 27A4452228FD5DFB00BBB91D /* outfit.jpeg */; };
 		27A8EEA128FC1252004DDCE9 /* IMG_2923.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 27A8EEA028FC1252004DDCE9 /* IMG_2923.PNG */; };
 		27A8EEA328FC1267004DDCE9 /* TextProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8EEA228FC1267004DDCE9 /* TextProcessor.swift */; };
@@ -91,6 +92,7 @@
 		27020E2028F762F800C94312 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		27020E2328F7680600C94312 /* Notification+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extensions.swift"; sourceTree = "<group>"; };
 		27748E3528FCB87C00013857 /* EmojiTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiTextField.swift; sourceTree = "<group>"; };
+		278F956828FD82920052D319 /* CGRect+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Extensions.swift"; sourceTree = "<group>"; };
 		27A4452228FD5DFB00BBB91D /* outfit.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = outfit.jpeg; sourceTree = "<group>"; };
 		27A8EEA028FC1252004DDCE9 /* IMG_2923.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_2923.PNG; sourceTree = "<group>"; };
 		27A8EEA228FC1267004DDCE9 /* TextProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextProcessor.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				27DBE9EF28F8A70D00B27850 /* Color+Codable.swift */,
 				27020E2328F7680600C94312 /* Notification+Extensions.swift */,
 				27DBEA0528F95E2200B27850 /* ColorThief.swift */,
+				278F956828FD82920052D319 /* CGRect+Extensions.swift */,
 				27DBEA0428F95E2200B27850 /* MMCQ.swift */,
 			);
 			path = Extensions;
@@ -437,6 +440,7 @@
 				27A8EEA328FC1267004DDCE9 /* TextProcessor.swift in Sources */,
 				27DBEA1528FAECB800B27850 /* View+floatingPanelContentMode.swift in Sources */,
 				27DBEA0728F95E2200B27850 /* ColorThief.swift in Sources */,
+				278F956928FD82920052D319 /* CGRect+Extensions.swift in Sources */,
 				27DBE9F028F8A70D00B27850 /* Color+Codable.swift in Sources */,
 				27DBE9F228F8AAE800B27850 /* ImagePayload.swift in Sources */,
 				27020E1C28F75F6000C94312 /* PersonSegmenter.swift in Sources */,

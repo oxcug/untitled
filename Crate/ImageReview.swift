@@ -79,24 +79,10 @@ struct ImageReview: View {
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
                     
-                    HStack {
-                        Text("Focus")
-                            .font(.system(size: 15, weight: .semibold, design: .default))
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                        
-                        Picker("", selection: $viewModelManager.focus) {
-                            ForEach(Focus.allCases, id: \.self) { option in
-                                Text(option.rawValue.capitalized)
-                            }
-                        }
-                        .pickerStyle(SegmentedPickerStyle())
-                        .frame(width: 180)
-                    }
-                    .padding(.top, 4)
-                    .padding(.vertical, 4)
-                    
+                    focusSegmentedView
+                        .padding(.top, 4)
+                        .padding(.vertical, 4)
+                
                     categoryRow
                         .listRowBackground(Color.black)
                     
@@ -141,6 +127,24 @@ struct ImageReview: View {
         }
     }
     
+    var focusSegmentedView: some View {
+        HStack {
+            Text("Focus")
+                .font(.system(size: 15, weight: .semibold, design: .default))
+                .foregroundColor(.white)
+            
+            Spacer()
+            
+            Picker("", selection: $viewModelManager.focus) {
+                ForEach(Focus.allCases, id: \.self) { option in
+                    Text(option.rawValue.capitalized)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .frame(width: 180)
+        }
+    }
+    
     var nextFooter: some View {
         VStack(spacing: 0) {
             Separator()
@@ -172,16 +176,31 @@ struct ImageReview: View {
                 .aspectRatio(contentMode: .fit)
                 .cornerRadius(10)
                 .scaledToFit()
+                .opacity(0.7)
                 .frame(height: imageHeight)
                 .readSize { size in
                     viewModelManager.imageSize = size
                 }
             
-            ForEach(viewModelManager.textBoundingRects, id: \.debugDescription) { rect in
-                Rectangle()
-                    .foregroundColor(.red.opacity(0.4))
-                    .position(x: rect.midX, y: rect.midY)
-                    .frame(width: rect.width, height: rect.height)
+            ForEach(viewModelManager.textBoundingBoxes) { box in
+                let rect = box.box
+                let isSelected = viewModelManager.selectedTextBoundingBoxes.contains(box)
+
+                Button {
+                    selectionFeedback.selectionChanged()
+                    viewModelManager.didTapBoundingBox(box)
+                } label: {
+                    RoundedRectangle(cornerRadius: 4)
+                        .foregroundColor(.white.opacity(isSelected ? 0.5 : 0.3))
+                        .buttonBorderShape(.roundedRectangle(radius: 4))
+                        .overlay(
+                              RoundedRectangle(cornerRadius: 4)
+                                  .stroke(Color.blue, lineWidth: isSelected ? 2 : 0)
+                          )
+                }
+                .buttonStyle(.plain)
+                .position(x: rect.midX, y: rect.midY)
+                .frame(width: rect.width, height: rect.height + 4)
             }
         }
     }
@@ -221,7 +240,7 @@ struct ImageReview: View {
 
 struct ImageReview_Previews: PreviewProvider {
     static var previews: some View {
-        ImageReview(images: [UIImage(named: "outfit.jpeg")!])
+        ImageReview(images: [UIImage(named: "represent.jpeg")!])
             .environmentObject(FolderStorage.shared)
     }
 }

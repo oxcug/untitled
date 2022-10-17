@@ -28,6 +28,9 @@ final class TextProcessor: ObservableObject {
 
         // Create a new request to recognize text.
         let request = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
+        request.recognitionLevel = .accurate
+        request.recognitionLanguages = ["en-US"]
+        request.revision = 2
 
         do {
             // Perform the text-recognition request.
@@ -41,25 +44,17 @@ final class TextProcessor: ObservableObject {
         guard let observations = request.results as? [VNRecognizedTextObservation] else {
             return
         }
-        let recognizedStrings = observations.compactMap { observation in
-            // Return the string of the top VNRecognizedText instance.
-            return observation.topCandidates(1).first?.string
-        }
-        
-        boundingRects = observations.compactMap { observation in
-            // Find the top observation.
-            guard let candidate = observation.topCandidates(1).first else { return .zero }
-            
+       
+        let theBest = observations.compactMap { $0.topCandidates(1).first }
+
+        boundingRects = theBest.map { cand in
+            print(cand.string, cand.confidence)
             // Find the bounding-box observation for the string range.
-            let stringRange = candidate.string.startIndex..<candidate.string.endIndex
-            let boxObservation = try? candidate.boundingBox(for: stringRange)
+            let stringRange = cand.string.startIndex..<cand.string.endIndex
+            let boxObservation = try? cand.boundingBox(for: stringRange)
             
             // Get the normalized CGRect value.
             return boxObservation?.boundingBox ?? .zero
         }
-       
-        print(recognizedStrings)
-        // Process the recognized strings.
-//        processResults(recognizedStrings)
     }
 }
