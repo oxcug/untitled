@@ -21,100 +21,68 @@ enum ProcessorState {
 struct BoundingBox: Identifiable, Hashable {
     let id = UUID()
     let box: CGRect
+    let string: String
 }
 
 final class ImageReviewManager: ObservableObject {
     var current: ImageReviewViewModel = .dummy
-    private var viewModels: [String: ImageReviewViewModel] = [:]
+    @Published var viewModels: [ImageReviewViewModel] = []
+    
+    func createViewModels(images: [UIImage]) {
+        if !viewModels.isEmpty {
+            return
+        }
+        
+        viewModels = images.enumerated().map { ImageReviewViewModel(image: $0.element, pageNumber: $0.offset) }
+        if let first = viewModels.first {
+            current = first
+        }
+    }
+}
+
+struct SegmentedImage {
+    let original: UIImage
+    let active: UIImage
+    let inactive: UIImage
+}
+
+final class ImageReviewViewModel: ObservableObject, Identifiable {
+    let id = UUID()
+    
+    let image: UIImage
+    let pageNumber: Int
     
     @Published var focus: Focus = .text
     @Published var name: String = ""
     @Published var isMagicEnabled = true
     @Published var folders = Set<Folder>()
+    @Published var selectedTextBoundingRects = Set<CGRect>()
     
-    @Published var segmentedImage: UIImage?
+    @Published var includeSegmentedImage = true
+    @Published var segmentedImage: SegmentedImage?
     @Published var textBoundingBoxes: [BoundingBox] = []
-    @Published var selectedTextBoundingBoxes = Set<BoundingBox>()
+    @Published var selectedTextBoundingBoxes = [BoundingBox]()
     
     @Published var imageSize: CGSize = .zero
     @Published var state: ProcessorState = .processing
     
     // MARK: -  processors
+    
     let textProcessor = TextProcessor()
     let personSegmenter = PersonSegmenter()
-    
+
     // MARK: -  streams
+    
     var incomingImageSizeStream: AnyCancellable?
     var cancellable: AnyCancellable?
-    
+
     // MARK: -
     
-    func setActiveViewModel(_ viewModel: ImageReviewViewModel) {
-        focus = viewModel.focus
-        name = viewModel.name
-        isMagicEnabled = viewModel.isMagicEnabled
-        folders = viewModel.folders
-        selectedTextBoundingBoxes = Set(viewModel.selectedTextBoundingRects.map(BoundingBox.init))
-        
-        current = viewModel
-        
-        // Remove old calculatations
-        textBoundingBoxes = []
-        segmentedImage = nil
-        imageSize = .zero
-        
-        state = .processing
-        incomingImageSizeStream = $imageSize
-            .filter { $0 != .zero }
-            .first()
-            .sink { [weak self] in
-                self?.state = .done
-                self?.requestForProcessing(imageSize: $0)
-            }
-    }
+    static let dummy = ImageReviewViewModel(image: UIImage(), pageNumber: -1)
     
-    func requestForProcessing(imageSize: CGSize) {
-        self.imageSize = imageSize
-        let fixedImage = current.image.fixOrientation()
-        
-        cancellable?.cancel()
-        textProcessor.reset()
-        textProcessor.performRecognition(image: fixedImage)
-        cancellable = textProcessor.$boundingRects.map { rects in
-            rects.map { box in
-                let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
-                let rect = box.applying(bottomToTopTransform)
-                return BoundingBox(box: VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height)))
-            }
-        }
-        .assign(to: \.textBoundingBoxes, on: self)
-        
-        segmentedImage = personSegmenter.segment(image: fixedImage)
-    }
-
-    func didTapBoundingBox(_ box: BoundingBox) {
-        DispatchQueue.main.async {
-            if self.selectedTextBoundingBoxes.contains(box) {
-                self.selectedTextBoundingBoxes.remove(box)
-            } else {
-                self.selectedTextBoundingBoxes.insert(box)
-            }
-        }
-    }
-}
-
-final class ImageReviewViewModel: ObservableObject {
-    let image: UIImage
-    var focus: Focus = .text
-    var name: String = ""
-    var isMagicEnabled = true
-    var folders = Set<Folder>()
-    var selectedTextBoundingRects = Set<CGRect>()
-    
-    static let dummy = ImageReviewViewModel(image: UIImage())
-    
-    init(image: UIImage) {
+    init(image: UIImage, pageNumber: Int) {
         self.image = image
+        self.pageNumber = pageNumber
     }
     
     func didTapFolder(_ folder: Folder) {
@@ -122,6 +90,35 @@ final class ImageReviewViewModel: ObservableObject {
             folders.remove(folder)
         } else {
             folders.insert(folder)
+        }
+    }
+    
+    func requestForProcessing(imageSize: CGSize) {
+        self.imageSize = imageSize
+        let fixedImage = image.fixOrientation()
+        
+        cancellable?.cancel()
+        textProcessor.reset()
+        textProcessor.performRecognition(image: fixedImage)
+        cancellable = textProcessor.$boundingRects.map { rects in
+            rects.map { box in
+                let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
+                let rect = box.box.applying(bottomToTopTransform)
+                return BoundingBox(box: VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height)), string: box.string)
+            }
+        }
+        .assign(to: \.textBoundingBoxes, on: self)
+        
+        segmentedImage = personSegmenter.segment(image: fixedImage)
+    }
+    
+    func didTapBoundingBox(_ box: BoundingBox) {
+        DispatchQueue.main.async {
+            if let idx = self.selectedTextBoundingBoxes.firstIndex(of: box) {
+                self.selectedTextBoundingBoxes.remove(at: idx)
+            } else {
+                self.selectedTextBoundingBoxes.append(box)
+            }
         }
     }
     

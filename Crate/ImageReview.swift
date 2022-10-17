@@ -25,14 +25,11 @@ extension View {
     }
 }
 
-struct ImageReview: View {
-    let images: [UIImage]
+struct SingleImageReview: View {
+    @State private var keyboardHeight: CGFloat = 0
     
-    @StateObject var viewModelManager = ImageReviewManager()
-    @State var progress = 1
+    @EnvironmentObject var viewModel: ImageReviewViewModel
     @FocusState var isNameFocused: Bool
-    
-    @EnvironmentObject var storage: FolderStorage
     @Environment(\.dismiss) private var dismiss
     
     let toggleFeedback = UIImpactFeedbackGenerator(style: .rigid)
@@ -42,161 +39,107 @@ struct ImageReview: View {
     @State var showFolderSelection = false
     
     var body: some View {
-        NavigationStack {
-            ZStack(alignment: .bottom) {
-                List {
-                    if viewModelManager.focus == .text {
-                        textBoundingBoxView
-                            .frame(maxWidth: .infinity, alignment: .center)
-                            .listRowBackground(Color.black)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    } else {
-                        ZStack(alignment: .topLeading) {
-                            let imageHeight = UIScreen.main.bounds.size.height * 0.65
-                            
-                            Image(uiImage: viewModelManager.current.image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .cornerRadius(10)
-                                .scaledToFit()
-                                .frame(height: imageHeight)
-                                .opacity(0.4)
-                                .readSize { size in
-                                    viewModelManager.imageSize = size
-                                }
-                            
-                            if let segmented = viewModelManager.segmentedImage {
-                                Image(uiImage: segmented)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                                    .frame(height: imageHeight)
-                            }
-                        }
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .listRowBackground(Color.black)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                    }
-                    
-                    focusSegmentedView
-                        .padding(.top, 4)
-                        .padding(.vertical, 4)
+        ScrollViewReader { scrollViewProxy in
+            List {
+                imagePreview
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .listRowBackground(Color.black)
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
+                    .id(0)
                 
-                    categoryRow
-                        .listRowBackground(Color.black)
-                    
-                    Spacer(minLength: 100)
-                        .listRowBackground(Color.black)
-                }
-                .listStyle(.plain)
-                .scrollContentBackground(.hidden)
+                TextField("Give it a name...", text: $viewModel.name)
+                    .font(.system(size: 20, weight: .semibold, design: .default))
+                    .foregroundColor(.white)
+                    .padding(.vertical, 8)
+                    .multilineTextAlignment(.center)
+                    .id(1)
                 
-                nextFooter
-            }
-            .padding(.top, 10)
-            .background(Color.black)
-            .edgesIgnoringSafeArea(.bottom)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button(role: .cancel) {
-                        dismiss()
-                    } label: {
-                        Text("Cancel")
-                            .font(.system(size: 15, weight: .semibold, design: .default))
-                            .foregroundColor(.gray)
-                    }
-                }
+                categoryRow
+                    .listRowBackground(Color.black)
+                    .id(2)
                 
-                ToolbarItem(placement: .principal) {
-                    Text("\(progress) of \(images.count)")
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Description")
                         .font(.system(size: 15, weight: .semibold, design: .default))
                         .foregroundColor(.white)
+                   
+                    VStack(alignment: .leading, spacing: 4) {
+                        ForEach(viewModel.selectedTextBoundingBoxes) { box in
+                            Text(box.string)
+                                .font(.system(size: 15, weight: .regular, design: .default))
+                        }
+                    }
                 }
+                
+                Spacer(minLength: 100 + keyboardHeight)
+                    .listRowSeparator(.hidden)
+                    .listRowBackground(Color.black)
+                    .id(3)
             }
-            .navigationBarTitleDisplayMode(.inline)
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .scrollDismissesKeyboard(.immediately)
             .sheet(isPresented: $showFolderSelection) {
                 NavigationStack {
-                    FolderSelectionView(folders: $viewModelManager.folders)
+                    FolderSelectionView(folders: $viewModel.folders)
                 }
             }
-        }
-        .preferredColorScheme(.dark)
-        .onAppear {
-            viewModelManager.setActiveViewModel(ImageReviewViewModel(image: images.first!))
-        }
-    }
-    
-    var focusSegmentedView: some View {
-        HStack {
-            Text("Focus")
-                .font(.system(size: 15, weight: .semibold, design: .default))
-                .foregroundColor(.white)
-            
-            Spacer()
-            
-            Picker("", selection: $viewModelManager.focus) {
-                ForEach(Focus.allCases, id: \.self) { option in
-                    Text(option.rawValue.capitalized)
+            .onReceive(Publishers.keyboardHeight) { height in
+                withAnimation(.easeInOut(duration: 0.15)) {
+                    self.keyboardHeight = height
+                    scrollViewProxy.scrollTo(1, anchor: .top)
                 }
-            }
-            .pickerStyle(SegmentedPickerStyle())
-            .frame(width: 180)
-        }
-    }
-    
-    var nextFooter: some View {
-        VStack(spacing: 0) {
-            Separator()
-                .frame(maxWidth: .infinity)
-            
-            ZStack {
-                Button {
-                    progress += 1
-                } label: {
-                    Text("finishing touches")
-                        .font(.system(size: 15, weight: .semibold, design: .default))
-                        .foregroundColor(Color(uiColor: .black))
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: .white)))
-                }
-                .padding(20)
-                .background(Rectangle().foregroundColor(.black))
             }
         }
     }
     
-    var textBoundingBoxView: some View {
+    var imagePreview: some View {
         ZStack(alignment: .topLeading) {
             let imageHeight = UIScreen.main.bounds.size.height * 0.65
             
-            Image(uiImage: images.first!)
+            Image(uiImage: viewModel.image)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .cornerRadius(10)
                 .scaledToFit()
-                .opacity(0.7)
+                .opacity(0.5)
                 .frame(height: imageHeight)
                 .readSize { size in
-                    viewModelManager.imageSize = size
+                    viewModel.requestForProcessing(imageSize: size)
                 }
             
-            ForEach(viewModelManager.textBoundingBoxes) { box in
+            if let segmented = viewModel.segmentedImage {
+                Button {
+                    viewModel.includeSegmentedImage.toggle()
+                    selectionFeedback.selectionChanged()
+                } label: {
+                    Image(uiImage: viewModel.includeSegmentedImage ? segmented.active : segmented.inactive)
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: imageHeight)
+                        .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
+                }
+                .buttonStyle(.plain)
+                .aspectRatio(contentMode: .fit)
+                .frame(height: imageHeight)
+            }
+            
+            ForEach(viewModel.textBoundingBoxes) { box in
                 let rect = box.box
-                let isSelected = viewModelManager.selectedTextBoundingBoxes.contains(box)
-
+                let isSelected = viewModel.selectedTextBoundingBoxes.contains(box)
+                
                 Button {
                     selectionFeedback.selectionChanged()
-                    viewModelManager.didTapBoundingBox(box)
+                    viewModel.didTapBoundingBox(box)
                 } label: {
                     RoundedRectangle(cornerRadius: 4)
                         .foregroundColor(.white.opacity(isSelected ? 0.5 : 0.3))
                         .buttonBorderShape(.roundedRectangle(radius: 4))
                         .overlay(
-                              RoundedRectangle(cornerRadius: 4)
-                                  .stroke(Color.blue, lineWidth: isSelected ? 2 : 0)
-                          )
+                            RoundedRectangle(cornerRadius: 4)
+                                .stroke(Color.blue, lineWidth: isSelected ? 2 : 0)
+                        )
                 }
                 .buttonStyle(.plain)
                 .position(x: rect.midX, y: rect.midY)
@@ -210,15 +153,15 @@ struct ImageReview: View {
             showFolderSelection = true
         } label: {
             HStack(alignment: .center) {
-                Text("Category")
+                Text("Folders")
                     .font(.system(size: 15, weight: .semibold, design: .default))
                     .foregroundColor(.white)
                 
                 Spacer()
                 
                 VStack(alignment: .trailing, spacing: 15) {
-                    if !viewModelManager.folders.isEmpty {
-                        ForEach(Array(viewModelManager.folders).sorted()) { folder in
+                    if !viewModel.folders.isEmpty {
+                        ForEach(Array(viewModel.folders).sorted()) { folder in
                             Text(folder.fullName)
                                 .font(.system(size: 12, weight: .semibold, design: .default))
                                 .foregroundColor(.white)
@@ -238,9 +181,80 @@ struct ImageReview: View {
     }
 }
 
+struct ImageReview: View {
+    let images: [UIImage]
+    
+    @State var selectedPage: Int = 0
+    @State var isKeyboardVisible = false
+    @StateObject var viewModelManager = ImageReviewManager()
+    @Environment(\.dismiss) private var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            ZStack(alignment: .bottom) {
+                TabView(selection: $selectedPage) {
+                    ForEach($viewModelManager.viewModels) { $viewModel in
+                        SingleImageReview()
+                            .environmentObject(viewModel)
+                            .tag(viewModel.pageNumber)
+                    }
+                }
+//                .tabViewStyle(.page(indexDisplayMode: .never))
+                
+                nextFooter
+                    .background(Color.black, ignoresSafeAreaEdges: .bottom)
+            }
+            .toolbar {
+                ToolbarCancelButton()
+                
+                ToolbarItem(placement: .principal) {
+                    Text("\(selectedPage + 1) of \(images.count)")
+                        .font(.system(size: 15, weight: .semibold, design: .default))
+                        .foregroundColor(.white)
+                }
+            }
+            .navigationBarTitleDisplayMode(.inline)
+            .preferredColorScheme(.dark)
+        }
+        .onAppear {
+            viewModelManager.createViewModels(images: images)
+        }
+    }
+    
+    var nextFooter: some View {
+        VStack(spacing: 0) {
+            Separator()
+                .frame(maxWidth: .infinity)
+            
+            HStack {
+                Spacer()
+                
+                Button {
+                    selectedPage += 1
+                } label: {
+                    Text(selectedPage == images.count - 1 ? "Finish" : "Next")
+                        .font(.system(size: 14, weight: .semibold, design: .default))
+                        .foregroundColor(Color(uiColor: .black))
+                        .frame(width: 50)
+                        .padding(8)
+                        .background(Capsule(style: .circular).foregroundColor(Color(uiColor: .white)))
+                }
+                .background(Rectangle().foregroundColor(.black))
+            }
+            .padding(.top, 15)
+            .padding(.horizontal, 15)
+            .padding(.bottom, isKeyboardVisible ? 15 : 0)
+        }
+        .onReceive(Publishers.keyboardWillBeVisible) { isVisible in
+            withAnimation(.easeInOut(duration: 0.1)) {
+                isKeyboardVisible = isVisible
+            }
+        }
+    }
+}
+
 struct ImageReview_Previews: PreviewProvider {
     static var previews: some View {
         ImageReview(images: [UIImage(named: "represent.jpeg")!])
-            .environmentObject(FolderStorage.shared)
     }
 }

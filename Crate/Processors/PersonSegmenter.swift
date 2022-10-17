@@ -14,7 +14,7 @@ final class PersonSegmenter {
     let context = CIContext()
     let request = VNGeneratePersonSegmentationRequest()
     
-    func segment(image: UIImage) -> UIImage? {
+    func segment(image: UIImage) -> SegmentedImage? {
         guard let foregroundImage = image.fixOrientation().cgImage else {
             print("Missing required images")
             return nil
@@ -46,8 +46,10 @@ final class PersonSegmenter {
             }
             
             // Update photoOutput
-            if let photoResult = renderAsUIImage(output) {
-                return photoResult
+            if let res = renderAsUIImage(output) {
+                return SegmentedImage(original: res,
+                                      active: outlineBorder(image: output, color: CIImage(color: CIColor(color: .systemBlue))) ?? UIImage(),
+                                      inactive: outlineBorder(image: output, color: CIImage(color: CIColor(color: .systemGray.withAlphaComponent(0.5)))) ?? UIImage())
             }
         } catch {
             print("Error processing person segmentation request")
@@ -67,6 +69,21 @@ final class PersonSegmenter {
         blendFilter.inputImage = foreground
         blendFilter.maskImage = maskScaled
         return blendFilter.outputImage
+    }
+    
+    private func outlineBorder(image: CIImage, color: CIImage) -> UIImage? {
+        // Apply morphology maximum to "erode" image in all direction into transparent area.
+        let filter = CIFilter.morphologyMaximum()
+        filter.inputImage = image
+        filter.radius = Float(max(image.extent.size.width, image.extent.size.height) * 0.005)
+        
+        let eroded = filter.outputImage!
+        
+        // Turn all pixels of eroded image into desired border color.
+        let colorized = CIBlendKernel.sourceAtop.apply(foreground: color, background: eroded)!.cropped(to: eroded.extent)
+        
+        // Blend original image over eroded, colorized image.
+        return renderAsUIImage(image.composited(over: colorized))
     }
     
     private func renderAsUIImage(_ image: CIImage) -> UIImage? {

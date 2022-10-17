@@ -57,15 +57,7 @@ struct FolderCreationView: View {
                     .foregroundColor(.white)
             }
             
-            ToolbarItem(placement: .cancellationAction) {
-                Button(role: .cancel) {
-                    dismiss()
-                } label: {
-                    Text("Close")
-                        .font(.system(size: 15, weight: .semibold, design: .default))
-                        .foregroundColor(.gray)
-                }
-            }
+            ToolbarCancelButton()
         }
         .onAppear {
             focusOnTextField = true

@@ -9,7 +9,7 @@ import UIKit
 import Vision
 
 final class TextProcessor: ObservableObject {
-    @Published var boundingRects: [CGRect] = []
+    @Published var boundingRects: [BoundingBox] = []
     var imageSize: CGSize = .zero
     
     func reset() {
@@ -52,9 +52,7 @@ final class TextProcessor: ObservableObject {
             // Find the bounding-box observation for the string range.
             let stringRange = cand.string.startIndex..<cand.string.endIndex
             let boxObservation = try? cand.boundingBox(for: stringRange)
-            
-            // Get the normalized CGRect value.
-            return boxObservation?.boundingBox ?? .zero
+            return BoundingBox(box: boxObservation?.boundingBox ?? .zero, string: cand.string)
         }
     }
 }
