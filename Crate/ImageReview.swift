@@ -30,15 +30,16 @@ struct ImageReview: View {
     
     @StateObject var viewModelManager = ImageReviewManager()
     @State var progress = 1
-    @State var keyboardHeight: CGFloat = 0
     @FocusState var isNameFocused: Bool
     
     @EnvironmentObject var storage: FolderStorage
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     
     let toggleFeedback = UIImpactFeedbackGenerator(style: .rigid)
     let selectionFeedback = UISelectionFeedbackGenerator()
     var streams = Set<AnyCancellable>()
+    
+    @State var showFolderSelection = false
     
     var body: some View {
         NavigationStack {
@@ -69,34 +70,38 @@ struct ImageReview: View {
                     .listRowBackground(Color.black)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                   
-                    HStack(alignment: .center) {
-                        Text("Category")
-                            .font(.system(size: 15, weight: .semibold, design: .default))
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                        
-                        VStack(alignment: .trailing, spacing: 15) {
-                            if !viewModelManager.folders.isEmpty {
-                                ForEach(viewModelManager.folders) { folder in
-                                    Text(folder.fullName)
+                  
+                    Button {
+                        showFolderSelection = true
+                    } label: {
+                        HStack(alignment: .center) {
+                            Text("Category")
+                                .font(.system(size: 15, weight: .semibold, design: .default))
+                                .foregroundColor(.white)
+                            
+                            Spacer()
+                            
+                            VStack(alignment: .trailing, spacing: 15) {
+                                if !viewModelManager.folders.isEmpty {
+                                    ForEach(Array(viewModelManager.folders).sorted()) { folder in
+                                        Text(folder.fullName)
+                                            .font(.system(size: 12, weight: .semibold, design: .default))
+                                            .foregroundColor(.white)
+                                            .padding(12)
+                                            .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
+                                    }
+                                } else {
+                                    Text("No selection")
                                         .font(.system(size: 12, weight: .semibold, design: .default))
                                         .foregroundColor(.white)
                                         .padding(12)
                                         .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
                                 }
-                            } else {
-                                Text("No selection")
-                                    .font(.system(size: 12, weight: .semibold, design: .default))
-                                    .foregroundColor(.white)
-                                    .padding(12)
-                                    .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
                             }
                         }
                     }
                     .listRowBackground(Color.black)
-                    .padding(20)
+                    .padding(.vertical, 20)
                     
                     Spacer(minLength: 100)
                         .listRowBackground(Color.black)
@@ -130,7 +135,7 @@ struct ImageReview: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(role: .cancel) {
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     } label: {
                         Text("Cancel")
                             .font(.system(size: 15, weight: .semibold, design: .default))
@@ -145,119 +150,13 @@ struct ImageReview: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-        }
-    }
-}
-
-struct ImageReviewasdf: View {
-    let images: [UIImage]
-    
-    @StateObject var viewModelManager = ImageReviewManager()
-    @State var progress = 1
-    @State var keyboardHeight: CGFloat = 0
-    @FocusState var isNameFocused: Bool
-    
-    @EnvironmentObject var storage: FolderStorage
-    @Environment(\.presentationMode) var presentationMode
-    
-    let toggleFeedback = UIImpactFeedbackGenerator(style: .rigid)
-    let selectionFeedback = UISelectionFeedbackGenerator()
-    var streams = Set<AnyCancellable>()
-    
-    var body: some View {
-        NavigationStack {
-            GeometryReader { proxy in
-                ZStack(alignment: .bottom) {
-                    ScrollView(.vertical) {
-                        editor(size: proxy.size)
-                            .offset(y: 15)
-                    }.gesture(
-                        DragGesture().onChanged { value in
-                            isNameFocused = false
-                        }
-                    )
-                }
-            }
-            .onReceive(Publishers.keyboardHeight) { height in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                    withAnimation(.easeInOut(duration: 0.15)) {
-                        self.keyboardHeight = height
-                    }
-                }
-            }
-            .onAppear {
-                viewModelManager.setActiveViewModel(ImageReviewViewModel(image: images.first!))
-            }
-        }
-    }
-    
-    @ViewBuilder
-    func editor(size: CGSize) -> some View {
-        VStack(spacing: 30) {
-            ZStack(alignment: .bottomTrailing) {
-                LazyHGrid(rows: [.init(.flexible())]) {
-                    ForEach(images, id: \.description) { image in
-                        let imageHeight = size.height * 0.6
-                        let textFieldLocation = imageHeight + 55 + 150
-                        let screenHeight = UIScreen.main.bounds.height
-                        let padding = max(0, textFieldLocation - (screenHeight - keyboardHeight))
-                        
-                        ZStack {
-                            Image(uiImage: image)
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .cornerRadius(10)
-                                .frame(width: 375, height: 360)
-                            
-                            ForEach(viewModelManager.textBoundingRects, id: \.debugDescription) { rect in
-                                Rectangle()
-                                    .foregroundColor(.red)
-                                    .position(x: rect.minX, y: rect.minY)
-                                    .frame(width: rect.width, height: rect.height)
-                            }
-                        }
-                        .id(image.description)
-                        
-                    }
-                    .onChange(of: progress) { newValue in
-                        let idx = progress - 1
-                        if idx == images.count {
-                            presentationMode.wrappedValue.dismiss()
-                        } else {
-                            //                            scrollReader.scrollTo(viewModels[idx].payload.id)
-                        }
-                    }
-                }
-                
-                Button {
-                    withAnimation(.easeInOut(duration: 0.15)) {
-                        viewModelManager.toggleFocus()
-                    }
-                    
-                    toggleFeedback.impactOccurred()
-                } label: {
-                    ZStack {
-                        Circle().foregroundColor(Color.black.opacity(0.15))
-                            .frame(width: 45, height: 45)
-                        
-                        Image(systemName: viewModelManager.focus == .person ? "person.fill" : "textformat")
-                            .font(.system(size: 22, weight: .semibold, design: .default))
-                    }
-                }
-                .buttonStyle(.plain)
-                .padding(.horizontal)
-                .padding(.bottom)
-            }
-            
-            VStack(spacing: 20) {
-                GeometryReader { proxy in
-                    TextField("Name this...", text: $viewModelManager.name)
-                        .frame(maxWidth: .infinity)
-                        .padding(.horizontal)
-                        .focused($isNameFocused)
+            .sheet(isPresented: $showFolderSelection) {
+                NavigationStack {
+                    FolderSelectionView(folders: $viewModelManager.folders)
                 }
             }
         }
+        .preferredColorScheme(.dark)
     }
 }
 

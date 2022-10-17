@@ -56,11 +56,14 @@ struct Folder: Identifiable, Hashable, Codable {
     let id: String
     let name: String
     let emoji: String?
-    let color: Color
     let entries: [Entry]
 }
 
-extension Folder {
+extension Folder: Comparable {
+    static func < (lhs: Folder, rhs: Folder) -> Bool {
+        lhs.name.compare(rhs.name) == .orderedAscending
+    }
+    
     var fullName: String {
         [emoji, name].compactMap { $0 }.joined(separator: " ")
     }

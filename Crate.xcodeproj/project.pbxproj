@@ -24,9 +24,12 @@
 		27020E1E28F75FE500C94312 /* ImageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E1D28F75FE500C94312 /* ImageProcessor.swift */; };
 		27020E2128F762F800C94312 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E2028F762F800C94312 /* UIImage+Extensions.swift */; };
 		27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E2328F7680600C94312 /* Notification+Extensions.swift */; };
+		27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27748E3528FCB87C00013857 /* EmojiTextField.swift */; };
 		27A8EEA128FC1252004DDCE9 /* IMG_2923.PNG in Resources */ = {isa = PBXBuildFile; fileRef = 27A8EEA028FC1252004DDCE9 /* IMG_2923.PNG */; };
 		27A8EEA328FC1267004DDCE9 /* TextProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8EEA228FC1267004DDCE9 /* TextProcessor.swift */; };
 		27A8EEA528FC3B98004DDCE9 /* ImageReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8EEA428FC3B98004DDCE9 /* ImageReviewViewModel.swift */; };
+		27A8EEA728FC9CE3004DDCE9 /* FolderSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */; };
+		27A8EEA928FCAF7C004DDCE9 /* FolderCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8EEA828FCAF7C004DDCE9 /* FolderCreationView.swift */; };
 		27DBE9E828F8655E00B27850 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9E728F8655E00B27850 /* Folder.swift */; };
 		27DBE9EB28F8658400B27850 /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9EA28F8658400B27850 /* Separator.swift */; };
 		27DBE9EE28F8669400B27850 /* FolderStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9ED28F8669400B27850 /* FolderStorage.swift */; };
@@ -86,9 +89,12 @@
 		27020E1D28F75FE500C94312 /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
 		27020E2028F762F800C94312 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		27020E2328F7680600C94312 /* Notification+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extensions.swift"; sourceTree = "<group>"; };
+		27748E3528FCB87C00013857 /* EmojiTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiTextField.swift; sourceTree = "<group>"; };
 		27A8EEA028FC1252004DDCE9 /* IMG_2923.PNG */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = IMG_2923.PNG; sourceTree = "<group>"; };
 		27A8EEA228FC1267004DDCE9 /* TextProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextProcessor.swift; sourceTree = "<group>"; };
 		27A8EEA428FC3B98004DDCE9 /* ImageReviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageReviewViewModel.swift; sourceTree = "<group>"; };
+		27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderSelectionView.swift; sourceTree = "<group>"; };
+		27A8EEA828FCAF7C004DDCE9 /* FolderCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderCreationView.swift; sourceTree = "<group>"; };
 		27DBE9E728F8655E00B27850 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		27DBE9EA28F8658400B27850 /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
 		27DBE9ED28F8669400B27850 /* FolderStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderStorage.swift; sourceTree = "<group>"; };
@@ -161,6 +167,8 @@
 				27020DE328F6C49C00C94312 /* CrateApp.swift */,
 				27020DE528F6C49C00C94312 /* HomeView.swift */,
 				27020E1528F6D88C00C94312 /* ImageReview.swift */,
+				27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */,
+				27A8EEA828FCAF7C004DDCE9 /* FolderCreationView.swift */,
 				27A8EEA428FC3B98004DDCE9 /* ImageReviewViewModel.swift */,
 				27020E1328F6D39A00C94312 /* ImagePicker.swift */,
 				27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */,
@@ -243,6 +251,7 @@
 			isa = PBXGroup;
 			children = (
 				27DBE9EA28F8658400B27850 /* Separator.swift */,
+				27748E3528FCB87C00013857 /* EmojiTextField.swift */,
 			);
 			path = "UI Elements";
 			sourceTree = "<group>";
@@ -406,6 +415,7 @@
 				27020DED28F6C49C00C94312 /* Persistence.swift in Sources */,
 				27DBE9F628F8BB9100B27850 /* ImageDetailView.swift in Sources */,
 				27020DF028F6C49C00C94312 /* Crate.xcdatamodeld in Sources */,
+				27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */,
 				27DBEA1628FAECB800B27850 /* View+floatingPanelGrabberHandlePadding.swift in Sources */,
 				27020E1E28F75FE500C94312 /* ImageProcessor.swift in Sources */,
 				27020E1428F6D39A00C94312 /* ImagePicker.swift in Sources */,
@@ -419,6 +429,7 @@
 				27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */,
 				27020E2128F762F800C94312 /* UIImage+Extensions.swift in Sources */,
 				27DBEA1728FAECB800B27850 /* UIHostingController+ignoreKeyboard.swift in Sources */,
+				27A8EEA728FC9CE3004DDCE9 /* FolderSelectionView.swift in Sources */,
 				27A8EEA328FC1267004DDCE9 /* TextProcessor.swift in Sources */,
 				27DBEA1528FAECB800B27850 /* View+floatingPanelContentMode.swift in Sources */,
 				27DBEA0728F95E2200B27850 /* ColorThief.swift in Sources */,
@@ -428,6 +439,7 @@
 				27A8EEA528FC3B98004DDCE9 /* ImageReviewViewModel.swift in Sources */,
 				27020DE428F6C49C00C94312 /* CrateApp.swift in Sources */,
 				27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */,
+				27A8EEA928FCAF7C004DDCE9 /* FolderCreationView.swift in Sources */,
 				27DBE9EB28F8658400B27850 /* Separator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

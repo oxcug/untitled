@@ -78,7 +78,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Crate")
-                        .font(.system(size: 16, weight: .bold, design: .monospaced))
+                        .font(.system(size: 16, weight: .semibold, design: .monospaced))
                 }
             }
         }

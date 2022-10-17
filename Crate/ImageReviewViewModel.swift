@@ -21,7 +21,7 @@ final class ImageReviewManager: ObservableObject {
     @Published var focus: Focus = .text
     @Published var name: String = ""
     @Published var isMagicEnabled = true
-    @Published var folders = [Folder]()
+    @Published var folders = Set<Folder>()
     
     let textProcessor = TextProcessor()
     @Published var textBoundingRects: [CGRect] = []
@@ -32,7 +32,7 @@ final class ImageReviewManager: ObservableObject {
         focus = viewModel.focus
         name = viewModel.name
         isMagicEnabled = viewModel.isMagicEnabled
-        folders = Array(viewModel.folders)
+        folders = viewModel.folders
         
         current = viewModel
     }

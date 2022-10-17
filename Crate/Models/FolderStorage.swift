@@ -34,7 +34,7 @@ final class FolderStorage: ObservableObject {
         }
         
         if folders.isEmpty {
-            createFolder(name: "Favorites", emoji: "⭐", color: .yellow, entries: [])
+            createFolder(name: "Favorites", emoji: "⭐", entries: [])
         }
     }
     
@@ -46,15 +46,14 @@ final class FolderStorage: ObservableObject {
         let newFolder = Folder(id: folder.id,
                                name: folder.name,
                                emoji: folder.emoji,
-                               color: folder.color,
                                entries: folder.entries + [entry])
         
         folders[folderIdx] = newFolder
         write(newFolder)
     }
     
-    func createFolder(name: String, emoji: String, color: Color, entries: [Entry]) {
-        let newFolder = Folder(id: UUID().uuidString, name: name, emoji: emoji, color: color, entries: entries)
+    func createFolder(name: String, emoji: String, entries: [Entry]) {
+        let newFolder = Folder(id: UUID().uuidString, name: name, emoji: emoji, entries: entries)
         write(newFolder)
         folders.append(newFolder)
     }
