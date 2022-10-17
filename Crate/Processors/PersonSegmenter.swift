@@ -57,7 +57,7 @@ final class PersonSegmenter {
         return nil
     }
     
-    func blendImages(foreground: CIImage, mask: CIImage, isRedMask: Bool = false) -> CIImage? {
+    private func blendImages(foreground: CIImage, mask: CIImage, isRedMask: Bool = false) -> CIImage? {
         // scale mask
         let maskScaleX = foreground.extent.width / mask.extent.width
         let maskScaleY = foreground.extent.height / mask.extent.height

@@ -12,6 +12,11 @@ final class TextProcessor: ObservableObject {
     @Published var boundingRects: [CGRect] = []
     var imageSize: CGSize = .zero
     
+    func reset() {
+        imageSize = .zero
+        boundingRects = []
+    }
+    
     func performRecognition(image: UIImage) {
         guard let cgImage = image.cgImage else {
             return

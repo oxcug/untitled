@@ -45,63 +45,60 @@ struct ImageReview: View {
         NavigationStack {
             ZStack(alignment: .bottom) {
                 List {
-                    ZStack(alignment: .topLeading) {
-                        let imageHeight = UIScreen.main.bounds.size.height * 0.7
-                        
-                        Image(uiImage: images.first!)
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .cornerRadius(10)
-                            .scaledToFit()
-                            .frame(height: imageHeight)
-                            .readSize { size in
-                                viewModelManager.setActiveViewModel(ImageReviewViewModel(image: images.first!))
-                                viewModelManager.requestForProcessing(imageSize: size)
-                            }
-                        
-                        ForEach(viewModelManager.textBoundingRects, id: \.debugDescription) { rect in
-                            Rectangle()
-                                .foregroundColor(.red.opacity(0.4))
-                                .position(x: rect.midX, y: rect.midY)
-                                .frame(width: rect.width, height: rect.height)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .listRowBackground(Color.black)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                  
-                    Button {
-                        showFolderSelection = true
-                    } label: {
-                        HStack(alignment: .center) {
-                            Text("Category")
-                                .font(.system(size: 15, weight: .semibold, design: .default))
-                                .foregroundColor(.white)
+                    if viewModelManager.focus == .text {
+                        textBoundingBoxView
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .listRowBackground(Color.black)
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    } else {
+                        ZStack(alignment: .topLeading) {
+                            let imageHeight = UIScreen.main.bounds.size.height * 0.65
                             
-                            Spacer()
-                            
-                            VStack(alignment: .trailing, spacing: 15) {
-                                if !viewModelManager.folders.isEmpty {
-                                    ForEach(Array(viewModelManager.folders).sorted()) { folder in
-                                        Text(folder.fullName)
-                                            .font(.system(size: 12, weight: .semibold, design: .default))
-                                            .foregroundColor(.white)
-                                            .padding(12)
-                                            .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
-                                    }
-                                } else {
-                                    Text("No selection")
-                                        .font(.system(size: 12, weight: .semibold, design: .default))
-                                        .foregroundColor(.white)
-                                        .padding(12)
-                                        .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
+                            Image(uiImage: viewModelManager.current.image)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                                .cornerRadius(10)
+                                .scaledToFit()
+                                .frame(height: imageHeight)
+                                .opacity(0.4)
+                                .readSize { size in
+                                    viewModelManager.imageSize = size
                                 }
+                            
+                            if let segmented = viewModelManager.segmentedImage {
+                                Image(uiImage: segmented)
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                                    .frame(height: imageHeight)
                             }
                         }
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .listRowBackground(Color.black)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
-                    .listRowBackground(Color.black)
-                    .padding(.vertical, 20)
+                    
+                    HStack {
+                        Text("Focus")
+                            .font(.system(size: 15, weight: .semibold, design: .default))
+                            .foregroundColor(.white)
+                        
+                        Spacer()
+                        
+                        Picker("", selection: $viewModelManager.focus) {
+                            ForEach(Focus.allCases, id: \.self) { option in
+                                Text(option.rawValue.capitalized)
+                            }
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                        .frame(width: 180)
+                    }
+                    .padding(.top, 4)
+                    .padding(.vertical, 4)
+                    
+                    categoryRow
+                        .listRowBackground(Color.black)
                     
                     Spacer(minLength: 100)
                         .listRowBackground(Color.black)
@@ -109,25 +106,7 @@ struct ImageReview: View {
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
                 
-                VStack(spacing: 0) {
-                    Separator()
-                        .frame(maxWidth: .infinity)
-                    
-                    ZStack {
-                        Button {
-                            progress += 1
-                        } label: {
-                            Text("finishing touches")
-                                .font(.system(size: 15, weight: .semibold, design: .default))
-                                .foregroundColor(Color(uiColor: .black))
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: .white)))
-                        }
-                        .padding(20)
-                        .background(Rectangle().foregroundColor(.black))
-                    }
-                }
+                nextFooter
             }
             .padding(.top, 10)
             .background(Color.black)
@@ -157,12 +136,92 @@ struct ImageReview: View {
             }
         }
         .preferredColorScheme(.dark)
+        .onAppear {
+            viewModelManager.setActiveViewModel(ImageReviewViewModel(image: images.first!))
+        }
+    }
+    
+    var nextFooter: some View {
+        VStack(spacing: 0) {
+            Separator()
+                .frame(maxWidth: .infinity)
+            
+            ZStack {
+                Button {
+                    progress += 1
+                } label: {
+                    Text("finishing touches")
+                        .font(.system(size: 15, weight: .semibold, design: .default))
+                        .foregroundColor(Color(uiColor: .black))
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: .white)))
+                }
+                .padding(20)
+                .background(Rectangle().foregroundColor(.black))
+            }
+        }
+    }
+    
+    var textBoundingBoxView: some View {
+        ZStack(alignment: .topLeading) {
+            let imageHeight = UIScreen.main.bounds.size.height * 0.65
+            
+            Image(uiImage: images.first!)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .cornerRadius(10)
+                .scaledToFit()
+                .frame(height: imageHeight)
+                .readSize { size in
+                    viewModelManager.imageSize = size
+                }
+            
+            ForEach(viewModelManager.textBoundingRects, id: \.debugDescription) { rect in
+                Rectangle()
+                    .foregroundColor(.red.opacity(0.4))
+                    .position(x: rect.midX, y: rect.midY)
+                    .frame(width: rect.width, height: rect.height)
+            }
+        }
+    }
+    
+    var categoryRow: some View {
+        Button {
+            showFolderSelection = true
+        } label: {
+            HStack(alignment: .center) {
+                Text("Category")
+                    .font(.system(size: 15, weight: .semibold, design: .default))
+                    .foregroundColor(.white)
+                
+                Spacer()
+                
+                VStack(alignment: .trailing, spacing: 15) {
+                    if !viewModelManager.folders.isEmpty {
+                        ForEach(Array(viewModelManager.folders).sorted()) { folder in
+                            Text(folder.fullName)
+                                .font(.system(size: 12, weight: .semibold, design: .default))
+                                .foregroundColor(.white)
+                                .padding(12)
+                                .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
+                        }
+                    } else {
+                        Text("No selection")
+                            .font(.system(size: 12, weight: .semibold, design: .default))
+                            .foregroundColor(.white)
+                            .padding(12)
+                            .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
+                    }
+                }
+            }
+        }
     }
 }
 
 struct ImageReview_Previews: PreviewProvider {
     static var previews: some View {
-        ImageReview(images: [UIImage(named: "porter.jpeg")!])
+        ImageReview(images: [UIImage(named: "outfit.jpeg")!])
             .environmentObject(FolderStorage.shared)
     }
 }

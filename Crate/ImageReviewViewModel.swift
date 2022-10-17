@@ -10,22 +10,27 @@ import SwiftUI
 import UIKit
 import Vision
 
-enum Focus {
+enum Focus: String, CaseIterable {
     case person, text
 }
 
 final class ImageReviewManager: ObservableObject {
-    private var current: ImageReviewViewModel = .dummy
+    var current: ImageReviewViewModel = .dummy
     private var viewModels: [String: ImageReviewViewModel] = [:]
     
-    @Published var focus: Focus = .text
+    @Published var focus: Focus = .person
     @Published var name: String = ""
     @Published var isMagicEnabled = true
     @Published var folders = Set<Folder>()
     
-    let textProcessor = TextProcessor()
+    @Published var segmentedImage: UIImage?
     @Published var textBoundingRects: [CGRect] = []
+   
+    @Published var imageSize: CGSize = .zero
+    let textProcessor = TextProcessor()
+    let personSegmenter = PersonSegmenter()
     
+    var incomingImageSizeStream: AnyCancellable?
     var cancellable: AnyCancellable?
     
     func setActiveViewModel(_ viewModel: ImageReviewViewModel) {
@@ -35,42 +40,43 @@ final class ImageReviewManager: ObservableObject {
         folders = viewModel.folders
         
         current = viewModel
+        
+        // Remove old calculatations
+        textBoundingRects = []
+        segmentedImage = nil
+        imageSize = .zero
+        
+        incomingImageSizeStream = $imageSize
+            .filter { $0 != .zero }
+            .first()
+            .sink {
+                self.requestForProcessing(imageSize: $0)
+            }
     }
     
     func requestForProcessing(imageSize: CGSize) {
-        if focus == .text {
-            textProcessor.performRecognition(image: current.image)
-            cancellable = textProcessor.$boundingRects.map { rects in
-                rects.map { box in
-                    let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
-                    let rect = box.applying(bottomToTopTransform)
-                    return VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height))
-                }
-            }
-            .assign(to: \.textBoundingRects, on: self)
-        } else {
-            current.focus = .person
-        }
-    }
-   
-    func toggleFocus() {
+        self.imageSize = imageSize
+        let fixedImage = current.image.fixOrientation()
+       
         cancellable?.cancel()
-        
-        if focus == .person {
-            current.focus = .text
-            textProcessor.performRecognition(image: current.image.imageResized(to: CGSize(width: 375, height: 360)))
-            cancellable = textProcessor.$boundingRects.assign(to: \.textBoundingRects, on: self)
-        } else {
-            current.focus = .person
+        textProcessor.reset()
+        textProcessor.performRecognition(image: fixedImage)
+        cancellable = textProcessor.$boundingRects.map { rects in
+            rects.map { box in
+                let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
+                let rect = box.applying(bottomToTopTransform)
+                return VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height))
+            }
         }
+        .assign(to: \.textBoundingRects, on: self)
         
-        focus = current.focus
+        segmentedImage = personSegmenter.segment(image: fixedImage)
     }
 }
 
 final class ImageReviewViewModel: ObservableObject {
     let image: UIImage
-    var focus: Focus = .text
+    var focus: Focus = .person
     var name: String = ""
     var isMagicEnabled = true
     var folders = Set<Folder>()
