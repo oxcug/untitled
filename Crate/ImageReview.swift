@@ -82,7 +82,7 @@ struct SingleImageReview: View {
             .scrollDismissesKeyboard(.immediately)
             .sheet(isPresented: $showFolderSelection) {
                 NavigationStack {
-                    FolderSelectionView(folders: $viewModel.folders)
+                    FolderSelectionView(selectedFolder: $viewModel.folder)
                 }
             }
             .onReceive(Publishers.keyboardHeight) { height in
@@ -153,21 +153,19 @@ struct SingleImageReview: View {
             showFolderSelection = true
         } label: {
             HStack(alignment: .center) {
-                Text("Folders")
+                Text("Folder")
                     .font(.system(size: 15, weight: .semibold, design: .default))
                     .foregroundColor(.white)
                 
                 Spacer()
                 
                 VStack(alignment: .trailing, spacing: 15) {
-                    if !viewModel.folders.isEmpty {
-                        ForEach(Array(viewModel.folders).sorted()) { folder in
-                            Text(folder.fullName)
-                                .font(.system(size: 12, weight: .semibold, design: .default))
-                                .foregroundColor(.white)
-                                .padding(12)
-                                .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
-                        }
+                    if let selectedFolder = viewModel.folder {
+                        Text(selectedFolder.fullName)
+                            .font(.system(size: 12, weight: .semibold, design: .default))
+                            .foregroundColor(.white)
+                            .padding(12)
+                            .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
                     } else {
                         Text("No selection")
                             .font(.system(size: 12, weight: .semibold, design: .default))
@@ -186,6 +184,7 @@ struct ImageReview: View {
     
     @State var selectedPage: Int = 0
     @State var isKeyboardVisible = false
+    @State var errorMessage = ""
     @StateObject var viewModelManager = ImageReviewManager()
     @Environment(\.dismiss) private var dismiss
     
@@ -227,12 +226,28 @@ struct ImageReview: View {
                 .frame(maxWidth: .infinity)
             
             HStack {
+                Text(errorMessage)
+                    .font(.system(size: 14, weight: .semibold, design: .default))
+                    .foregroundColor(.red)
+                
                 Spacer()
                 
+                let lastOne = selectedPage == images.count - 1
+                
                 Button {
-                    selectedPage += 1
+                    if lastOne {
+                        if viewModelManager.current.folder == nil {
+                            showErrorMessage()
+                        } else {
+                            viewModelManager.save()
+                            dismiss()
+                        }
+                    } else {
+                        selectedPage += 1
+                        viewModelManager.selectViewModel(idx: selectedPage)
+                    }
                 } label: {
-                    Text(selectedPage == images.count - 1 ? "Finish" : "Next")
+                    Text(lastOne ? "Finish" : "Next")
                         .font(.system(size: 14, weight: .semibold, design: .default))
                         .foregroundColor(Color(uiColor: .black))
                         .frame(width: 50)
@@ -248,6 +263,18 @@ struct ImageReview: View {
         .onReceive(Publishers.keyboardWillBeVisible) { isVisible in
             withAnimation(.easeInOut(duration: 0.1)) {
                 isKeyboardVisible = isVisible
+            }
+        }
+    }
+    
+    func showErrorMessage() {
+        withAnimation(.easeInOut(duration: 0.15)) {
+            errorMessage = "❗Select Folder"
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                withAnimation(.easeInOut(duration: 0.15)) {
+                    errorMessage = ""
+                }
             }
         }
     }

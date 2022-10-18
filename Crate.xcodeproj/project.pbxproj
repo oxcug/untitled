@@ -11,8 +11,6 @@
 		27020DE628F6C49C00C94312 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020DE528F6C49C00C94312 /* HomeView.swift */; };
 		27020DE828F6C49C00C94312 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27020DE728F6C49C00C94312 /* Assets.xcassets */; };
 		27020DEB28F6C49C00C94312 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 27020DEA28F6C49C00C94312 /* Preview Assets.xcassets */; };
-		27020DED28F6C49C00C94312 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020DEC28F6C49C00C94312 /* Persistence.swift */; };
-		27020DF028F6C49C00C94312 /* Crate.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27020DEE28F6C49C00C94312 /* Crate.xcdatamodeld */; };
 		27020DFB28F6C49C00C94312 /* CrateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020DFA28F6C49C00C94312 /* CrateTests.swift */; };
 		27020E0528F6C49C00C94312 /* CrateUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E0428F6C49C00C94312 /* CrateUITests.swift */; };
 		27020E0728F6C49C00C94312 /* CrateUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E0628F6C49C00C94312 /* CrateUITestsLaunchTests.swift */; };
@@ -51,6 +49,7 @@
 		27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1128FAECB700B27850 /* FloatingPanelView.swift */; };
 		27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1228FAECB700B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift */; };
 		27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */; };
+		27DED94B28FF593000CE9095 /* FloatingPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -76,8 +75,6 @@
 		27020DE528F6C49C00C94312 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		27020DE728F6C49C00C94312 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		27020DEA28F6C49C00C94312 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		27020DEC28F6C49C00C94312 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
-		27020DEF28F6C49C00C94312 /* Crate.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Crate.xcdatamodel; sourceTree = "<group>"; };
 		27020DF128F6C49C00C94312 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27020DF628F6C49C00C94312 /* CrateTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CrateTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		27020DFA28F6C49C00C94312 /* CrateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrateTests.swift; sourceTree = "<group>"; };
@@ -118,6 +115,7 @@
 		27DBEA1128FAECB700B27850 /* FloatingPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanelView.swift; sourceTree = "<group>"; };
 		27DBEA1228FAECB700B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanelContentInsetAdjustmentBehavior.swift"; sourceTree = "<group>"; };
 		27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanel.swift"; sourceTree = "<group>"; };
+		27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -169,9 +167,9 @@
 		27020DE228F6C49C00C94312 /* Crate */ = {
 			isa = PBXGroup;
 			children = (
-				27020DEC28F6C49C00C94312 /* Persistence.swift */,
 				27020DE328F6C49C00C94312 /* CrateApp.swift */,
 				27020DE528F6C49C00C94312 /* HomeView.swift */,
+				27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */,
 				27020E1528F6D88C00C94312 /* ImageReview.swift */,
 				27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */,
 				27A8EEA828FCAF7C004DDCE9 /* FolderCreationView.swift */,
@@ -191,7 +189,6 @@
 				27A8EEA028FC1252004DDCE9 /* IMG_2923.PNG */,
 				27A4452228FD5DFB00BBB91D /* outfit.jpeg */,
 				27020DF128F6C49C00C94312 /* Info.plist */,
-				27020DEE28F6C49C00C94312 /* Crate.xcdatamodeld */,
 				27020DE928F6C49C00C94312 /* Preview Content */,
 			);
 			path = Crate;
@@ -422,15 +419,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				27DBEA0628F95E2200B27850 /* MMCQ.swift in Sources */,
-				27020DED28F6C49C00C94312 /* Persistence.swift in Sources */,
 				27DBE9F628F8BB9100B27850 /* ImageDetailView.swift in Sources */,
-				27020DF028F6C49C00C94312 /* Crate.xcdatamodeld in Sources */,
 				27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */,
 				27DBEA1628FAECB800B27850 /* View+floatingPanelGrabberHandlePadding.swift in Sources */,
 				27020E1E28F75FE500C94312 /* ImageProcessor.swift in Sources */,
 				27020E1428F6D39A00C94312 /* ImagePicker.swift in Sources */,
 				27DBEA1828FAECB800B27850 /* View+floatingPanelSurfaceAppearance.swift in Sources */,
 				27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */,
+				27DED94B28FF593000CE9095 /* FloatingPanelDelegate.swift in Sources */,
 				27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */,
 				27DBE9E828F8655E00B27850 /* Folder.swift in Sources */,
 				27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */,
@@ -796,19 +792,6 @@
 			productName = FloatingPanel;
 		};
 /* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		27020DEE28F6C49C00C94312 /* Crate.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				27020DEF28F6C49C00C94312 /* Crate.xcdatamodel */,
-			);
-			currentVersion = 27020DEF28F6C49C00C94312 /* Crate.xcdatamodel */;
-			path = Crate.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 27020DD828F6C49C00C94312 /* Project object */;
 }

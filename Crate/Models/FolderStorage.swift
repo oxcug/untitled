@@ -53,7 +53,7 @@ final class FolderStorage: ObservableObject {
     }
     
     func createFolder(name: String, emoji: String, entries: [Entry]) {
-        let newFolder = Folder(id: UUID().uuidString, name: name, emoji: emoji, entries: entries)
+        let newFolder = Folder(id: UUID(), name: name, emoji: emoji, entries: entries)
         write(newFolder)
         folders.append(newFolder)
     }

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FolderSelectionView: View {
-    @Binding var folders: Set<Folder>
+    @Binding var selectedFolder: Folder?
     let selectionFeedback = UISelectionFeedbackGenerator()
     
     @State var showFolderCreationModal = false
@@ -21,11 +21,8 @@ struct FolderSelectionView: View {
                     selectionFeedback.selectionChanged()
                     
                     DispatchQueue.main.async {
-                        if folders.contains(folder) {
-                            folders.remove(folder)
-                        } else {
-                            folders.insert(folder)
-                        }
+                        selectedFolder = folder
+                        dismiss()
                     }
                 } label: {
                     HStack(spacing: 10) {
@@ -42,7 +39,7 @@ struct FolderSelectionView: View {
                         
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.white)
-                            .opacity(folders.contains(folder) ? 1 : 0)
+                            .opacity((selectedFolder == folder) ? 1 : 0)
                             .font(.system(size: 17, weight: .semibold, design: .default))
                     }
                     .padding(.vertical, 10)
@@ -79,7 +76,7 @@ struct FolderSelectionView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("Select folders")
+                Text("Select folder")
                     .font(.system(size: 15, weight: .semibold, design: .default))
                     .foregroundColor(.white)
             }
@@ -107,10 +104,9 @@ struct FolderSelectionView: View {
 struct FolderSelectionView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            FolderSelectionView(folders: .constant([
-                .init(id: UUID().uuidString, name: "Favorites", emoji: "⭐", entries: []),
-                .init(id: UUID().uuidString, name: "Fall", emoji: "🍁", entries: [])
-            ]))
+            FolderSelectionView(selectedFolder: .constant(
+                .init(id: UUID(), name: "Favorites", emoji: "⭐", entries: [])
+            ))
         }
     }
 }

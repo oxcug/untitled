@@ -10,13 +10,14 @@ import SwiftUI
 struct Entry: Identifiable, Codable, Hashable {
     let id: UUID
     let name: String
+    let textBoundingBoxes: [BoundingBox]
     let date: Date
     let original: UIImage
     let modified: UIImage?
     let colors: [MMCQ.Color]
     
     enum CodingKeys: CodingKey {
-        case id, name, date, original, modified, colors
+        case id, name, textBoundingBoxes, date, original, modified, colors
     }
 }
 
@@ -26,6 +27,7 @@ extension Entry {
         
         id = try container.decode(UUID.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
+        textBoundingBoxes = try container.decode([BoundingBox].self, forKey: .textBoundingBoxes)
         date = try container.decode(Date.self, forKey: .date)
         colors = try container.decode([MMCQ.Color].self, forKey: .colors)
         
@@ -43,6 +45,7 @@ extension Entry {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(id, forKey: .id)
         try container.encode(name, forKey: .name)
+        try container.encode(textBoundingBoxes, forKey: .textBoundingBoxes)
         try container.encode(date, forKey: .date)
         try container.encode(colors, forKey: .colors)
         try container.encode(original.pngData(), forKey: .original)
@@ -53,13 +56,13 @@ extension Entry {
 }
 
 struct Folder: Identifiable, Hashable, Codable {
-    let id: String
+    let id: UUID
     let name: String
     let emoji: String?
     let entries: [Entry]
 }
 
-extension Folder: Comparable {
+extension Folder: Comparable, Equatable {
     static func < (lhs: Folder, rhs: Folder) -> Bool {
         lhs.name.compare(rhs.name) == .orderedAscending
     }

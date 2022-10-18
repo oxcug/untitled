@@ -52,7 +52,7 @@ final class TextProcessor: ObservableObject {
             // Find the bounding-box observation for the string range.
             let stringRange = cand.string.startIndex..<cand.string.endIndex
             let boxObservation = try? cand.boundingBox(for: stringRange)
-            return BoundingBox(box: boxObservation?.boundingBox ?? .zero, string: cand.string)
+            return BoundingBox(id: UUID(), box: boxObservation?.boundingBox ?? .zero, string: cand.string)
         }
     }
 }

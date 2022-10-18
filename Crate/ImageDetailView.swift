@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 final class ImageDetailViewModel: ObservableObject {
-    @Published var entry: Entry = .init(id: UUID(), name: "", date: Date(), original: UIImage(systemName: "circle")!, modified: nil, colors: [])
+    @Published var entry: Entry = .init(id: UUID(), name: "", textBoundingBoxes: [], date: Date(), original: UIImage(systemName: "circle")!, modified: nil, colors: [])
     
     var palette: [UIColor] {
         entry.colors.compactMap { $0.makeUIColor() }
@@ -23,8 +23,7 @@ final class ImageDetailViewModel: ObservableObject {
 
 struct ImageDetailView: View {
     let proxy: FloatingPanelProxy
-    @Binding var folderName: String
-    @Binding var entry: Entry?
+    @Binding var detailPayload: DetailPayload?
     
     @State var backgroundColor: Color? = .black
     @EnvironmentObject var viewModel: ImageDetailViewModel
@@ -67,15 +66,25 @@ struct ImageDetailView: View {
                     }
                     
                     Spacer()
-                    
-                    Button {
+                   
+                    Menu {
+                        Button {
+                            
+                        } label: {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
                         
-                    } label: {
-                        Image(systemName: "ellipsis.circle.fill")
-                            .symbolRenderingMode(.hierarchical)
-                            .foregroundColor(.white)
-                            .font(.system(size: 28, weight: .semibold, design: .default))
-                    }
+                        Button(role: .destructive) {
+                            
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                        }
+                     } label: {
+                         Image(systemName: "ellipsis.circle.fill")
+                             .symbolRenderingMode(.hierarchical)
+                             .foregroundColor(.white)
+                             .font(.system(size: 28, weight: .semibold, design: .default))
+                     }
                 }
                 
                 VStack(alignment: .leading) {
@@ -101,11 +110,11 @@ struct ImageDetailView: View {
         .padding(.top, 18)
         .padding(.horizontal, 20)
         .background(.black)
-        .onChange(of: entry) { entry in
+        .onChange(of: detailPayload) { payload in
             proxy.fpc?.isRemovalInteractionEnabled = true
             
-            if let entry = entry {
-                viewModel.entry = entry
+            if let detail = payload?.detail {
+                viewModel.entry = detail
                 proxy.move(to: .full, animated: true)
             } else {
                 proxy.move(to: .hidden, animated: true)
@@ -116,8 +125,7 @@ struct ImageDetailView: View {
 
 struct ImageDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView(detailPayload: .constant(nil))
             .environmentObject(FolderStorage.shared)
-            .environment(\.managedObjectContext, PersistenceController.preview.container.viewContext)
     }
 }

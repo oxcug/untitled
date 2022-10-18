@@ -10,16 +10,8 @@ import SwiftUI
 import UIKit
 import Vision
 
-enum Focus: String, CaseIterable {
-    case person, text
-}
-
-enum ProcessorState {
-    case done, processing
-}
-
-struct BoundingBox: Identifiable, Hashable {
-    let id = UUID()
+struct BoundingBox: Identifiable, Hashable, Codable {
+    let id: UUID
     let box: CGRect
     let string: String
 }
@@ -27,6 +19,12 @@ struct BoundingBox: Identifiable, Hashable {
 final class ImageReviewManager: ObservableObject {
     var current: ImageReviewViewModel = .dummy
     @Published var viewModels: [ImageReviewViewModel] = []
+    
+    func save() {
+        viewModels.forEach {
+            $0.save()
+        }
+    }
     
     func createViewModels(images: [UIImage]) {
         if !viewModels.isEmpty {
@@ -37,6 +35,14 @@ final class ImageReviewManager: ObservableObject {
         if let first = viewModels.first {
             current = first
         }
+    }
+    
+    func selectViewModel(idx: Int) {
+        if viewModels.count == idx + 1 {
+            return
+        }
+        
+        current = viewModels[idx]
     }
 }
 
@@ -52,19 +58,15 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     let image: UIImage
     let pageNumber: Int
     
-    @Published var focus: Focus = .text
     @Published var name: String = ""
-    @Published var isMagicEnabled = true
-    @Published var folders = Set<Folder>()
-    @Published var selectedTextBoundingRects = Set<CGRect>()
+    @Published var folder: Folder?
+    
+    @Published var textBoundingBoxes: [BoundingBox] = []
+    @Published var selectedTextBoundingBoxes: [BoundingBox] = []
     
     @Published var includeSegmentedImage = true
     @Published var segmentedImage: SegmentedImage?
-    @Published var textBoundingBoxes: [BoundingBox] = []
-    @Published var selectedTextBoundingBoxes = [BoundingBox]()
-    
     @Published var imageSize: CGSize = .zero
-    @Published var state: ProcessorState = .processing
     
     // MARK: -  processors
     
@@ -86,11 +88,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     }
     
     func didTapFolder(_ folder: Folder) {
-        if folders.contains(folder) {
-            folders.remove(folder)
-        } else {
-            folders.insert(folder)
-        }
+        self.folder = folder
     }
     
     func requestForProcessing(imageSize: CGSize) {
@@ -104,7 +102,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
             rects.map { box in
                 let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
                 let rect = box.box.applying(bottomToTopTransform)
-                return BoundingBox(box: VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height)), string: box.string)
+                return BoundingBox(id: UUID(), box: VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height)), string: box.string)
             }
         }
         .assign(to: \.textBoundingBoxes, on: self)
@@ -123,16 +121,19 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     }
     
     func save() {
-        //        folders.forEach {
-        //            let modified = payload.modified?.cropImageByAlpha()
-        //            let colors = (modified == nil) ? [] : ColorThief.getPalette(from: modified!, colorCount: 4)
-        //            let entry = Entry(id: UUID(),
-        //                              name: name,
-        //                              date: Date(),
-        //                              original: payload.original,
-        //                              modified: modified,
-        //                              colors: colors ?? [])
-        //            FolderStorage.shared.add(entry: entry, to: $0)
-        //        }
+        guard let folder = folder else {
+            return
+        }
+        
+        let colors = (segmentedImage == nil) ? [] : ColorThief.getPalette(from: segmentedImage!.original, colorCount: 4)
+        let entry = Entry(id: id,
+                          name: name,
+                          textBoundingBoxes: selectedTextBoundingBoxes,
+                          date: Date(),
+                          original: image,
+                          modified: segmentedImage?.original.cropImageByAlpha(),
+                          colors: colors ?? [])
+        
+        FolderStorage.shared.add(entry: entry, to: folder)
     }
 }

@@ -7,16 +7,29 @@
 
 import SwiftUI
 
+struct DetailPayload: Identifiable, Hashable {
+    let id: UUID
+    let folderName: String
+    let detail: Entry?
+}
+
 @main
 struct CrateApp: App {
-    let persistenceController = PersistenceController.shared
-    @StateObject var storage = FolderStorage.shared
-
+    @StateObject var panelDelegate = DetailFloatingPanelDelegate()
+    @State var folderName = ""
+    @State var detailPayload: DetailPayload? = nil
+    @StateObject var detailViewModel = ImageDetailViewModel()
+    
     var body: some Scene {
         WindowGroup {
-            HomeView()
-                .environmentObject(storage)
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            HomeView(detailPayload: $detailPayload)
+                .floatingPanel(delegate: panelDelegate) { proxy in
+                    ImageDetailView(proxy: proxy, detailPayload: $detailPayload)
+                        .environmentObject(detailViewModel)
+                }
+                .floatingPanelSurfaceAppearance(.phone)
+                .floatingPanelContentMode(.fitToBounds)
+                .floatingPanelContentInsetAdjustmentBehavior(.never)
         }
     }
 }

@@ -21,7 +21,7 @@ final class PersonSegmenter {
         }
         
         // Create request
-        request.qualityLevel = .accurate
+        request.qualityLevel = .balanced
         request.revision = VNGeneratePersonSegmentationRequestRevision1
         request.outputPixelFormat = kCVPixelFormatType_OneComponent8
         
