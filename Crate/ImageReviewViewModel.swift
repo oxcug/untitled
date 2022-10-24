@@ -60,8 +60,10 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     
     @Published var name: String = ""
     @Published var folder: Folder?
-    
+   
     @Published var textBoundingBoxes: [BoundingBox] = []
+    @Published var suggestedTitle: BoundingBox?
+    @Published var titleBox: BoundingBox?
     @Published var selectedTextBoundingBoxes: [BoundingBox] = []
     
     @Published var includeSegmentedImage = true
@@ -98,20 +100,45 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         cancellable?.cancel()
         textProcessor.reset()
         textProcessor.performRecognition(image: fixedImage)
-        cancellable = textProcessor.$boundingRects.map { rects in
+        cancellable = textProcessor.$boundingRects.map { (rects: [BoundingBox]) -> [BoundingBox] in
             rects.map { box in
                 let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
                 let rect = box.box.applying(bottomToTopTransform)
                 return BoundingBox(id: UUID(), box: VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height)), string: box.string)
             }
         }
-        .assign(to: \.textBoundingBoxes, on: self)
+        .sink { [weak self] (boxes: [BoundingBox]) in
+            guard let self = self else { return }
+            
+            self.textBoundingBoxes = boxes
+            let suggestion = boxes.max(by: { lft, rht in
+                lft.box.size.area < rht.box.size.area
+            })
+            
+            if let suggested = suggestion {
+                self.name = suggested.string
+                self.suggestedTitle = suggested
+            }
+        }
         
         segmentedImage = personSegmenter.segment(image: fixedImage)
     }
     
     func didTapBoundingBox(_ box: BoundingBox) {
         DispatchQueue.main.async {
+            // First tap is the title
+            if self.titleBox == nil {
+                self.titleBox = box
+                self.name = box.string
+                return
+            }
+            
+            if box == self.titleBox {
+                self.titleBox = nil
+                self.name = ""
+                return
+            }
+            
             if let idx = self.selectedTextBoundingBoxes.firstIndex(of: box) {
                 self.selectedTextBoundingBoxes.remove(at: idx)
             } else {

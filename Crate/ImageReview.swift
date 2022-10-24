@@ -32,7 +32,7 @@ struct SingleImageReview: View {
     @FocusState var isNameFocused: Bool
     @Environment(\.dismiss) private var dismiss
     
-    let toggleFeedback = UIImpactFeedbackGenerator(style: .rigid)
+    let titleFeedback = UIImpactFeedbackGenerator(style: .heavy)
     let selectionFeedback = UISelectionFeedbackGenerator()
     var streams = Set<AnyCancellable>()
     
@@ -123,23 +123,49 @@ struct SingleImageReview: View {
                 .buttonStyle(.plain)
                 .aspectRatio(contentMode: .fit)
                 .frame(height: imageHeight)
+                .zIndex(1)
             }
             
             ForEach(viewModel.textBoundingBoxes) { box in
                 let rect = box.box
-                let isSelected = viewModel.selectedTextBoundingBoxes.contains(box)
+                let isTitle = (viewModel.titleBox == box)
+                let isSelected = (viewModel.selectedTextBoundingBoxes.contains(box)) || isTitle
                 
                 Button {
-                    selectionFeedback.selectionChanged()
                     viewModel.didTapBoundingBox(box)
+                    
+                    if viewModel.titleBox != nil {
+                        titleFeedback.impactOccurred()
+                    } else {
+                        selectionFeedback.selectionChanged()
+                    }
                 } label: {
                     RoundedRectangle(cornerRadius: 4)
                         .foregroundColor(.white.opacity(isSelected ? 0.5 : 0.3))
-                        .buttonBorderShape(.roundedRectangle(radius: 4))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 4)
-                                .stroke(Color.blue, lineWidth: isSelected ? 2 : 0)
+                        .background(
+                            Rectangle()
+                                .foregroundColor(.clear)
+                                .background(RoundedCorners(color: (isTitle ? Color.orange : Color.blue),
+                                                           tl: 4,
+                                                           tr: 4,
+                                                           bl: 4,
+                                                           br: isTitle ? 0 : 4))
+                                .opacity(isSelected ? 1 : 0)
                         )
+                        .overlay(
+                            Text("TITLE")
+                                .font(.system(size: 9, weight: .bold, design: .default))
+                                .foregroundColor(.white)
+                                .padding(3)
+                                .background(FilledRoundedCorners(color: Color.orange,
+                                                                 tl: 0,
+                                                                 tr: 0,
+                                                                 bl: 4,
+                                                                 br: 4))
+                                .opacity(isTitle ? 1 : 0)
+                                .offset(x: (box.box.width - 31) / 2, y: box.box.height + 4)
+                        )
+                        .zIndex(isTitle ? 2 : 0)
                 }
                 .buttonStyle(.plain)
                 .position(x: rect.midX, y: rect.midY)

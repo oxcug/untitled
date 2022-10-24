@@ -15,3 +15,9 @@ extension CGRect: Hashable {
         }
     }
 }
+
+extension CGSize {
+    public var area: CGFloat {
+        width * height
+    }
+}

@@ -50,6 +50,7 @@
 		27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1228FAECB700B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift */; };
 		27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */; };
 		27DED94B28FF593000CE9095 /* FloatingPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */; };
+		27DED94D2906A08E00CE9095 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94C2906A08E00CE9095 /* RoundedCorner.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -116,6 +117,7 @@
 		27DBEA1228FAECB700B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanelContentInsetAdjustmentBehavior.swift"; sourceTree = "<group>"; };
 		27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanel.swift"; sourceTree = "<group>"; };
 		27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelDelegate.swift; sourceTree = "<group>"; };
+		27DED94C2906A08E00CE9095 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,6 +258,7 @@
 			isa = PBXGroup;
 			children = (
 				27DBE9EA28F8658400B27850 /* Separator.swift */,
+				27DED94C2906A08E00CE9095 /* RoundedCorner.swift */,
 				27748E3528FCB87C00013857 /* EmojiTextField.swift */,
 				27D604CA28FDF25F00B4B3F2 /* CancelToolbarButton.swift */,
 			);
@@ -426,6 +429,7 @@
 				27020E1428F6D39A00C94312 /* ImagePicker.swift in Sources */,
 				27DBEA1828FAECB800B27850 /* View+floatingPanelSurfaceAppearance.swift in Sources */,
 				27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */,
+				27DED94D2906A08E00CE9095 /* RoundedCorner.swift in Sources */,
 				27DED94B28FF593000CE9095 /* FloatingPanelDelegate.swift in Sources */,
 				27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */,
 				27DBE9E828F8655E00B27850 /* Folder.swift in Sources */,
