@@ -5,6 +5,7 @@
 //  Created by Mike Choi on 10/24/22.
 //
 
+import UIKit
 import CoreData
 
 final class DataController: ObservableObject {
@@ -13,13 +14,20 @@ final class DataController: ObservableObject {
     static var preview: DataController = {
         let result = DataController(inMemory: true)
         let viewContext = result.container.viewContext
-        for i in 0..<10 {
-            let folder = PictureFolder(context: viewContext)
-            folder.id = UUID()
-            folder.name = "\(i)"
-            folder.emoji = "🔥"
-            folder.entries = NSOrderedSet(array: [])
-        }
+        
+        let entry = PictureEntry(context: viewContext)
+        entry.id = UUID()
+        entry.name = "sweater"
+        entry.date = Date()
+        entry.modified = ImageStorage.shared.write(UIImage(named: "modified_4.png"), entryID: entry.id!, isOriginal: false)
+        entry.original = ImageStorage.shared.write(UIImage(named: "represent.jpeg"), entryID: entry.id!, isOriginal: true)
+        entry.boxes = NSArray()
+        
+        let folder = PictureFolder(context: viewContext)
+        folder.id = UUID()
+        folder.name = "Favorites"
+        folder.emoji = "🔥"
+        folder.entries = NSOrderedSet(array: [entry])
         
         do {
             try viewContext.save()

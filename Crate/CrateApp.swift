@@ -19,7 +19,7 @@ struct CrateApp: App {
     
     @StateObject var panelDelegate = DetailFloatingPanelDelegate()
     @StateObject var detailViewModel = ImageDetailViewModel()
-    let dataController = DataController()
+    let dataController = DataController.preview
     
     var body: some Scene {
         WindowGroup {

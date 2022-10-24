@@ -14,7 +14,7 @@ final class ImageDetailViewModel: ObservableObject {
     
     var palette: [UIColor] {
         []
-//        entry.colors.compactMap { $0.makeUIColor() }
+        //        entry.colors.compactMap { $0.makeUIColor() }
     }
     
     var image: UIImage {
@@ -69,7 +69,7 @@ struct ImageDetailView: View {
                     }
                     
                     Spacer()
-                   
+                    
                     Menu {
                         Button {
                             
@@ -82,12 +82,12 @@ struct ImageDetailView: View {
                         } label: {
                             Label("Delete", systemImage: "trash")
                         }
-                     } label: {
-                         Image(systemName: "ellipsis.circle.fill")
-                             .symbolRenderingMode(.hierarchical)
-                             .foregroundColor(.white)
-                             .font(.system(size: 28, weight: .semibold, design: .default))
-                     }
+                    } label: {
+                        Image(systemName: "ellipsis.circle.fill")
+                            .symbolRenderingMode(.hierarchical)
+                            .foregroundColor(.white)
+                            .font(.system(size: 28, weight: .semibold, design: .default))
+                    }
                 }
                 
                 VStack(alignment: .leading) {
@@ -127,8 +127,19 @@ struct ImageDetailView: View {
 }
 
 struct ImageDetailView_Previews: PreviewProvider {
+    @State static var detailPayload: DetailPayload? = nil
+    @StateObject static var panelDelegate = DetailFloatingPanelDelegate()
+    @StateObject static var detailViewModel = ImageDetailViewModel()
+    
     static var previews: some View {
-        HomeView(detailPayload: .constant(nil))
+        HomeView(detailPayload: $detailPayload)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+            .floatingPanel(delegate: panelDelegate) { proxy in
+                ImageDetailView(proxy: proxy, detailPayload: $detailPayload)
+                    .environmentObject(detailViewModel)
+            }
+            .floatingPanelSurfaceAppearance(.phone)
+            .floatingPanelContentMode(.fitToBounds)
+            .floatingPanelContentInsetAdjustmentBehavior(.never)
     }
 }
