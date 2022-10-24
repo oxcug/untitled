@@ -33,7 +33,7 @@
 		27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D604CA28FDF25F00B4B3F2 /* CancelToolbarButton.swift */; };
 		27DBE9E828F8655E00B27850 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9E728F8655E00B27850 /* Folder.swift */; };
 		27DBE9EB28F8658400B27850 /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9EA28F8658400B27850 /* Separator.swift */; };
-		27DBE9EE28F8669400B27850 /* FolderStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9ED28F8669400B27850 /* FolderStorage.swift */; };
+		27DBE9EE28F8669400B27850 /* ImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9ED28F8669400B27850 /* ImageStorage.swift */; };
 		27DBE9F028F8A70D00B27850 /* Color+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9EF28F8A70D00B27850 /* Color+Codable.swift */; };
 		27DBE9F228F8AAE800B27850 /* ImagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9F128F8AAE800B27850 /* ImagePayload.swift */; };
 		27DBE9F628F8BB9100B27850 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */; };
@@ -51,6 +51,10 @@
 		27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */; };
 		27DED94B28FF593000CE9095 /* FloatingPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */; };
 		27DED94D2906A08E00CE9095 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94C2906A08E00CE9095 /* RoundedCorner.swift */; };
+		27DED9502906C27C00CE9095 /* Crate.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94E2906C27C00CE9095 /* Crate.xcdatamodeld */; };
+		27DED9522906C3FD00CE9095 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9512906C3FD00CE9095 /* DataController.swift */; };
+		27DED9902906D5A800CE9095 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED98F2906D5A800CE9095 /* BoundingBox.swift */; };
+		27DED9922906E77700CE9095 /* Sequence+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9912906E77700CE9095 /* Sequence+Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -101,7 +105,7 @@
 		27D604CA28FDF25F00B4B3F2 /* CancelToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelToolbarButton.swift; sourceTree = "<group>"; };
 		27DBE9E728F8655E00B27850 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		27DBE9EA28F8658400B27850 /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
-		27DBE9ED28F8669400B27850 /* FolderStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderStorage.swift; sourceTree = "<group>"; };
+		27DBE9ED28F8669400B27850 /* ImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorage.swift; sourceTree = "<group>"; };
 		27DBE9EF28F8A70D00B27850 /* Color+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Codable.swift"; sourceTree = "<group>"; };
 		27DBE9F128F8AAE800B27850 /* ImagePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePayload.swift; sourceTree = "<group>"; };
 		27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDetailView.swift; sourceTree = "<group>"; };
@@ -118,6 +122,10 @@
 		27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanel.swift"; sourceTree = "<group>"; };
 		27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelDelegate.swift; sourceTree = "<group>"; };
 		27DED94C2906A08E00CE9095 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
+		27DED94F2906C27C00CE9095 /* Crate.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Crate.xcdatamodel; sourceTree = "<group>"; };
+		27DED9512906C3FD00CE9095 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
+		27DED98F2906D5A800CE9095 /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
+		27DED9912906E77700CE9095 /* Sequence+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,6 +180,7 @@
 				27020DE328F6C49C00C94312 /* CrateApp.swift */,
 				27020DE528F6C49C00C94312 /* HomeView.swift */,
 				27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */,
+				27DED9512906C3FD00CE9095 /* DataController.swift */,
 				27020E1528F6D88C00C94312 /* ImageReview.swift */,
 				27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */,
 				27A8EEA828FCAF7C004DDCE9 /* FolderCreationView.swift */,
@@ -240,6 +249,7 @@
 				27DBEA0528F95E2200B27850 /* ColorThief.swift */,
 				278F956828FD82920052D319 /* CGRect+Extensions.swift */,
 				27DBEA0428F95E2200B27850 /* MMCQ.swift */,
+				27DED9912906E77700CE9095 /* Sequence+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -247,9 +257,11 @@
 		27DBE9E928F8656500B27850 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				27DED94E2906C27C00CE9095 /* Crate.xcdatamodeld */,
 				27DBE9E728F8655E00B27850 /* Folder.swift */,
 				27DBE9F128F8AAE800B27850 /* ImagePayload.swift */,
-				27DBE9ED28F8669400B27850 /* FolderStorage.swift */,
+				27DED98F2906D5A800CE9095 /* BoundingBox.swift */,
+				27DBE9ED28F8669400B27850 /* ImageStorage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -421,6 +433,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27DED9922906E77700CE9095 /* Sequence+Extensions.swift in Sources */,
 				27DBEA0628F95E2200B27850 /* MMCQ.swift in Sources */,
 				27DBE9F628F8BB9100B27850 /* ImageDetailView.swift in Sources */,
 				27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */,
@@ -428,13 +441,14 @@
 				27020E1E28F75FE500C94312 /* ImageProcessor.swift in Sources */,
 				27020E1428F6D39A00C94312 /* ImagePicker.swift in Sources */,
 				27DBEA1828FAECB800B27850 /* View+floatingPanelSurfaceAppearance.swift in Sources */,
+				27DED9522906C3FD00CE9095 /* DataController.swift in Sources */,
 				27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */,
 				27DED94D2906A08E00CE9095 /* RoundedCorner.swift in Sources */,
 				27DED94B28FF593000CE9095 /* FloatingPanelDelegate.swift in Sources */,
 				27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */,
 				27DBE9E828F8655E00B27850 /* Folder.swift in Sources */,
 				27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */,
-				27DBE9EE28F8669400B27850 /* FolderStorage.swift in Sources */,
+				27DBE9EE28F8669400B27850 /* ImageStorage.swift in Sources */,
 				27020E1628F6D88C00C94312 /* ImageReview.swift in Sources */,
 				27020DE628F6C49C00C94312 /* HomeView.swift in Sources */,
 				27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */,
@@ -450,9 +464,11 @@
 				27020E1C28F75F6000C94312 /* PersonSegmenter.swift in Sources */,
 				27A8EEA528FC3B98004DDCE9 /* ImageReviewViewModel.swift in Sources */,
 				27020DE428F6C49C00C94312 /* CrateApp.swift in Sources */,
+				27DED9902906D5A800CE9095 /* BoundingBox.swift in Sources */,
 				27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */,
 				27A8EEA928FCAF7C004DDCE9 /* FolderCreationView.swift in Sources */,
 				27DBE9EB28F8658400B27850 /* Separator.swift in Sources */,
+				27DED9502906C27C00CE9095 /* Crate.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -796,6 +812,19 @@
 			productName = FloatingPanel;
 		};
 /* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		27DED94E2906C27C00CE9095 /* Crate.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				27DED94F2906C27C00CE9095 /* Crate.xcdatamodel */,
+			);
+			currentVersion = 27DED94F2906C27C00CE9095 /* Crate.xcdatamodel */;
+			path = Crate.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 27020DD828F6C49C00C94312 /* Project object */;
 }

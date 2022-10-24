@@ -26,17 +26,16 @@ extension View {
 }
 
 struct SingleImageReview: View {
-    @State private var keyboardHeight: CGFloat = 0
+    @State var showFolderSelection = false
+    @State var keyboardHeight: CGFloat = 0
+    @FocusState var isNameFocused: Bool
     
     @EnvironmentObject var viewModel: ImageReviewViewModel
-    @FocusState var isNameFocused: Bool
     @Environment(\.dismiss) private var dismiss
     
     let titleFeedback = UIImpactFeedbackGenerator(style: .heavy)
     let selectionFeedback = UISelectionFeedbackGenerator()
     var streams = Set<AnyCancellable>()
-    
-    @State var showFolderSelection = false
     
     var body: some View {
         ScrollViewReader { scrollViewProxy in
@@ -123,7 +122,7 @@ struct SingleImageReview: View {
                 .buttonStyle(.plain)
                 .aspectRatio(contentMode: .fit)
                 .frame(height: imageHeight)
-                .zIndex(1)
+                .zIndex(0)
             }
             
             ForEach(viewModel.textBoundingBoxes) { box in
@@ -165,8 +164,8 @@ struct SingleImageReview: View {
                                 .opacity(isTitle ? 1 : 0)
                                 .offset(x: (box.box.width - 31) / 2, y: box.box.height + 4)
                         )
-                        .zIndex(isTitle ? 2 : 0)
                 }
+                .zIndex(isTitle ? 2 : 0)
                 .buttonStyle(.plain)
                 .position(x: rect.midX, y: rect.midY)
                 .frame(width: rect.width, height: rect.height + 4)
@@ -187,7 +186,7 @@ struct SingleImageReview: View {
                 
                 VStack(alignment: .trailing, spacing: 15) {
                     if let selectedFolder = viewModel.folder {
-                        Text(selectedFolder.fullName)
+                        Text(selectedFolder.name ?? "asdf")
                             .font(.system(size: 12, weight: .semibold, design: .default))
                             .foregroundColor(.white)
                             .padding(12)
@@ -212,7 +211,9 @@ struct ImageReview: View {
     @State var isKeyboardVisible = false
     @State var errorMessage = ""
     @StateObject var viewModelManager = ImageReviewManager()
+    
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.managedObjectContext) var viewContext
     
     var body: some View {
         NavigationStack {
@@ -257,23 +258,13 @@ struct ImageReview: View {
                     .foregroundColor(.red)
                 
                 Spacer()
-                
-                let lastOne = selectedPage == images.count - 1
+                                
+                let isLastOne = (selectedPage == images.count - 1)
                 
                 Button {
-                    if lastOne {
-                        if viewModelManager.current.folder == nil {
-                            showErrorMessage()
-                        } else {
-                            viewModelManager.save()
-                            dismiss()
-                        }
-                    } else {
-                        selectedPage += 1
-                        viewModelManager.selectViewModel(idx: selectedPage)
-                    }
+                   save(isLastOne)
                 } label: {
-                    Text(lastOne ? "Finish" : "Next")
+                    Text(isLastOne ? "Finish" : "Next")
                         .font(.system(size: 14, weight: .semibold, design: .default))
                         .foregroundColor(Color(uiColor: .black))
                         .frame(width: 50)
@@ -293,6 +284,23 @@ struct ImageReview: View {
         }
     }
     
+    func save(_ isLastOne: Bool) {
+        if viewModelManager.current.folder == nil {
+            showErrorMessage()
+            return
+        }
+        
+        if isLastOne {
+            Task {
+                await viewModelManager.save(viewContext: viewContext)
+                dismiss()
+            }
+        } else {
+            selectedPage += 1
+            viewModelManager.selectViewModel(idx: selectedPage)
+        }
+    }
+    
     func showErrorMessage() {
         withAnimation(.easeInOut(duration: 0.15)) {
             errorMessage = "❗Select Folder"
@@ -309,5 +317,6 @@ struct ImageReview: View {
 struct ImageReview_Previews: PreviewProvider {
     static var previews: some View {
         ImageReview(images: [UIImage(named: "represent.jpeg")!])
+            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

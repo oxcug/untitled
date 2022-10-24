@@ -10,14 +10,17 @@ import Foundation
 import UIKit
 
 final class ImageDetailViewModel: ObservableObject {
-    @Published var entry: Entry = .init(id: UUID(), name: "", textBoundingBoxes: [], date: Date(), original: UIImage(systemName: "circle")!, modified: nil, colors: [])
+    @Published var entry: PictureEntry?
     
     var palette: [UIColor] {
-        entry.colors.compactMap { $0.makeUIColor() }
+        []
+//        entry.colors.compactMap { $0.makeUIColor() }
     }
     
     var image: UIImage {
-        entry.modified ?? entry.original
+        guard let entry = entry else { return UIImage() }
+        let name = (entry.modified) ?? entry.original!
+        return ImageStorage.shared.loadImage(named: name)!
     }
 }
 
@@ -56,7 +59,7 @@ struct ImageDetailView: View {
                 
                 HStack {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(viewModel.entry.name)
+                        Text(viewModel.entry?.name ?? "ASDF")
                             .font(.system(size: 24, weight: .semibold, design: .default))
                             .foregroundColor(.white)
                         
@@ -126,6 +129,6 @@ struct ImageDetailView: View {
 struct ImageDetailView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView(detailPayload: .constant(nil))
-            .environmentObject(FolderStorage.shared)
+            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

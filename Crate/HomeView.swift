@@ -15,14 +15,21 @@ struct HomeView: View {
     @Binding var detailPayload: DetailPayload?
     
     @StateObject var detailViewModel = ImageDetailViewModel()
-    @StateObject var storage: FolderStorage = .shared
+    
+    // MARK: - Core Data
+    
+    @Environment(\.managedObjectContext) private var viewContext
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \PictureFolder.name, ascending: true)], animation: .default)
+    var folders: FetchedResults<PictureFolder>
+
+    // MARK: -
     
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 List {
-                    ForEach(storage.folders) { folder in
-                        section(folder)
+                    ForEach(folders) { folder in
+                        section(Folder(coreDataObject: folder))
                     }
                 }
                 .listStyle(.plain)
@@ -54,7 +61,6 @@ struct HomeView: View {
         }
         .fullScreenCover(item: $imagesPayload) { payload in
             ImageReview(images: payload.images)
-                .environmentObject(storage)
         }
     }
     
@@ -83,17 +89,17 @@ struct HomeView: View {
                         detailPayload = DetailPayload(id: UUID(), folderName: folder.fullName, detail: entry)
                     } label: {
                         VStack(alignment: .leading, spacing: 12) {
-                            Image(uiImage: entry.modified!)
+                            Image(uiImage: ImageStorage.shared.loadImage(named: entry.modified)!)
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: 180)
                             
                             VStack(alignment: .leading, spacing: 5) {
-                                Text(entry.name)
+                                Text(entry.name ?? "")
                                     .font(.system(size: 18, weight: .semibold, design: .default))
                                     .foregroundColor(.white)
                                 
-                                Text(entry.date.description)
+                                Text(entry.date?.description ?? "")
                                     .font(.system(size: 13, weight: .regular, design: .rounded))
                                     .foregroundColor(.white.opacity(0.7))
                             }
@@ -114,5 +120,6 @@ struct HomeView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView(detailPayload: .constant(nil))
+            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

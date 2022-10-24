@@ -14,7 +14,8 @@ struct FolderCreationView: View {
     @State var keyboardHeight: CGFloat = .zero
     @FocusState var focusOnTextField: Bool
     
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.managedObjectContext) var viewContext
     
     var body: some View {
         VStack(spacing: 30) {
@@ -31,11 +32,11 @@ struct FolderCreationView: View {
                 .background(RoundedRectangle(cornerRadius: 10).foregroundColor(.white.opacity(0.08)))
                 .foregroundColor(.white)
                 .focused($focusOnTextField)
-             
+            
             Spacer()
             
             Button {
-                FolderStorage.shared.createFolder(name: name, emoji: emoji, entries: [])
+                createFolder()
                 dismiss()
             } label: {
                 Text("create folder")
@@ -63,12 +64,28 @@ struct FolderCreationView: View {
             focusOnTextField = true
         }
     }
+    
+    private func createFolder() {
+        let folder = PictureFolder(context: viewContext)
+        folder.id = UUID()
+        folder.name = name
+        folder.emoji = emoji
+        folder.entries = NSOrderedSet(array: [])
+        
+        do {
+            try viewContext.save()
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
 }
 
 struct FolderCreationView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             FolderCreationView()
+                .environment(\.managedObjectContext, DataController.preview.container.viewContext)
         }
     }
 }

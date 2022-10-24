@@ -55,11 +55,22 @@ extension Entry {
     }
 }
 
-struct Folder: Identifiable, Hashable, Codable {
+struct Folder: Identifiable, Hashable {
     let id: UUID
     let name: String
     let emoji: String?
-    let entries: [Entry]
+    let entries: [PictureEntry]
+}
+
+extension Folder {
+    init(coreDataObject cd: PictureFolder) {
+        id = cd.id ?? UUID()
+        name = cd.name ?? ""
+        emoji = cd.emoji ?? ""
+        entries = (cd.entries?.array as? [PictureEntry])?.sorted(by: { lft, rht in
+            (lft.date ?? .distantPast).compare(rht.date ?? .distantPast) == . orderedDescending
+        }) ?? []
+    }
 }
 
 extension Folder: Comparable, Equatable {

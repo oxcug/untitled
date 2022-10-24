@@ -8,20 +8,29 @@
 import SwiftUI
 
 struct FolderSelectionView: View {
-    @Binding var selectedFolder: Folder?
-    let selectionFeedback = UISelectionFeedbackGenerator()
-    
     @State var showFolderCreationModal = false
+    @Binding var selectedFolder: PictureFolder?
     @Environment(\.dismiss) private var dismiss
+    
+    // MARK: - Core Data
+    
+    @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \PictureFolder.name, ascending: true)], animation: .default)
+    var folders: FetchedResults<PictureFolder>
+    
+    // MARK: -
+    
+    let selectionFeedback = UISelectionFeedbackGenerator()
     
     var body: some View {
         List {
-            ForEach(FolderStorage.shared.folders, id: \.self) { folder in
+            ForEach(folders, id: \.self) { coreDataFolder in
+                let folder = Folder(coreDataObject: coreDataFolder)
+                
                 Button {
                     selectionFeedback.selectionChanged()
                     
                     DispatchQueue.main.async {
-                        selectedFolder = folder
+                        selectedFolder = coreDataFolder
                         dismiss()
                     }
                 } label: {
@@ -39,7 +48,7 @@ struct FolderSelectionView: View {
                         
                         Image(systemName: "checkmark.circle.fill")
                             .foregroundColor(.white)
-                            .opacity((selectedFolder == folder) ? 1 : 0)
+                            .opacity(((selectedFolder?.id ?? UUID()) == folder.id) ? 1 : 0)
                             .font(.system(size: 17, weight: .semibold, design: .default))
                     }
                     .padding(.vertical, 10)
@@ -104,9 +113,8 @@ struct FolderSelectionView: View {
 struct FolderSelectionView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
-            FolderSelectionView(selectedFolder: .constant(
-                .init(id: UUID(), name: "Favorites", emoji: "⭐", entries: [])
-            ))
+            FolderSelectionView(selectedFolder: .constant(nil))
+            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
         }
     }
 }
