@@ -51,8 +51,8 @@ struct ImageDetailView: View {
                         .foregroundColor(.white)
                         .font(.system(size: 15, weight: .semibold, design: .default))
                 }
-                
-                Image(uiImage: viewModel.image)
+               
+                Image(uiImage: UIImage(named: "modified_4.png")!)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: reader.size.height * 0.6, alignment: .center)
@@ -128,7 +128,7 @@ struct ImageDetailView: View {
 
 struct ImageDetailView_Previews: PreviewProvider {
     @State static var detailPayload: DetailPayload? = nil
-    @StateObject static var panelDelegate = DetailFloatingPanelDelegate()
+    @StateObject static var panelDelegate = DemoFloatingPanelDelegate()
     @StateObject static var detailViewModel = ImageDetailViewModel()
     
     static var previews: some View {

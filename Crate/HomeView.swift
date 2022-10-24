@@ -6,15 +6,37 @@
 //
 
 import SwiftUI
-import FloatingPanel
+
+final class PictureEntryViewModel: ObservableObject {
+    lazy var relativeDateFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateStyle = .short
+        df.doesRelativeDateFormatting = true
+        return df
+    }()
+    
+    func image(for entry: PictureEntry) -> UIImage {
+        ImageStorage.shared.loadImage(named: entry.modified ?? entry.original) ?? UIImage()
+    }
+    
+    func name(for entry: PictureEntry) -> String {
+        entry.name ?? "Untitled"
+    }
+    
+    func dateString(for entry: PictureEntry) -> String {
+        if let date = entry.date {
+            return relativeDateFormatter.string(from: date)
+        } else {
+            return "Unknown"
+        }
+    }
+}
 
 struct HomeView: View {
     @State private var showingImagePicker = false
     @State private var showImageReviewModal = false
     @State private var imagesPayload: ImagesPayload?
     @Binding var detailPayload: DetailPayload?
-    
-    @StateObject var detailViewModel = ImageDetailViewModel()
     
     // MARK: - Core Data
     
@@ -23,6 +45,8 @@ struct HomeView: View {
     var folders: FetchedResults<PictureFolder>
 
     // MARK: -
+    
+    @StateObject var viewModel = PictureEntryViewModel()
     
     var body: some View {
         NavigationStack {
@@ -86,20 +110,20 @@ struct HomeView: View {
             LazyHGrid(rows: [GridItem(.flexible())]) {
                 ForEach(folder.entries) { entry in
                     Button {
-                        detailPayload = DetailPayload(id: UUID(), folderName: folder.fullName, detail: entry)
+                        detailPayload = DetailPayload(id: UUID(), folder: folder, detail: entry)
                     } label: {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Image(uiImage: ImageStorage.shared.loadImage(named: entry.modified)!)
+                        VStack(alignment: .center, spacing: 6) {
+                            Image(uiImage: viewModel.image(for: entry))
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(height: 180)
+                                .frame(height: 200)
                             
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text(entry.name ?? "")
-                                    .font(.system(size: 18, weight: .semibold, design: .default))
+                            VStack(alignment: .center, spacing: 4) {
+                                Text(viewModel.name(for: entry))
+                                    .font(.system(size: 16, weight: .semibold, design: .default))
                                     .foregroundColor(.white)
                                 
-                                Text(entry.date?.description ?? "")
+                                Text(viewModel.dateString(for: entry))
                                     .font(.system(size: 13, weight: .regular, design: .rounded))
                                     .foregroundColor(.white.opacity(0.7))
                             }

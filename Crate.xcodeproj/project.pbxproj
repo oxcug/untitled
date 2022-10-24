@@ -54,6 +54,7 @@
 		27DED9522906C3FD00CE9095 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9512906C3FD00CE9095 /* DataController.swift */; };
 		27DED9902906D5A800CE9095 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED98F2906D5A800CE9095 /* BoundingBox.swift */; };
 		27DED9922906E77700CE9095 /* Sequence+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9912906E77700CE9095 /* Sequence+Extensions.swift */; };
+		27DED9942907409600CE9095 /* DemoPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9932907409600CE9095 /* DemoPanelDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,6 +125,7 @@
 		27DED9512906C3FD00CE9095 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		27DED98F2906D5A800CE9095 /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		27DED9912906E77700CE9095 /* Sequence+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Extensions.swift"; sourceTree = "<group>"; };
+		27DED9932907409600CE9095 /* DemoPanelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoPanelDelegate.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -284,6 +286,7 @@
 				27DBEA0D28FAECB700B27850 /* View+floatingPanelContentMode.swift */,
 				27DBEA0E28FAECB700B27850 /* View+floatingPanelGrabberHandlePadding.swift */,
 				27DBEA1028FAECB700B27850 /* View+floatingPanelSurfaceAppearance.swift */,
+				27DED9932907409600CE9095 /* DemoPanelDelegate.swift */,
 			);
 			path = FloatingPanel;
 			sourceTree = "<group>";
@@ -446,6 +449,7 @@
 				27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */,
 				27DBE9EE28F8669400B27850 /* ImageStorage.swift in Sources */,
 				27020E1628F6D88C00C94312 /* ImageReview.swift in Sources */,
+				27DED9942907409600CE9095 /* DemoPanelDelegate.swift in Sources */,
 				27020DE628F6C49C00C94312 /* HomeView.swift in Sources */,
 				27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */,
 				27020E2128F762F800C94312 /* UIImage+Extensions.swift in Sources */,

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct DetailPayload: Identifiable, Hashable {
     let id: UUID
-    let folderName: String
+    let folder: Folder
     let detail: PictureEntry?
 }
 
