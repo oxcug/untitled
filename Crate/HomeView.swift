@@ -6,47 +6,54 @@
 //
 
 import SwiftUI
+import FloatingPanel
 
-final class PictureEntryViewModel: ObservableObject {
-    lazy var relativeDateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateStyle = .short
-        df.doesRelativeDateFormatting = true
-        return df
-    }()
+struct HomeSettingsView: View {
+    let proxy: FloatingPanelProxy
+    @Binding var showSettings: Bool
+    @Binding var zoomFactor: Double
     
-    func image(for entry: PictureEntry) -> UIImage {
-        ImageStorage.shared.loadImage(named: entry.modified ?? entry.original) ?? UIImage()
-    }
-    
-    func name(for entry: PictureEntry) -> String {
-        entry.name ?? "Untitled"
-    }
-    
-    func dateString(for entry: PictureEntry) -> String {
-        if let date = entry.date {
-            return relativeDateFormatter.string(from: date)
-        } else {
-            return "Unknown"
+    var body: some View {
+        VStack(spacing: 24) {
+            Text("choose your perspective")
+            
+            HStack(spacing: 12) {
+                Image(systemName: "minus.magnifyingglass")
+                    .font(.system(size: 20, weight: .light, design: .default))
+                
+                Slider(value: $zoomFactor, in: 1...15, step: 1)
+                
+                Image(systemName: "plus.magnifyingglass")
+                    .font(.system(size: 20, weight: .light, design: .default))
+            }
+        }
+        .padding()
+        .onChange(of: showSettings) { _ in
+            proxy.move(to: .full, animated: true)
         }
     }
 }
 
 struct HomeView: View {
-    @State private var showingImagePicker = false
-    @State private var showImageReviewModal = false
-    @State private var imagesPayload: ImagesPayload?
     @Binding var detailPayload: DetailPayload?
+    @Binding var zoomFactor: Double
+    @Binding var showSettings: Bool
+    
+    @State var imagesPayload: ImagesPayload?
+    @State var showingImagePicker = false
+    @State var showImageReviewModal = false
     
     // MARK: - Core Data
     
     @Environment(\.managedObjectContext) private var viewContext
     @FetchRequest(sortDescriptors: [NSSortDescriptor(keyPath: \PictureFolder.name, ascending: true)], animation: .default)
     var folders: FetchedResults<PictureFolder>
-
+    
     // MARK: -
     
     @StateObject var viewModel = PictureEntryViewModel()
+    @StateObject var panelDelegate = SettingsPanelDelegate()
+    @StateObject var detailViewModel = ImageDetailViewModel()
     
     var body: some View {
         NavigationStack {
@@ -76,6 +83,15 @@ struct HomeView: View {
                     Text("Crate")
                         .font(.system(size: 17, weight: .semibold, design: .default))
                         .foregroundColor(.white)
+                }
+                
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showSettings.toggle()
+                    } label: {
+                        Image(systemName: "gear")
+                            .foregroundColor(.white)
+                    }
                 }
             }
         }
@@ -116,7 +132,7 @@ struct HomeView: View {
                             Image(uiImage: viewModel.image(for: entry))
                                 .resizable()
                                 .aspectRatio(contentMode: .fit)
-                                .frame(height: 200)
+                                .frame(height: 50 * zoomFactor)
                             
                             VStack(alignment: .center, spacing: 4) {
                                 Text(viewModel.name(for: entry))
@@ -128,22 +144,20 @@ struct HomeView: View {
                                     .foregroundColor(.white.opacity(0.7))
                             }
                         }
-                        .padding()
-                        .background(RoundedRectangle(cornerRadius: 10)
-                            .foregroundColor(Color(uiColor: .systemBackground)).shadow(radius: 0.4))
-                        .padding(.leading, 20)
+                        .padding(.horizontal, 20)
                     }
                 }
             }
         }
         .listRowSeparator(.hidden)
-        .listRowInsets(EdgeInsets(top: 8, leading: 0, bottom: 0, trailing: 0))
+        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+//        .background(Color.red)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(detailPayload: .constant(nil))
+        HomeView(detailPayload: .constant(nil), zoomFactor: .constant(4), showSettings: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

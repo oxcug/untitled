@@ -132,7 +132,7 @@ struct ImageDetailView_Previews: PreviewProvider {
     @StateObject static var detailViewModel = ImageDetailViewModel()
     
     static var previews: some View {
-        HomeView(detailPayload: $detailPayload)
+        HomeView(detailPayload: .constant(nil), zoomFactor: .constant(4), showSettings: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
             .floatingPanel(delegate: panelDelegate) { proxy in
                 ImageDetailView(proxy: proxy, detailPayload: $detailPayload)
