@@ -35,7 +35,7 @@ struct HomeSettingsView: View {
 }
 
 struct HomeView: View {
-    @Binding var detailPayload: DetailPayload?
+    @Binding var detailPayload: DetailPayload
     @Binding var zoomFactor: Double
     @Binding var showSettings: Bool
     
@@ -53,7 +53,6 @@ struct HomeView: View {
     
     @StateObject var viewModel = PictureEntryViewModel()
     @StateObject var panelDelegate = SettingsPanelDelegate()
-    @StateObject var detailViewModel = ImageDetailViewModel()
     
     var body: some View {
         NavigationStack {
@@ -151,13 +150,12 @@ struct HomeView: View {
         }
         .listRowSeparator(.hidden)
         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-//        .background(Color.red)
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(detailPayload: .constant(nil), zoomFactor: .constant(4), showSettings: .constant(false))
+        HomeView(detailPayload: .constant(.dummy), zoomFactor: .constant(4), showSettings: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

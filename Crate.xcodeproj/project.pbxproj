@@ -297,8 +297,8 @@
 			children = (
 				27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */,
 				27A8EEA828FCAF7C004DDCE9 /* FolderCreationView.swift */,
-				27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */,
 				27DED9952907483400CE9095 /* PictureEntryViewModel.swift */,
+				27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";

@@ -30,4 +30,8 @@ final class PictureEntryViewModel: ObservableObject {
             return "Unknown"
         }
     }
+    
+    func palette(for entry: PictureEntry) -> [UIColor] {
+        entry.colors as? [UIColor] ?? []
+    }
 }

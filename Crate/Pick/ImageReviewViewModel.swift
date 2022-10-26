@@ -168,9 +168,10 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         
         entry.original = ImageStorage.shared.write(image, entryID: entryID, isOriginal: true)
         entry.modified = ImageStorage.shared.write(segmentedImage?.original.cropImageByAlpha(), entryID: entryID, isOriginal: false)
-        entry.boxes = NSArray(objects: selectedTextBoundingBoxes)
+        entry.boxes = NSArray()
         entry.folder = folder
-       
+        entry.colors = (colors ?? []).map { $0.id }
+
         do {
             try viewContext.save()
             return true

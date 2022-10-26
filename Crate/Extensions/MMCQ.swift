@@ -54,6 +54,19 @@ open class MMCQ {
             self.b = b
         }
         
+        init(rgbID: String) {
+            let ids = rgbID.split(separator: ", ").map { UInt8($0) ?? 0 }
+            if ids.count != 3 {
+                self.r = 0
+                self.g = 0
+                self.b = 0
+            } else {
+                self.r = ids[0]
+                self.g = ids[1]
+                self.b = ids[2]
+            }
+        }
+        
         public var id: String {
             String([r, g, b].map { String($0) }.joined(separator: ", "))
         }
@@ -492,5 +505,4 @@ open class MMCQ {
             return aProduct < bProduct
         }
     }
-
 }

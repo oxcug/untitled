@@ -9,19 +9,21 @@ import SwiftUI
 
 struct DetailPayload: Identifiable, Hashable {
     let id: UUID
-    let folder: Folder
+    let folder: Folder?
     let detail: PictureEntry?
+    
+    static let dummy = DetailPayload(id: UUID(), folder: nil, detail: nil)
 }
 
 @main
 struct CrateApp: App {
-    @State var detailPayload: DetailPayload? = nil
+    @State var detailPayload: DetailPayload = .dummy
     @State var showSettings = false
     @State var zoomFactor: Double = 4
     
     @StateObject var panelDelegate = DetailFloatingPanelDelegate()
     @StateObject var settingsPanelDelegate = SettingsPanelDelegate()
-    @StateObject var detailViewModel = ImageDetailViewModel()
+    @StateObject var detailViewModel = PictureEntryDetailViewModel()
     let dataController = DataController.shared
     
     var body: some Scene {
