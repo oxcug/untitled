@@ -5,6 +5,7 @@
 //  Created by Mike Choi on 10/12/22.
 //
 
+import Combine
 import SwiftUI
 
 struct DetailPayload: Identifiable, Hashable {
@@ -17,8 +18,9 @@ struct DetailPayload: Identifiable, Hashable {
 
 @main
 struct CrateApp: App {
-    @State var detailPayload: DetailPayload = .dummy
+    let detailPayloadStream = CurrentValueSubject<DetailPayload, Never>(.dummy)
     @State var showSettings = false
+    @State var showLabels = false
     @State var zoomFactor: Double = 4
     
     @StateObject var panelDelegate = DetailFloatingPanelDelegate()
@@ -28,14 +30,14 @@ struct CrateApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HomeView(detailPayload: $detailPayload, zoomFactor: $zoomFactor, showSettings: $showSettings)
+            HomeView(detailPayloadStream: detailPayloadStream, zoomFactor: $zoomFactor, showSettings: $showSettings, showLabels: $showLabels)
                 .environment(\.managedObjectContext, dataController.container.viewContext)
                 .floatingPanel(delegate: panelDelegate) { proxy in
-                    ImageDetailView(proxy: proxy, detailPayload: $detailPayload)
+                    ImageDetailView(proxy: proxy, detailPayloadStream: detailPayloadStream)
                         .environmentObject(detailViewModel)
                 }
                 .floatingPanel(delegate: settingsPanelDelegate) { proxy in
-                    HomeSettingsView(proxy: proxy, showSettings: $showSettings, zoomFactor: $zoomFactor)
+                    HomeSettingsView(proxy: proxy, showSettings: $showSettings, showLabels: $showLabels, zoomFactor: $zoomFactor)
                 }
                 .floatingPanelSurfaceAppearance(.phone)
                 .floatingPanelContentMode(.fitToBounds)

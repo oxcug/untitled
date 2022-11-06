@@ -25,7 +25,7 @@ final class SavedMapPanelLayout: FloatingPanelLayout {
     }
 }
 
-final class DetailFloatingPanelDelegate: FloatingPanelControllerDelegate, ObservableObject {
+final class DetailFloatingPanelDelegate: FloatingPanelControllerDelegate, ObservableObject {    
     func floatingPanel(_ fpc: FloatingPanelController, layoutFor newCollection: UITraitCollection) -> FloatingPanelLayout {
         fpc.surfaceView.grabberHandle.isHidden = true
         return SavedMapPanelLayout()

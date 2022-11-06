@@ -5,39 +5,15 @@
 //  Created by Mike Choi on 10/12/22.
 //
 
+import Combine
 import SwiftUI
 import FloatingPanel
 
-struct HomeSettingsView: View {
-    let proxy: FloatingPanelProxy
-    @Binding var showSettings: Bool
-    @Binding var zoomFactor: Double
-    
-    var body: some View {
-        VStack(spacing: 24) {
-            Text("choose your perspective")
-            
-            HStack(spacing: 12) {
-                Image(systemName: "minus.magnifyingglass")
-                    .font(.system(size: 20, weight: .light, design: .default))
-                
-                Slider(value: $zoomFactor, in: 1...15, step: 1)
-                
-                Image(systemName: "plus.magnifyingglass")
-                    .font(.system(size: 20, weight: .light, design: .default))
-            }
-        }
-        .padding()
-        .onChange(of: showSettings) { _ in
-            proxy.move(to: .full, animated: true)
-        }
-    }
-}
-
 struct HomeView: View {
-    @Binding var detailPayload: DetailPayload
+    let detailPayloadStream: CurrentValueSubject<DetailPayload, Never>
     @Binding var zoomFactor: Double
     @Binding var showSettings: Bool
+    @Binding var showLabels: Bool
     
     @State var imagesPayload: ImagesPayload?
     @State var showingImagePicker = false
@@ -125,7 +101,7 @@ struct HomeView: View {
             LazyHGrid(rows: [GridItem(.flexible())]) {
                 ForEach(folder.entries) { entry in
                     Button {
-                        detailPayload = DetailPayload(id: UUID(), folder: folder, detail: entry)
+                        detailPayloadStream.send(DetailPayload(id: UUID(), folder: folder, detail: entry))
                     } label: {
                         VStack(alignment: .center, spacing: 6) {
                             Image(uiImage: viewModel.image(for: entry))
@@ -142,6 +118,7 @@ struct HomeView: View {
                                     .font(.system(size: 13, weight: .regular, design: .rounded))
                                     .foregroundColor(.white.opacity(0.7))
                             }
+                            .opacity(showLabels ? 1 : 0)
                         }
                         .padding(.horizontal, 20)
                     }
@@ -155,7 +132,7 @@ struct HomeView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(detailPayload: .constant(.dummy), zoomFactor: .constant(4), showSettings: .constant(false))
+        HomeView(detailPayloadStream: .init(.dummy), zoomFactor: .constant(4), showSettings: .constant(false), showLabels: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

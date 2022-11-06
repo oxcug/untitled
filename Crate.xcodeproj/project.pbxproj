@@ -21,6 +21,8 @@
 		27020E1E28F75FE500C94312 /* ImageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E1D28F75FE500C94312 /* ImageProcessor.swift */; };
 		27020E2128F762F800C94312 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E2028F762F800C94312 /* UIImage+Extensions.swift */; };
 		27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E2328F7680600C94312 /* Notification+Extensions.swift */; };
+		275203532917D60D0076C4B5 /* HomeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275203522917D60D0076C4B5 /* HomeSettingsView.swift */; };
+		275203592917F8050076C4B5 /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 275203582917F8050076C4B5 /* Introspect */; };
 		27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27748E3528FCB87C00013857 /* EmojiTextField.swift */; };
 		278F956928FD82920052D319 /* CGRect+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278F956828FD82920052D319 /* CGRect+Extensions.swift */; };
 		27A4452328FD5DFB00BBB91D /* outfit.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 27A4452228FD5DFB00BBB91D /* outfit.jpeg */; };
@@ -95,6 +97,7 @@
 		27020E1D28F75FE500C94312 /* ImageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageProcessor.swift; sourceTree = "<group>"; };
 		27020E2028F762F800C94312 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		27020E2328F7680600C94312 /* Notification+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extensions.swift"; sourceTree = "<group>"; };
+		275203522917D60D0076C4B5 /* HomeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSettingsView.swift; sourceTree = "<group>"; };
 		27748E3528FCB87C00013857 /* EmojiTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiTextField.swift; sourceTree = "<group>"; };
 		278F956828FD82920052D319 /* CGRect+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Extensions.swift"; sourceTree = "<group>"; };
 		27A4452228FD5DFB00BBB91D /* outfit.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = outfit.jpeg; sourceTree = "<group>"; };
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */,
+				275203592917F8050076C4B5 /* Introspect in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,8 +188,8 @@
 				27020DE328F6C49C00C94312 /* CrateApp.swift */,
 				27020DE528F6C49C00C94312 /* HomeView.swift */,
 				27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */,
-				27DED999290749E100CE9095 /* SettingsPanelDelegate.swift */,
 				27DED9512906C3FD00CE9095 /* DataController.swift */,
+				275203512917D5FA0076C4B5 /* Settings */,
 				27DED9982907485B00CE9095 /* Pick */,
 				27DED9972907485100CE9095 /* Detail */,
 				27DBE9E928F8656500B27850 /* Models */,
@@ -252,6 +256,15 @@
 				27DED9912906E77700CE9095 /* Sequence+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		275203512917D5FA0076C4B5 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				275203522917D60D0076C4B5 /* HomeSettingsView.swift */,
+				27DED999290749E100CE9095 /* SettingsPanelDelegate.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 		27DBE9E928F8656500B27850 /* Models */ = {
@@ -331,6 +344,7 @@
 			name = Crate;
 			packageProductDependencies = (
 				27DBEA0928FAEBB600B27850 /* FloatingPanel */,
+				275203582917F8050076C4B5 /* Introspect */,
 			);
 			productName = Crate;
 			productReference = 27020DE028F6C49C00C94312 /* Crate.app */;
@@ -406,6 +420,7 @@
 			mainGroup = 27020DD728F6C49C00C94312;
 			packageReferences = (
 				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
+				275203572917F8050076C4B5 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 			);
 			productRefGroup = 27020DE128F6C49C00C94312 /* Products */;
 			projectDirPath = "";
@@ -460,6 +475,7 @@
 				27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */,
 				27DBEA1628FAECB800B27850 /* View+floatingPanelGrabberHandlePadding.swift in Sources */,
 				27020E1E28F75FE500C94312 /* ImageProcessor.swift in Sources */,
+				275203532917D60D0076C4B5 /* HomeSettingsView.swift in Sources */,
 				27020E1428F6D39A00C94312 /* ImagePicker.swift in Sources */,
 				27DBEA1828FAECB800B27850 /* View+floatingPanelSurfaceAppearance.swift in Sources */,
 				27DED9522906C3FD00CE9095 /* DataController.swift in Sources */,
@@ -819,6 +835,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		275203572917F8050076C4B5 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scenee/FloatingPanel#swift-package-manager";
@@ -830,6 +854,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		275203582917F8050076C4B5 /* Introspect */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 275203572917F8050076C4B5 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
+			productName = Introspect;
+		};
 		27DBEA0928FAEBB600B27850 /* FloatingPanel */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */;
