@@ -18,13 +18,9 @@ final class PictureEntryDetailViewModel: ObservableObject {
         return df
     }()
     
-    var payload: CurrentValueSubject<DetailPayload, Never>? {
+    var payload: DetailPayload = .dummy {
         didSet {
-            payload?.removeDuplicates().receive(on: RunLoop.main)
-                .sink { [weak self] payload in
-                    self?.reload(payload: payload)
-                }
-                .store(in: &streams)
+            reload(payload: payload)
         }
     }
     
@@ -62,45 +58,36 @@ final class PictureEntryDetailViewModel: ObservableObject {
 }
 
 struct ImageDetailView: View {
-    let proxy: FloatingPanelProxy
-    let detailPayloadStream: CurrentValueSubject<DetailPayload, Never>
-    let selectionFeedbackGenerator = UIImpactFeedbackGenerator(style: .rigid)
+    let detailPayload: DetailPayload
     
+    let selectionFeedbackGenerator = UIImpactFeedbackGenerator(style: .rigid)
     @State var backgroundColor: UIColor = .black
+    
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         GeometryReader { reader in
             VStack(alignment: .center, spacing: 12) {
                 modalHeader
+                    .padding(.horizontal, 20)
                 
                 mainImage(reader: reader)
                 
                 infoHeader
+                    .padding(.horizontal, 20)
+
 
                 paletteSection
+                    .padding(.horizontal, 20)
                 
                 Spacer()
             }
             .padding(.top, 18)
-            .padding(.horizontal, 20)
             .background(Color(uiColor: backgroundColor))
         }
         .onAppear {
-            viewModel.payload = detailPayloadStream
-            
-            detailPayloadStream.receive(on: RunLoop.main)
-                .sink { payload in
-                    if payload.detail != nil {
-                        backgroundColor = .black
-                        proxy.move(to: .full, animated: true)
-                    } else {
-                        proxy.move(to: .hidden, animated: true) {
-                            backgroundColor = .black
-                        }
-                    }
-                }
-                .store(in: &viewModel.streams)
+            viewModel.payload = detailPayload
         }
     }
     
@@ -108,7 +95,7 @@ struct ImageDetailView: View {
         ZStack(alignment: .top) {
             HStack {
                 Button {
-                    proxy.move(to: .hidden, animated: true)
+                    dismiss()
                 } label: {
                     Image(systemName: "chevron.down")
                         .font(.system(size: 22))
@@ -135,9 +122,6 @@ struct ImageDetailView: View {
                         .aspectRatio(contentMode: .fit)
                         .frame(height: reader.size.height * 0.6, alignment: .center)
                 }
-            }
-            .introspectTabScrollView { scroll in
-                proxy.track(scrollView: scroll)
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
         } else {
@@ -242,19 +226,12 @@ struct ImageDetailView_Previews: PreviewProvider {
         return obj
     }()
     
-    static var detailPayloadStream = CurrentValueSubject<DetailPayload, Never>(.init(id: UUID(),
-                                                                                     folder: .init(id: UUID(), name: "Favorites", emoji: "⭐", entries: []),
-                                                                                     detail: detail))
     @StateObject static var panelDelegate = DemoFloatingPanelDelegate()
     @StateObject static var detailViewModel = PictureEntryDetailViewModel()
     
     static var previews: some View {
-        HomeView(detailPayloadStream: .init(.dummy), zoomFactor: .constant(4), showSettings: .constant(false), showLabels: .constant(false))
+        HomeView(detailPayload: .dummy, zoomFactor: .constant(4), showSettings: .constant(false), showLabels: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
-            .floatingPanel(delegate: panelDelegate) { proxy in
-                ImageDetailView(proxy: proxy, detailPayloadStream: detailPayloadStream)
-                    .environmentObject(detailViewModel)
-            }
             .floatingPanelSurfaceAppearance(.phone)
             .floatingPanelContentMode(.fitToBounds)
             .floatingPanelContentInsetAdjustmentBehavior(.never)

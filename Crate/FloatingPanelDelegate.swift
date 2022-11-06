@@ -14,7 +14,7 @@ final class SavedMapPanelLayout: FloatingPanelLayout {
     }
     
     var position: FloatingPanelPosition {
-        .bottom
+        .left
     }
     
     var anchors: [FloatingPanelState : FloatingPanelLayoutAnchoring] {
@@ -35,3 +35,4 @@ final class DetailFloatingPanelDelegate: FloatingPanelControllerDelegate, Observ
         return false
     }
 }
+

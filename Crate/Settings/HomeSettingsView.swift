@@ -57,9 +57,9 @@ struct HomeSettingsView_Previews: PreviewProvider {
     @State static var showSettings = true
     @State static var showLabels = true
     @State static var zoomFactor = 1.0
-    
+
     static var previews: some View {
-        HomeView(detailPayloadStream: .init(.dummy), zoomFactor: $zoomFactor, showSettings: $showSettings, showLabels: $showLabels)
+        HomeView(detailPayload: .dummy, zoomFactor: $zoomFactor, showSettings: $showSettings, showLabels: $showLabels)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
             .floatingPanel(delegate: panelDelegate) { proxy in
                 HomeSettingsView(proxy: proxy, showSettings: $showSettings, showLabels: $showLabels, zoomFactor: $zoomFactor)

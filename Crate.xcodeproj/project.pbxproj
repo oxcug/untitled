@@ -23,6 +23,8 @@
 		27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27020E2328F7680600C94312 /* Notification+Extensions.swift */; };
 		275203532917D60D0076C4B5 /* HomeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275203522917D60D0076C4B5 /* HomeSettingsView.swift */; };
 		275203592917F8050076C4B5 /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 275203582917F8050076C4B5 /* Introspect */; };
+		2752035C291876360076C4B5 /* PanModal in Frameworks */ = {isa = PBXBuildFile; productRef = 2752035B291876360076C4B5 /* PanModal */; };
+		2752035E2918766E0076C4B5 /* DetailNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2752035D2918766E0076C4B5 /* DetailNavigationController.swift */; };
 		27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27748E3528FCB87C00013857 /* EmojiTextField.swift */; };
 		278F956928FD82920052D319 /* CGRect+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278F956828FD82920052D319 /* CGRect+Extensions.swift */; };
 		27A4452328FD5DFB00BBB91D /* outfit.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 27A4452228FD5DFB00BBB91D /* outfit.jpeg */; };
@@ -50,7 +52,6 @@
 		27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1128FAECB700B27850 /* FloatingPanelView.swift */; };
 		27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1228FAECB700B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift */; };
 		27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */; };
-		27DED94B28FF593000CE9095 /* FloatingPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */; };
 		27DED94D2906A08E00CE9095 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94C2906A08E00CE9095 /* RoundedCorner.swift */; };
 		27DED9502906C27C00CE9095 /* Crate.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94E2906C27C00CE9095 /* Crate.xcdatamodeld */; };
 		27DED9522906C3FD00CE9095 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9512906C3FD00CE9095 /* DataController.swift */; };
@@ -98,6 +99,7 @@
 		27020E2028F762F800C94312 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		27020E2328F7680600C94312 /* Notification+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extensions.swift"; sourceTree = "<group>"; };
 		275203522917D60D0076C4B5 /* HomeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSettingsView.swift; sourceTree = "<group>"; };
+		2752035D2918766E0076C4B5 /* DetailNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailNavigationController.swift; sourceTree = "<group>"; };
 		27748E3528FCB87C00013857 /* EmojiTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiTextField.swift; sourceTree = "<group>"; };
 		278F956828FD82920052D319 /* CGRect+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGRect+Extensions.swift"; sourceTree = "<group>"; };
 		27A4452228FD5DFB00BBB91D /* outfit.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = outfit.jpeg; sourceTree = "<group>"; };
@@ -124,7 +126,6 @@
 		27DBEA1128FAECB700B27850 /* FloatingPanelView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FloatingPanelView.swift; sourceTree = "<group>"; };
 		27DBEA1228FAECB700B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanelContentInsetAdjustmentBehavior.swift"; sourceTree = "<group>"; };
 		27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanel.swift"; sourceTree = "<group>"; };
-		27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingPanelDelegate.swift; sourceTree = "<group>"; };
 		27DED94C2906A08E00CE9095 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		27DED94F2906C27C00CE9095 /* Crate.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Crate.xcdatamodel; sourceTree = "<group>"; };
 		27DED9512906C3FD00CE9095 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -142,6 +143,7 @@
 			files = (
 				27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */,
 				275203592917F8050076C4B5 /* Introspect in Frameworks */,
+				2752035C291876360076C4B5 /* PanModal in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,7 +189,6 @@
 			children = (
 				27020DE328F6C49C00C94312 /* CrateApp.swift */,
 				27020DE528F6C49C00C94312 /* HomeView.swift */,
-				27DED94A28FF593000CE9095 /* FloatingPanelDelegate.swift */,
 				27DED9512906C3FD00CE9095 /* DataController.swift */,
 				275203512917D5FA0076C4B5 /* Settings */,
 				27DED9982907485B00CE9095 /* Pick */,
@@ -308,6 +309,7 @@
 		27DED9972907485100CE9095 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
+				2752035D2918766E0076C4B5 /* DetailNavigationController.swift */,
 				27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */,
 				27A8EEA828FCAF7C004DDCE9 /* FolderCreationView.swift */,
 				27DED9952907483400CE9095 /* PictureEntryViewModel.swift */,
@@ -345,6 +347,7 @@
 			packageProductDependencies = (
 				27DBEA0928FAEBB600B27850 /* FloatingPanel */,
 				275203582917F8050076C4B5 /* Introspect */,
+				2752035B291876360076C4B5 /* PanModal */,
 			);
 			productName = Crate;
 			productReference = 27020DE028F6C49C00C94312 /* Crate.app */;
@@ -421,6 +424,7 @@
 			packageReferences = (
 				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
 				275203572917F8050076C4B5 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
+				2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */,
 			);
 			productRefGroup = 27020DE128F6C49C00C94312 /* Products */;
 			projectDirPath = "";
@@ -481,7 +485,6 @@
 				27DED9522906C3FD00CE9095 /* DataController.swift in Sources */,
 				27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */,
 				27DED94D2906A08E00CE9095 /* RoundedCorner.swift in Sources */,
-				27DED94B28FF593000CE9095 /* FloatingPanelDelegate.swift in Sources */,
 				27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */,
 				27DBE9E828F8655E00B27850 /* Folder.swift in Sources */,
 				27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */,
@@ -490,6 +493,7 @@
 				27DED9942907409600CE9095 /* DemoPanelDelegate.swift in Sources */,
 				27020DE628F6C49C00C94312 /* HomeView.swift in Sources */,
 				27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */,
+				2752035E2918766E0076C4B5 /* DetailNavigationController.swift in Sources */,
 				27DED99A290749E100CE9095 /* SettingsPanelDelegate.swift in Sources */,
 				27020E2128F762F800C94312 /* UIImage+Extensions.swift in Sources */,
 				27DBEA1728FAECB800B27850 /* UIHostingController+ignoreKeyboard.swift in Sources */,
@@ -843,6 +847,14 @@
 				kind = branch;
 			};
 		};
+		2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/slackhq/PanModal.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scenee/FloatingPanel#swift-package-manager";
@@ -858,6 +870,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 275203572917F8050076C4B5 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
 			productName = Introspect;
+		};
+		2752035B291876360076C4B5 /* PanModal */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */;
+			productName = PanModal;
 		};
 		27DBEA0928FAEBB600B27850 /* FloatingPanel */ = {
 			isa = XCSwiftPackageProductDependency;

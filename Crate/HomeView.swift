@@ -9,8 +9,31 @@ import Combine
 import SwiftUI
 import FloatingPanel
 
+extension View {
+    func presentModal<Content: View, Item: Equatable>(item: Binding<Item>, @ViewBuilder content: @escaping (Item) -> Content) -> some View {
+        onChange(of: item.wrappedValue) { value in
+            let topMostController = self.topMostController()
+            if (!topMostController.isPanModalPresented) {
+                DispatchQueue.main.async {
+                    let rootView = content(value)
+                    let host = FullScreenHostingController(rootView: rootView)
+                    topMostController.presentPanModal(host)
+                }
+            }
+        }
+    }
+    
+    func topMostController() -> UIViewController {
+        var topController = UIApplication.shared.windows.first!.rootViewController!
+        while (topController.presentedViewController != nil) {
+            topController = topController.presentedViewController!
+        }
+        return topController
+    }
+}
+
 struct HomeView: View {
-    let detailPayloadStream: CurrentValueSubject<DetailPayload, Never>
+    @State var detailPayload: DetailPayload = .dummy
     @Binding var zoomFactor: Double
     @Binding var showSettings: Bool
     @Binding var showLabels: Bool
@@ -29,6 +52,8 @@ struct HomeView: View {
     
     @StateObject var viewModel = PictureEntryViewModel()
     @StateObject var panelDelegate = SettingsPanelDelegate()
+    @StateObject var detailViewModel = PictureEntryDetailViewModel()
+
     
     var body: some View {
         NavigationStack {
@@ -77,6 +102,10 @@ struct HomeView: View {
         .fullScreenCover(item: $imagesPayload) { payload in
             ImageReview(images: payload.images)
         }
+        .presentModal(item: $detailPayload) { payload in
+            ImageDetailView(detailPayload: payload)
+                .environmentObject(detailViewModel)
+        }
     }
     
     @ViewBuilder
@@ -101,7 +130,7 @@ struct HomeView: View {
             LazyHGrid(rows: [GridItem(.flexible())]) {
                 ForEach(folder.entries) { entry in
                     Button {
-                        detailPayloadStream.send(DetailPayload(id: UUID(), folder: folder, detail: entry))
+                        detailPayload = DetailPayload(id: UUID(), folder: folder, detail: entry)
                     } label: {
                         VStack(alignment: .center, spacing: 6) {
                             Image(uiImage: viewModel.image(for: entry))
@@ -132,7 +161,7 @@ struct HomeView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(detailPayloadStream: .init(.dummy), zoomFactor: .constant(4), showSettings: .constant(false), showLabels: .constant(false))
+        HomeView(detailPayload: .dummy, zoomFactor: .constant(4), showSettings: .constant(false), showLabels: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }
