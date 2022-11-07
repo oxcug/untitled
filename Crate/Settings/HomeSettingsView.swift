@@ -15,7 +15,11 @@ struct HomeSettingsView: View {
     @Binding var zoomFactor: Double
     
     var body: some View {
-        VStack(alignment: .center, spacing: 26) {
+        VStack(alignment: .leading, spacing: 24) {
+            Text("Settings")
+                .font(.system(size: 24, weight: .semibold, design: .default))
+                .foregroundColor(.white)
+            
             VStack(alignment: .leading, spacing: 15) {
                 Text("Zoom")
                     .font(.system(size: 15, weight: .semibold, design: .default))
@@ -40,7 +44,7 @@ struct HomeSettingsView: View {
                 
                 Spacer()
                 
-                Toggle(isOn: $showLabels.animation(.easeIn)) { }
+                Toggle(isOn: $showLabels) { }
                     .tint(.white.opacity(0.4))
             }
         }

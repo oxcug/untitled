@@ -137,18 +137,19 @@ struct HomeView: View {
                                 .aspectRatio(contentMode: .fit)
                                 .frame(height: 50 * zoomFactor)
                             
-                            VStack(alignment: .center, spacing: 4) {
-                                Text(viewModel.name(for: entry))
-                                    .font(.system(size: 16, weight: .semibold, design: .default))
-                                    .foregroundColor(.white)
-                                
-                                Text(viewModel.dateString(for: entry))
-                                    .font(.system(size: 13, weight: .regular, design: .rounded))
-                                    .foregroundColor(.white.opacity(0.7))
+                            if showLabels {
+                                VStack(alignment: .center, spacing: 4) {
+                                    Text(viewModel.name(for: entry))
+                                        .font(.system(size: 16, weight: .semibold, design: .default))
+                                        .foregroundColor(.white)
+                                    
+                                    Text(viewModel.dateString(for: entry))
+                                        .font(.system(size: 13, weight: .regular, design: .rounded))
+                                        .foregroundColor(.white.opacity(0.7))
+                                }
                             }
-                            .opacity(showLabels ? 1 : 0)
                         }
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, showLabels ? 20 : 10)
                     }
                 }
             }

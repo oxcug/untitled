@@ -19,7 +19,7 @@ final class SettingsPanelLayout: FloatingPanelLayout {
     
     var anchors: [FloatingPanelState : FloatingPanelLayoutAnchoring] {
         [
-            .full: FloatingPanelLayoutAnchor(absoluteInset: 200, edge: .bottom, referenceGuide: .superview),
+            .full: FloatingPanelLayoutAnchor(absoluteInset: 250, edge: .bottom, referenceGuide: .superview),
             .hidden: FloatingPanelLayoutAnchor(absoluteInset: 0, edge: .bottom, referenceGuide: .superview)
         ]
     }

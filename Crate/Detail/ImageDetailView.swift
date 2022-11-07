@@ -24,6 +24,7 @@ final class PictureEntryDetailViewModel: ObservableObject {
         }
     }
     
+    @Published var cur: PictureEntry = .init()
     @Published var entries: [PictureEntry] = []
     @Published var images: [UUID: UIImage] = [:]
     
@@ -92,7 +93,6 @@ struct ImageDetailView: View {
     let detailPayload: DetailPayload
     let selectionFeedbackGenerator = UIImpactFeedbackGenerator(style: .rigid)
     
-    @State var cur: PictureEntry = .init()
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
     @Environment(\.dismiss) private var dismiss
     
@@ -118,8 +118,8 @@ struct ImageDetailView: View {
         .task {
             viewModel.payload = detailPayload
         }
-        .onChange(of: cur) { cur in
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.27) {
+        .onChange(of: viewModel.cur) { cur in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.23) {
                 withAnimation {
                     viewModel.reload(entry: cur)
                 }
@@ -152,15 +152,12 @@ struct ImageDetailView: View {
     
     @ViewBuilder
     func mainImage(reader: GeometryProxy) -> some View {
-        TabView(selection: $cur) {
+        TabView(selection: $viewModel.cur) {
             ForEach(viewModel.entries, id: \.self) { entry in
                 Image(uiImage: viewModel.images[entry.id ?? UUID()] ?? UIImage())
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: reader.size.height * 0.6, alignment: .center)
-                    .task {
-                        _ = viewModel.loadPalette(entry: entry)
-                    }
             }
         }
         .tabViewStyle(.page(indexDisplayMode: .never))
@@ -184,7 +181,13 @@ struct ImageDetailView: View {
                 Button {
                     
                 } label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
+                    Label("Save", systemImage: "arrow.down.circle")
+                }
+                
+                Button {
+                    
+                } label: {
+                    Label("Edit", systemImage: "pencil")
                 }
                 
                 Button(role: .destructive) {
