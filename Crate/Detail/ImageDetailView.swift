@@ -24,26 +24,46 @@ final class PictureEntryDetailViewModel: ObservableObject {
         }
     }
     
+    @Published var entries: [PictureEntry] = []
+    @Published var images: [UUID: UIImage] = [:]
+    
     @Published var name = "Untitled"
     @Published var folderName = "Untitled"
     @Published var dateString = "Untitled"
-    @Published var originalImage: UIImage?
-    @Published var modifiedImage: UIImage?
     @Published var palette: [UIColor] = []
+    @Published var paletteCache: [UUID: [UIColor]] = [:]
     
-    var streams = Set<AnyCancellable>()
-
+    @Published var backgroundColor: UIColor = .black
+    
+    func reset() {
+        backgroundColor = .black
+        entries = []
+    }
+    
     func reload(payload: DetailPayload) {
-        guard let entry = payload.detail, let folder = payload.folder else {
+        guard let entry = payload.detail,
+              let folder = payload.folder,
+              let currentIndexInFolder = folder.entries.firstIndex(of: entry) else {
             return
         }
-        
-        originalImage = ImageStorage.shared.loadImage(named: entry.original)
-        modifiedImage = ImageStorage.shared.loadImage(named: entry.modified)
-        
-        let colorStrings = entry.colors ?? []
-        palette = colorStrings.map { MMCQ.Color(rgbID: $0).makeUIColor() }
+       
         folderName = folder.fullName
+        
+        let existingEntries = folder.entries
+        entries = existingEntries.dropFirst(Int(currentIndexInFolder)) + existingEntries.dropLast(existingEntries.count - Int(currentIndexInFolder))
+        images = Dictionary(uniqueKeysWithValues: entries.map {
+            ($0.id ?? UUID(), ImageStorage.shared.loadImage(named: $0.modified) ?? UIImage())
+        })
+        
+        if let first = entries.first {
+            reload(entry: first)
+        }
+    }
+   
+    func reload(entry: PictureEntry)  {
+        palette = loadPalette(entry: entry)
+        backgroundColor = palette.first ?? .black
+        
         name = entry.name ?? ""
         if name.count == 0 {
             name = "Untitled"
@@ -55,14 +75,24 @@ final class PictureEntryDetailViewModel: ObservableObject {
             dateString = "Unknown date"
         }
     }
+    
+    func loadPalette(entry: PictureEntry) -> [UIColor] {
+        if let cachedPalette = paletteCache[entry.id ?? UUID()] {
+            return cachedPalette
+        } else {
+            let colorStrings = entry.colors ?? []
+            let palette = colorStrings.map { MMCQ.Color(rgbID: $0).makeUIColor() }
+            paletteCache[entry.id ?? UUID()] = palette
+            return palette
+        }
+    }
 }
 
 struct ImageDetailView: View {
     let detailPayload: DetailPayload
-    
     let selectionFeedbackGenerator = UIImpactFeedbackGenerator(style: .rigid)
-    @State var backgroundColor: UIColor = .black
     
+    @State var cur: PictureEntry = .init()
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
     @Environment(\.dismiss) private var dismiss
     
@@ -77,17 +107,26 @@ struct ImageDetailView: View {
                 infoHeader
                     .padding(.horizontal, 20)
 
-
                 paletteSection
                     .padding(.horizontal, 20)
                 
                 Spacer()
             }
             .padding(.top, 18)
-            .background(Color(uiColor: backgroundColor))
+            .background(Color(uiColor: viewModel.backgroundColor))
         }
-        .onAppear {
+        .task {
             viewModel.payload = detailPayload
+        }
+        .onChange(of: cur) { cur in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.27) {
+                withAnimation {
+                    viewModel.reload(entry: cur)
+                }
+            }
+        }
+        .onDisappear {
+            viewModel.reset()
         }
     }
     
@@ -113,28 +152,18 @@ struct ImageDetailView: View {
     
     @ViewBuilder
     func mainImage(reader: GeometryProxy) -> some View {
-        let savedImage = viewModel.modifiedImage ?? viewModel.originalImage
-        if let savedImage {
-            TabView {
-                ForEach(1...10, id: \.self) { _ in
-                    Image(uiImage: savedImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: reader.size.height * 0.6, alignment: .center)
-                }
+        TabView(selection: $cur) {
+            ForEach(viewModel.entries, id: \.self) { entry in
+                Image(uiImage: viewModel.images[entry.id ?? UUID()] ?? UIImage())
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: reader.size.height * 0.6, alignment: .center)
+                    .task {
+                        _ = viewModel.loadPalette(entry: entry)
+                    }
             }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-        } else {
-            ZStack {
-                RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(.gray.opacity(0.2))
-                
-                Image(systemName: "questionmark")
-                    .font(.system(size: 30, weight: .semibold, design: .default))
-                    .foregroundColor(.white)
-            }
-            .frame(height: reader.size.height * 0.6, alignment: .center)
         }
+        .tabViewStyle(.page(indexDisplayMode: .never))
     }
     
     var infoHeader: some View {
@@ -185,10 +214,10 @@ struct ImageDetailView: View {
                             selectionFeedbackGenerator.impactOccurred()
                             
                             withAnimation(.easeInOut) {
-                                backgroundColor = color
+                                viewModel.backgroundColor = color
                             }
                         } label: {
-                            let isSelected = (backgroundColor == color)
+                            let isSelected = (viewModel.backgroundColor == color)
                             RoundedRectangle(cornerRadius: 6)
                                 .foregroundColor(Color(uiColor: color))
                                 .frame(width: 40, height: 40)

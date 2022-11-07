@@ -54,7 +54,6 @@ struct HomeView: View {
     @StateObject var panelDelegate = SettingsPanelDelegate()
     @StateObject var detailViewModel = PictureEntryDetailViewModel()
 
-    
     var body: some View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {

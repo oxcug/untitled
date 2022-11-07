@@ -16,21 +16,28 @@ final class ImageStorage: ObservableObject {
     let fileManager: FileManager
     let documentsURL: URL
     
+    var cacheTable: [String: UIImage] = [:]
+    
     private init() {
         fileManager = FileManager.default
         documentsURL = try! fileManager.url(for: .libraryDirectory, in: .allDomainsMask, appropriateFor: nil, create: true)
     }
    
-    // Add caching
     func loadImage(named fileName: String?) -> UIImage? {
         guard let fileName = fileName else {
             return nil
         }
         
+        if let cached = cacheTable[fileName] {
+            return cached
+        }
+        
         let fileURL = documentsURL.appendingPathComponent(fileName)
         do {
             let imageData = try Data(contentsOf: fileURL)
-            return UIImage(data: imageData)
+            let image = UIImage(data: imageData)
+            cacheTable[fileName] = image
+            return image
         } catch {
             return nil
         }
