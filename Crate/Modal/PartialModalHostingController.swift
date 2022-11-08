@@ -1,21 +1,26 @@
 //
-//  DetailNavigationController.swift
+//  PartialModalHostingController.swift
 //  Crate
 //
-//  Created by Mike Choi on 11/6/22.
+//  Created by Mike Choi on 11/8/22.
 //
 
-import Combine
 import PanModal
 import SwiftUI
 
-final class FullScreenHostingController<Content>: UIHostingController<Content> where Content : View {
+final class PartialModalHostingController<Content>: UIHostingController<Content> where Content : View {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        view.backgroundColor = .init(hexString: "#141414") ?? .black
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         .lightContent
     }
 }
 
-extension FullScreenHostingController: PanModalPresentable {
+extension PartialModalHostingController: PanModalPresentable {
     var panScrollable: UIScrollView? {
         return nil
     }
@@ -23,13 +28,17 @@ extension FullScreenHostingController: PanModalPresentable {
     var topOffset: CGFloat {
         return 0.0
     }
+    
+    var longFormHeight: PanModalHeight {
+        .contentHeight(200)
+    }
 
     var springDamping: CGFloat {
-        return 1.0
+        1.0
     }
 
     var transitionDuration: Double {
-        return 0.4
+        0.4
     }
 
     var transitionAnimationOptions: UIView.AnimationOptions {
@@ -41,6 +50,6 @@ extension FullScreenHostingController: PanModalPresentable {
     }
 
     var showDragIndicator: Bool {
-        false
+        true
     }
 }

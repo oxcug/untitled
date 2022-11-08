@@ -9,34 +9,46 @@ import Combine
 import SwiftUI
 import FloatingPanel
 
-extension View {
-    func presentModal<Content: View, Item: Equatable>(item: Binding<Item>, @ViewBuilder content: @escaping (Item) -> Content) -> some View {
-        onChange(of: item.wrappedValue) { value in
-            let topMostController = self.topMostController()
-            if (!topMostController.isPanModalPresented) {
-                DispatchQueue.main.async {
-                    let rootView = content(value)
-                    let host = FullScreenHostingController(rootView: rootView)
-                    topMostController.presentPanModal(host)
+struct EntryCell: View {
+    let folder: Folder
+    let entry: PictureEntry
+    
+    var didTap: () -> ()
+    
+    @AppStorage("show.labels") var showLabels = true
+    @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
+    @EnvironmentObject var viewModel: PictureEntryViewModel
+    
+    var body: some View {
+        Button {
+            didTap()
+        } label: {
+            VStack(alignment: .center, spacing: 6) {
+                Image(uiImage: viewModel.image(for: entry))
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: 50 * zoomFactor)
+                
+                if showLabels {
+                    VStack(alignment: .center, spacing: 4) {
+                        Text(viewModel.name(for: entry))
+                            .font(.system(size: 16, weight: .semibold, design: .default))
+                            .foregroundColor(.white)
+                        
+                        Text(viewModel.dateString(for: entry))
+                            .font(.system(size: 13, weight: .regular, design: .rounded))
+                            .foregroundColor(.white.opacity(0.7))
+                    }
                 }
             }
+            .padding(.horizontal, showLabels ? 20 : 10)
         }
-    }
-    
-    func topMostController() -> UIViewController {
-        var topController = UIApplication.shared.windows.first!.rootViewController!
-        while (topController.presentedViewController != nil) {
-            topController = topController.presentedViewController!
-        }
-        return topController
     }
 }
 
 struct HomeView: View {
     @State var detailPayload: DetailPayload = .dummy
-    @Binding var zoomFactor: Double
     @Binding var showSettings: Bool
-    @Binding var showLabels: Bool
     
     @State var imagesPayload: ImagesPayload?
     @State var showingImagePicker = false
@@ -64,6 +76,10 @@ struct HomeView: View {
                 }
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
+                .navigationDestination(for: Folder.self) { folder in
+                    FolderDetailView(folder: folder)
+                        .environmentObject(viewModel)
+                }
                 
                 Button {
                     showingImagePicker = true
@@ -95,13 +111,14 @@ struct HomeView: View {
             }
         }
         .preferredColorScheme(.dark)
+        .tint(.white)
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(imagesPayload: $imagesPayload)
         }
         .fullScreenCover(item: $imagesPayload) { payload in
             ImageReview(images: payload.images)
         }
-        .presentModal(item: $detailPayload) { payload in
+        .presentFullScreenModal(item: $detailPayload) { payload in
             ImageDetailView(detailPayload: payload)
                 .environment(\.managedObjectContext, DataController.shared.container.viewContext)
                 .environmentObject(detailViewModel)
@@ -110,48 +127,20 @@ struct HomeView: View {
     
     @ViewBuilder
     func section(_ folder: Folder) -> some View {
-        HStack(alignment: .center) {
+        NavigationLink(value: folder) {
             Text(folder.fullName)
                 .font(.system(size: 16, weight: .semibold, design: .default))
                 .foregroundColor(.white)
-            
-            Spacer()
-            
-            Button {
-            } label: {
-                Image(systemName: "chevron.right")
-                    .foregroundColor(.white)
-                    .font(.system(size: 15, weight: .bold, design: .default))
-            }
+                .padding(.vertical)
         }
-        .padding(.vertical)
         
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHGrid(rows: [GridItem(.flexible())]) {
                 ForEach(folder.entries) { entry in
-                    Button {
+                    EntryCell(folder: folder, entry: entry) {
                         detailPayload = DetailPayload(id: UUID(), folder: folder, detail: entry)
-                    } label: {
-                        VStack(alignment: .center, spacing: 6) {
-                            Image(uiImage: viewModel.image(for: entry))
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                                .frame(height: 50 * zoomFactor)
-                            
-                            if showLabels {
-                                VStack(alignment: .center, spacing: 4) {
-                                    Text(viewModel.name(for: entry))
-                                        .font(.system(size: 16, weight: .semibold, design: .default))
-                                        .foregroundColor(.white)
-                                    
-                                    Text(viewModel.dateString(for: entry))
-                                        .font(.system(size: 13, weight: .regular, design: .rounded))
-                                        .foregroundColor(.white.opacity(0.7))
-                                }
-                            }
-                        }
-                        .padding(.horizontal, showLabels ? 20 : 10)
                     }
+                    .environmentObject(viewModel)
                 }
             }
         }
@@ -162,7 +151,7 @@ struct HomeView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(detailPayload: .dummy, zoomFactor: .constant(4), showSettings: .constant(false), showLabels: .constant(false))
+        HomeView(detailPayload: .dummy, showSettings: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

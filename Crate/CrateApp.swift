@@ -20,22 +20,18 @@ struct DetailPayload: Identifiable, Hashable {
 struct CrateApp: App {
     @State var detailPayload: DetailPayload = .dummy
     @State var showSettings = false
-    @State var showLabels = false
-    @State var zoomFactor: Double = 4
     
-    @StateObject var settingsPanelDelegate = SettingsPanelDelegate()
-    let dataController = DataController.shared
+    @AppStorage("show.labels") var showLabels = true
+    @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
     
     var body: some Scene {
         WindowGroup {
-            HomeView(detailPayload: detailPayload, zoomFactor: $zoomFactor, showSettings: $showSettings, showLabels: $showLabels)
-                .environment(\.managedObjectContext, dataController.container.viewContext)
-                .floatingPanel(delegate: settingsPanelDelegate) { proxy in
-                    HomeSettingsView(proxy: proxy, showSettings: $showSettings, showLabels: $showLabels, zoomFactor: $zoomFactor)
+            HomeView(showSettings: $showSettings)
+                .preferredColorScheme(.dark)
+                .environment(\.managedObjectContext, DataController.shared.container.viewContext)
+                .presentModal(isPresented: $showSettings) {
+                    HomeSettingsView(showSettings: $showSettings)
                 }
-                .floatingPanelSurfaceAppearance(.phone)
-                .floatingPanelContentMode(.fitToBounds)
-                .floatingPanelContentInsetAdjustmentBehavior(.never)
         }
     }
 }

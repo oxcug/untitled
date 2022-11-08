@@ -9,10 +9,11 @@ import Foundation
 import SwiftUI
 
 struct HomeSettingsView: View {
-    let proxy: FloatingPanelProxy
     @Binding var showSettings: Bool
-    @Binding var showLabels: Bool
-    @Binding var zoomFactor: Double
+    
+    @Environment(\.dismiss) var dismiss
+    @AppStorage("show.labels") var showLabels = true
+    @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
     
     var body: some View {
         VStack(alignment: .leading, spacing: 24) {
@@ -23,24 +24,26 @@ struct HomeSettingsView: View {
             VStack(alignment: .leading, spacing: 15) {
                 Text("Zoom")
                     .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.white)
                 
                 HStack(spacing: 12) {
                     Image(systemName: "minus.magnifyingglass")
                         .font(.system(size: 20, weight: .light, design: .default))
+                        .foregroundColor(.white)
                     
-                    Slider(value: $zoomFactor, in: 1...15, step: 1)
+                    Slider(value: $zoomFactor, in: 1...10, step: 0.25)
                         .tint(.white)
                     
                     Image(systemName: "plus.magnifyingglass")
                         .font(.system(size: 20, weight: .light, design: .default))
+                        .foregroundColor(.white)
                 }
             }
             
             HStack(alignment: .center, spacing: 15) {
                 Text("Text")
                     .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.white)
                 
                 Spacer()
                 
@@ -50,26 +53,20 @@ struct HomeSettingsView: View {
         }
         .padding()
         .onChange(of: showSettings) { _ in
-            proxy.move(to: .full, animated: true)
+            dismiss()
         }
     }
 }
 
 struct HomeSettingsView_Previews: PreviewProvider {
-    @StateObject static var panelDelegate = DemoFloatingPanelDelegate()
     @StateObject static var detailViewModel = PictureEntryDetailViewModel()
     @State static var showSettings = true
-    @State static var showLabels = true
-    @State static var zoomFactor = 1.0
 
     static var previews: some View {
-        HomeView(detailPayload: .dummy, zoomFactor: $zoomFactor, showSettings: $showSettings, showLabels: $showLabels)
+        HomeView(detailPayload: .dummy, showSettings: $showSettings)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
-            .floatingPanel(delegate: panelDelegate) { proxy in
-                HomeSettingsView(proxy: proxy, showSettings: $showSettings, showLabels: $showLabels, zoomFactor: $zoomFactor)
+            .presentModal(isPresented: $showSettings) {
+                HomeSettingsView(showSettings: $showSettings)
             }
-            .floatingPanelSurfaceAppearance(.phone)
-            .floatingPanelContentMode(.fitToBounds)
-            .floatingPanelContentInsetAdjustmentBehavior(.never)
     }
 }

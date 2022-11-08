@@ -346,7 +346,7 @@ struct ImageDetailView_Previews: PreviewProvider {
     @StateObject static var detailViewModel = PictureEntryDetailViewModel()
     
     static var previews: some View {
-        HomeView(detailPayload: .dummy, zoomFactor: .constant(4), showSettings: .constant(false), showLabels: .constant(false))
+        HomeView(detailPayload: .dummy, showSettings: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
             .floatingPanelSurfaceAppearance(.phone)
             .floatingPanelContentMode(.fitToBounds)
