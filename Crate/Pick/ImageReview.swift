@@ -186,7 +186,7 @@ struct SingleImageReview: View {
                 
                 VStack(alignment: .trailing, spacing: 15) {
                     if let selectedFolder = viewModel.folder {
-                        Text(selectedFolder.name ?? "asdf")
+                        Text(selectedFolder.fullName)
                             .font(.system(size: 12, weight: .semibold, design: .default))
                             .foregroundColor(.white)
                             .padding(12)
@@ -205,8 +205,10 @@ struct SingleImageReview: View {
 }
 
 struct ImageReview: View {
-    let images: [UIImage]
+    let images: [UIImage]?
+    let detail: DetailPayload?
     
+    @State var title: String = ""
     @State var selectedPage: Int = 0
     @State var isKeyboardVisible = false
     @State var errorMessage = ""
@@ -225,7 +227,6 @@ struct ImageReview: View {
                             .tag(viewModel.pageNumber)
                     }
                 }
-//                .tabViewStyle(.page(indexDisplayMode: .never))
                 
                 nextFooter
                     .background(Color.black, ignoresSafeAreaEdges: .bottom)
@@ -234,7 +235,7 @@ struct ImageReview: View {
                 ToolbarCancelButton()
                 
                 ToolbarItem(placement: .principal) {
-                    Text("\(selectedPage + 1) of \(images.count)")
+                    Text(title)
                         .font(.system(size: 15, weight: .semibold, design: .default))
                         .foregroundColor(.white)
                 }
@@ -242,8 +243,14 @@ struct ImageReview: View {
             .navigationBarTitleDisplayMode(.inline)
             .preferredColorScheme(.dark)
         }
-        .onAppear {
-            viewModelManager.createViewModels(images: images)
+        .task {
+            if let images = images {
+                title = "\(selectedPage + 1) of \(images.count)"
+                viewModelManager.createViewModels(images: images)
+            } else if let detail = detail {
+                title = "Edit"
+                viewModelManager.setupEditMode(detail: detail)
+            }
         }
     }
     
@@ -259,7 +266,7 @@ struct ImageReview: View {
                 
                 Spacer()
                                 
-                let isLastOne = (selectedPage == images.count - 1)
+                let isLastOne = (selectedPage == (images?.count ?? 1) - 1)
                 
                 Button {
                    save(isLastOne)
@@ -316,7 +323,7 @@ struct ImageReview: View {
 
 struct ImageReview_Previews: PreviewProvider {
     static var previews: some View {
-        ImageReview(images: [UIImage(named: "represent.jpeg")!])
+        ImageReview(images: [UIImage(named: "represent.jpeg")!], detail: nil)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

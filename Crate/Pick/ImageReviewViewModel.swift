@@ -31,6 +31,15 @@ final class ImageReviewManager: ObservableObject {
         }
     }
     
+    func setupEditMode(detail: DetailPayload) {
+        guard let viewModel = ImageReviewViewModel(detail: detail) else {
+            return
+        }
+        
+        viewModels = [viewModel]
+        current = viewModel
+    }
+    
     func createViewModels(images: [UIImage]) {
         if !viewModels.isEmpty {
             return
@@ -57,7 +66,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     let pageNumber: Int
     
     @Published var name: String = ""
-    @Published var folder: PictureFolder?
+    @Published var folder: Folder?
    
     @Published var textBoundingBoxes: [BoundingBox] = []
     @Published var titleBox: BoundingBox?
@@ -86,8 +95,15 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         self.pageNumber = pageNumber
     }
     
-    func didTapFolder(_ folder: PictureFolder) {
+    init?(detail: DetailPayload) {
+        guard let entry = detail.detail, let folder = detail.folder else { return nil}
+        self.pageNumber = 0
         self.folder = folder
+        self.image = ImageStorage.shared.loadImage(named: entry.original) ?? UIImage()
+    }
+    
+    func didTapFolder(_ folder: PictureFolder) {
+        self.folder = Folder(coreDataObject: folder)
     }
    
     func requestForProcessing(imageSize: CGSize) {
@@ -169,7 +185,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         entry.original = ImageStorage.shared.write(image, entryID: entryID, isOriginal: true)
         entry.modified = ImageStorage.shared.write(segmentedImage?.original.cropImageByAlpha(), entryID: entryID, isOriginal: false)
         entry.boxes = NSArray()
-        entry.folder = folder
+        entry.folder = folder.coreDataObject
         entry.colors = (colors ?? []).map { $0.id }
 
         do {

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct FolderSelectionView: View {
     @State var showFolderCreationModal = false
-    @Binding var selectedFolder: PictureFolder?
+    @Binding var selectedFolder: Folder?
     @Environment(\.dismiss) private var dismiss
     
     // MARK: - Core Data
@@ -30,7 +30,7 @@ struct FolderSelectionView: View {
                     selectionFeedback.selectionChanged()
                     
                     DispatchQueue.main.async {
-                        selectedFolder = coreDataFolder
+                        selectedFolder = Folder(coreDataObject: coreDataFolder)
                         dismiss()
                     }
                 } label: {

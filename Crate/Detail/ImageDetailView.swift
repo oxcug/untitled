@@ -146,6 +146,7 @@ struct ImageDetailView: View {
     @State var offset: CGPoint = .zero
     @State var scale: CGFloat = .zero
     @State var scalePoisition: CGPoint = .zero
+    @State var showEditModal = false
     
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
     @Environment(\.dismiss) var dismiss
@@ -188,6 +189,11 @@ struct ImageDetailView: View {
         }
         .onDisappear {
             viewModel.reset()
+        }
+        .fullScreenCover(isPresented: $showEditModal) {
+            NavigationStack {
+                ImageReview(images: nil, detail: detailPayload)
+            }
         }
     }
     
@@ -271,11 +277,11 @@ struct ImageDetailView: View {
                 
                 Button {
                 } label: {
-                    Label("Save", systemImage: "arrow.down.circle")
+                    Label("Share", systemImage: "square.and.arrow.up")
                 }
                 
                 Button {
-                    
+                    showEditModal = true
                 } label: {
                     Label("Edit", systemImage: "pencil")
                 }
@@ -286,7 +292,6 @@ struct ImageDetailView: View {
                     .font(.system(size: 28, weight: .semibold, design: .default))
             }
         }
-        
     }
     
     var paletteSection: some View {
