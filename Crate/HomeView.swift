@@ -103,6 +103,7 @@ struct HomeView: View {
         }
         .presentModal(item: $detailPayload) { payload in
             ImageDetailView(detailPayload: payload)
+                .environment(\.managedObjectContext, DataController.shared.container.viewContext)
                 .environmentObject(detailViewModel)
         }
     }

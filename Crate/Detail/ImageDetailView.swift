@@ -62,6 +62,27 @@ final class PictureEntryDetailViewModel: ObservableObject {
         entries = []
     }
     
+    func deleteCurrent() {
+        guard let curIdx = entries.firstIndex(of: cur) else {
+           return
+        }
+        
+        backgroundColor = .black
+        entries.remove(at: curIdx)
+        
+        let nextIdx: Int
+        switch curIdx {
+            case let idx where idx > entries.count - 1:
+                nextIdx = idx - 1
+            case let idx where idx == 0:
+                nextIdx = 0
+            default:
+                nextIdx = curIdx - 1
+        }
+        cur = entries[nextIdx]
+        reload(entry: cur)
+    }
+    
     func reload(payload: DetailPayload) {
         guard let entry = payload.detail,
               let folder = payload.folder,
@@ -121,7 +142,8 @@ struct ImageDetailView: View {
     @State var scalePoisition: CGPoint = .zero
     
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.managedObjectContext) var viewContext
     
     var body: some View {
         GeometryReader { reader in
@@ -225,6 +247,15 @@ struct ImageDetailView: View {
             Spacer()
             
             Menu {
+                Button(role: .destructive) {
+                    if let entry = viewModel.cur.entry {
+                        viewContext.delete(entry)
+                    }
+                    viewModel.deleteCurrent()
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
+                
                 Button {
                     
                 } label: {
@@ -235,12 +266,6 @@ struct ImageDetailView: View {
                     
                 } label: {
                     Label("Edit", systemImage: "pencil")
-                }
-                
-                Button(role: .destructive) {
-                    
-                } label: {
-                    Label("Delete", systemImage: "trash")
                 }
             } label: {
                 Image(systemName: "ellipsis.circle.fill")
@@ -255,7 +280,7 @@ struct ImageDetailView: View {
     var paletteSection: some View {
         VStack(alignment: .leading) {
             Text("PALETTE")
-                .foregroundColor(.gray)
+                .foregroundColor(.white)
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
             
             HStack {
