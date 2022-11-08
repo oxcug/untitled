@@ -9,14 +9,19 @@ import Combine
 import SwiftUI
 
 struct FolderCreationView: View {
+    var folder: Folder?
+    
     @State var name = ""
     @State var emoji = "🔥"
+    @State var actionText: String = ""
     @State var keyboardHeight: CGFloat = .zero
     @FocusState var focusOnTextField: Bool
+       
+    var didUpdateName: ((String) -> ())?
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var viewContext
-    
+        
     var body: some View {
         VStack(spacing: 30) {
             EmojiTextField(text: $emoji)
@@ -36,10 +41,14 @@ struct FolderCreationView: View {
             Spacer()
             
             Button {
-                createFolder()
+                if folder != nil {
+                    updateFolder()
+                } else {
+                    createFolder()
+                }
                 dismiss()
             } label: {
-                Text("create folder")
+                Text(actionText.lowercased())
                     .font(.system(size: 15, weight: .semibold, design: .default))
                     .foregroundColor(Color(uiColor: .black))
                     .frame(maxWidth: .infinity)
@@ -53,12 +62,20 @@ struct FolderCreationView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
-                Text("New folder")
+                Text(actionText)
                     .font(.system(size: 15, weight: .semibold, design: .default))
                     .foregroundColor(.white)
             }
             
             ToolbarCancelButton()
+        }
+        .task {
+            if let folder = folder {
+                name = folder.name
+                emoji = folder.emoji ?? ""
+            }
+            
+            actionText = "\(folder == nil ? "New": "Update") folder"
         }
         .onAppear {
             focusOnTextField = true
@@ -77,6 +94,15 @@ struct FolderCreationView: View {
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
+    }
+    
+    private func updateFolder() {
+        if let coreDataObject = folder?.coreDataObject {
+            coreDataObject.name = name
+            coreDataObject.emoji = emoji
+            didUpdateName?("\(emoji) \(name)")
+            try? viewContext.save()
         }
     }
 }

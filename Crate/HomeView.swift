@@ -79,6 +79,7 @@ struct HomeView: View {
                 .navigationDestination(for: Folder.self) { folder in
                     FolderDetailView(folder: folder)
                         .environmentObject(viewModel)
+                        .environmentObject(detailViewModel)
                 }
                 
                 Button {

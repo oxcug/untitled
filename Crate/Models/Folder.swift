@@ -57,13 +57,15 @@ extension Entry {
 
 struct Folder: Identifiable, Hashable {
     let id: UUID
-    let name: String
-    let emoji: String?
+    var name: String
+    var emoji: String?
     let entries: [PictureEntry]
+    let coreDataObject: PictureFolder?
 }
 
 extension Folder {
     init(coreDataObject cd: PictureFolder) {
+        self.coreDataObject = cd
         id = cd.id ?? UUID()
         name = cd.name ?? ""
         emoji = cd.emoji ?? ""
