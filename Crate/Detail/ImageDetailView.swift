@@ -51,7 +51,7 @@ final class PictureEntryDetailViewModel: ObservableObject {
     
     @Published var name = "Untitled"
     @Published var folderName = "Untitled"
-    @Published var dateString = "Untitled"
+    @Published var dateString = "The Void"
     @Published var palette: [UIColor] = []
     @Published var paletteCache: [UUID: [UIColor]] = [:]
     
@@ -79,7 +79,13 @@ final class PictureEntryDetailViewModel: ObservableObject {
             default:
                 nextIdx = curIdx - 1
         }
-        cur = entries[nextIdx]
+        
+        if entries.count > 0 {
+            cur = entries[nextIdx]
+        } else {
+            cur = .init(id: UUID(), entry: nil)
+        }
+        
         reload(entry: cur)
     }
     
@@ -116,7 +122,7 @@ final class PictureEntryDetailViewModel: ObservableObject {
         if let date = entry.date {
             dateString = relativeDateFormatter.string(from: date)
         } else {
-            dateString = "Unknown date"
+            dateString = "the void"
         }
     }
     
@@ -218,12 +224,18 @@ struct ImageDetailView: View {
                 .disabled(true)
             
             TabView(selection: $viewModel.cur) {
-                ForEach(viewModel.entries, id: \.self) { entry in
-                    Image(uiImage: viewModel.images[entry.id] ?? UIImage())
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: reader.size.height * 0.6, alignment: .center)
-                        .addPinchToZoom(isZooming: $isZooming, offset: $offset, scale: $scale, scalePosition: $scalePoisition)
+                if viewModel.entries.count > 0 {
+                    ForEach(viewModel.entries, id: \.self) { entry in
+                        Image(uiImage: viewModel.images[entry.id] ?? UIImage())
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: reader.size.height * 0.6, alignment: .center)
+                            .addPinchToZoom(isZooming: $isZooming, offset: $offset, scale: $scale, scalePosition: $scalePoisition)
+                    }
+                } else {
+                    Text("No selection")
+                        .foregroundColor(.gray)
+                        .font(.system(size: 16, weight: .semibold, design: .default))
                 }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
@@ -250,6 +262,7 @@ struct ImageDetailView: View {
                 Button(role: .destructive) {
                     if let entry = viewModel.cur.entry {
                         viewContext.delete(entry)
+                        try? viewContext.save()
                     }
                     viewModel.deleteCurrent()
                 } label: {
@@ -257,7 +270,6 @@ struct ImageDetailView: View {
                 }
                 
                 Button {
-                    
                 } label: {
                     Label("Save", systemImage: "arrow.down.circle")
                 }
