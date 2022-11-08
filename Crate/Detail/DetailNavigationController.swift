@@ -10,6 +10,9 @@ import PanModal
 import SwiftUI
 
 final class FullScreenHostingController<Content>: UIHostingController<Content> where Content : View {
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        .lightContent
+    }
 }
 
 extension FullScreenHostingController: PanModalPresentable {

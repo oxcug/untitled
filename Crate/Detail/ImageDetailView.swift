@@ -10,6 +10,27 @@ import SwiftUI
 import Introspect
 import UIKit
 
+struct EntryEntity: Identifiable, Equatable, Hashable {
+    let id: UUID
+    let entry: PictureEntry?
+    
+    var modified: String? {
+        entry?.modified
+    }
+    
+    var colors: [String]? {
+        entry?.colors
+    }
+    
+    var name: String {
+        entry?.name ?? "Untitled"
+    }
+    
+    var date: Date? {
+        entry?.date
+    }
+}
+
 final class PictureEntryDetailViewModel: ObservableObject {
     lazy var relativeDateFormatter: DateFormatter = {
         let df = DateFormatter()
@@ -24,8 +45,8 @@ final class PictureEntryDetailViewModel: ObservableObject {
         }
     }
     
-    @Published var cur: PictureEntry = .init()
-    @Published var entries: [PictureEntry] = []
+    @Published var cur: EntryEntity = .init(id: UUID(), entry: nil)
+    @Published var entries: [EntryEntity] = []
     @Published var images: [UUID: UIImage] = [:]
     
     @Published var name = "Untitled"
@@ -47,25 +68,26 @@ final class PictureEntryDetailViewModel: ObservableObject {
               let currentIndexInFolder = folder.entries.firstIndex(of: entry) else {
             return
         }
-       
+        
         folderName = folder.fullName
         
-        let existingEntries = folder.entries
+        let existingEntries = folder.entries.map { EntryEntity(id: $0.id ?? UUID(), entry: $0) }
         entries = existingEntries.dropFirst(Int(currentIndexInFolder)) + existingEntries.dropLast(existingEntries.count - Int(currentIndexInFolder))
         images = Dictionary(uniqueKeysWithValues: entries.map {
-            ($0.id ?? UUID(), ImageStorage.shared.loadImage(named: $0.modified) ?? UIImage())
+            ($0.id, ImageStorage.shared.loadImage(named: $0.modified) ?? UIImage())
         })
         
         if let first = entries.first {
             reload(entry: first)
+            cur = first
         }
     }
-   
-    func reload(entry: PictureEntry)  {
+    
+    func reload(entry: EntryEntity)  {
         palette = loadPalette(entry: entry)
         backgroundColor = palette.first ?? .black
         
-        name = entry.name ?? ""
+        name = entry.name
         if name.count == 0 {
             name = "Untitled"
         }
@@ -77,13 +99,13 @@ final class PictureEntryDetailViewModel: ObservableObject {
         }
     }
     
-    func loadPalette(entry: PictureEntry) -> [UIColor] {
-        if let cachedPalette = paletteCache[entry.id ?? UUID()] {
+    func loadPalette(entry: EntryEntity) -> [UIColor] {
+        if let cachedPalette = paletteCache[entry.id] {
             return cachedPalette
         } else {
             let colorStrings = entry.colors ?? []
             let palette = colorStrings.map { MMCQ.Color(rgbID: $0).makeUIColor() }
-            paletteCache[entry.id ?? UUID()] = palette
+            paletteCache[entry.id] = palette
             return palette
         }
     }
@@ -92,6 +114,11 @@ final class PictureEntryDetailViewModel: ObservableObject {
 struct ImageDetailView: View {
     let detailPayload: DetailPayload
     let selectionFeedbackGenerator = UIImpactFeedbackGenerator(style: .rigid)
+   
+    @State var isZooming = false
+    @State var offset: CGPoint = .zero
+    @State var scale: CGFloat = .zero
+    @State var scalePoisition: CGPoint = .zero
     
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
     @Environment(\.dismiss) private var dismiss
@@ -101,14 +128,20 @@ struct ImageDetailView: View {
             VStack(alignment: .center, spacing: 12) {
                 modalHeader
                     .padding(.horizontal, 20)
+                    .opacity(isZooming ? 0.3 : 1)
+                    .animation(.easeInOut, value: isZooming)
                 
                 mainImage(reader: reader)
                 
                 infoHeader
                     .padding(.horizontal, 20)
-
+                    .opacity(isZooming ? 0.3 : 1)
+                    .animation(.easeInOut(duration: 0.2), value: isZooming)
+                
                 paletteSection
                     .padding(.horizontal, 20)
+                    .opacity(isZooming ? 0.3 : 1)
+                    .animation(.easeInOut(duration: 0.2), value: isZooming)
                 
                 Spacer()
             }
@@ -152,15 +185,29 @@ struct ImageDetailView: View {
     
     @ViewBuilder
     func mainImage(reader: GeometryProxy) -> some View {
-        TabView(selection: $viewModel.cur) {
-            ForEach(viewModel.entries, id: \.self) { entry in
-                Image(uiImage: viewModel.images[entry.id ?? UUID()] ?? UIImage())
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: reader.size.height * 0.6, alignment: .center)
+        ZStack(alignment: .center) {
+            Image(uiImage: viewModel.images[viewModel.cur.id] ?? UIImage())
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: reader.size.height * 0.6, alignment: .center)
+                .opacity(isZooming ? 1 : 0)
+                .offset(x: offset.x, y: offset.y)
+                .scaleEffect(1 + (scale < 0 ? 0 : scale), anchor: .init(x: scalePoisition.x, y: scalePoisition.y))
+                .disabled(true)
+            
+            TabView(selection: $viewModel.cur) {
+                ForEach(viewModel.entries, id: \.self) { entry in
+                    Image(uiImage: viewModel.images[entry.id] ?? UIImage())
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: reader.size.height * 0.6, alignment: .center)
+                        .addPinchToZoom(isZooming: $isZooming, offset: $offset, scale: $scale, scalePosition: $scalePoisition)
+                }
             }
+            .tabViewStyle(.page(indexDisplayMode: .never))
+            .opacity(isZooming ? 0 : 1)
         }
-        .tabViewStyle(.page(indexDisplayMode: .never))
+        .zIndex(isZooming ? 1000 : 0)
     }
     
     var infoHeader: some View {
@@ -211,28 +258,28 @@ struct ImageDetailView: View {
                 .foregroundColor(.gray)
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
             
-                HStack {
-                    ForEach(viewModel.palette) { color in
-                        Button {
-                            selectionFeedbackGenerator.impactOccurred()
-                            
-                            withAnimation(.easeInOut) {
-                                viewModel.backgroundColor = color
-                            }
-                        } label: {
-                            let isSelected = (viewModel.backgroundColor == color)
-                            RoundedRectangle(cornerRadius: 6)
-                                .foregroundColor(Color(uiColor: color))
-                                .frame(width: 40, height: 40)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 6)
-                                        .stroke(.white.opacity(isSelected ? 1 : 0), lineWidth: 2)
-                                )
+            HStack {
+                ForEach(viewModel.palette) { color in
+                    Button {
+                        selectionFeedbackGenerator.impactOccurred()
+                        
+                        withAnimation(.easeInOut) {
+                            viewModel.backgroundColor = color
                         }
+                    } label: {
+                        let isSelected = (viewModel.backgroundColor == color)
+                        RoundedRectangle(cornerRadius: 6)
+                            .foregroundColor(Color(uiColor: color))
+                            .frame(width: 40, height: 40)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 6)
+                                    .stroke(.white.opacity(isSelected ? 1 : 0), lineWidth: 2)
+                            )
                     }
-
-                    Spacer()
                 }
+                
+                Spacer()
+            }
         }
         .padding(.vertical)
     }
