@@ -13,6 +13,7 @@ struct FolderDetailView: View {
     @State var title = ""
     @State var showSettings = false
     @State var editFolderName = false
+    @State var showDeletionConfirmation = false
     @State var columns: [GridItem] = [.init(.flexible()), .init(.flexible())]
     
     @State var detailPayload: DetailPayload = .dummy
@@ -20,6 +21,9 @@ struct FolderDetailView: View {
     @AppStorage("zoom.factor") var zoomFactor: Double = 2.0
     @EnvironmentObject var viewModel: PictureEntryViewModel
     @EnvironmentObject var detailViewModel: PictureEntryDetailViewModel
+    
+    @Environment(\.managedObjectContext) var viewContext
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         ScrollView(.vertical) {
@@ -64,6 +68,7 @@ struct FolderDetailView: View {
                     }
 
                     Button(role: .destructive) {
+                        showDeletionConfirmation = true
                     } label: {
                         Label("Delete", systemImage: "trash")
                     }
@@ -86,6 +91,15 @@ struct FolderDetailView: View {
                     title = $0
                 }
             }
+        }
+        .alert(isPresented: $showDeletionConfirmation) {
+            Alert(title: Text("Delete \"\(folder.fullName)\"?"), primaryButton: .cancel(), secondaryButton: .destructive(Text("Delete")) {
+                if let cd = folder.coreDataObject {
+                    viewContext.delete(cd)
+                    try? viewContext.save()
+                    dismiss()
+                }
+            })
         }
     }
 }
