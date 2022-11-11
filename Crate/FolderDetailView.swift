@@ -52,8 +52,7 @@ struct FolderDetailView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(title)
-                    .font(.system(size: 17, weight: .semibold, design: .default))
-                    .foregroundColor(.white)
+                    .modifier(NavigationBarTextModifier())
             }
             
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -77,7 +76,7 @@ struct FolderDetailView: View {
                     }
                 } label: {
                     Image(systemName: "ellipsis.circle")
-                        .tint(.white)
+                        .tint(.bodyText)
                 }
             }
         }

@@ -60,8 +60,7 @@ struct SingleImageReview: View {
                 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Description")
-                        .font(.system(size: 15, weight: .semibold, design: .default))
-                        .foregroundColor(.white)
+                        .modifier(SemiBoldBodyTextModifier())
                    
                     VStack(alignment: .leading, spacing: 4) {
                         ForEach(viewModel.selectedTextBoundingBoxes) { box in
@@ -179,8 +178,7 @@ struct SingleImageReview: View {
         } label: {
             HStack(alignment: .center) {
                 Text("Folder")
-                    .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(.white)
+                    .modifier(SemiBoldBodyTextModifier())
                 
                 Spacer()
                 
@@ -241,7 +239,6 @@ struct ImageReview: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .preferredColorScheme(.dark)
         }
         .task {
             if let images = images {

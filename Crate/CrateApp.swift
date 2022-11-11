@@ -24,11 +24,12 @@ struct CrateApp: App {
     
     @AppStorage("show.labels") var showLabels = true
     @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
+    @AppStorage("theme") var theme: Theme = .lightsOff
     
     var body: some Scene {
         WindowGroup {
             HomeView(showSettings: $showSettings, showVisualSettings: $showVisualSettings)
-                .preferredColorScheme(.dark)
+                .preferredColorScheme(theme.colorScheme)
                 .environment(\.managedObjectContext, DataController.shared.container.viewContext)
                 .presentModal(isPresented: $showVisualSettings, height: 200) {
                     HomeSettingsView(showSettings: $showSettings)

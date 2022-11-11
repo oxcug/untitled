@@ -14,12 +14,12 @@ final class PartialModalHostingController<Content>: UIHostingController<Content>
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .init(hexString: "#141414") ?? .black
+//        view.backgroundColor = .init(hexString: "#141414") ?? .black
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        .lightContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        .lightContent
+//    }
 }
 
 extension PartialModalHostingController: PanModalPresentable {

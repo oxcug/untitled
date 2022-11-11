@@ -15,9 +15,9 @@ struct ToolbarCancelButton: ToolbarContent {
             Button(role: .cancel) {
                 dismiss()
             } label: {
-                Text("Cancel")
-                    .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(.gray)
+                Text("cancel")
+                    .font(.system(size: 17, weight: .semibold, design: .default))
+                    .foregroundColor(.secondary)
             }
         }
     }

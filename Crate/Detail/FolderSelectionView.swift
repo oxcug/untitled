@@ -70,8 +70,7 @@ struct FolderSelectionView: View {
                         .frame(width: 40)
                     
                     Text("Create a folder")
-                        .foregroundColor(.white)
-                        .font(.system(size: 15, weight: .semibold, design: .default))
+                        .modifier(SemiBoldBodyTextModifier())
                 }
                 .padding(.vertical, 10)
             }
@@ -86,8 +85,7 @@ struct FolderSelectionView: View {
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text("Select folder")
-                    .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(.white)
+                    .modifier(SemiBoldBodyTextModifier())
             }
             
             ToolbarCancelButton()

@@ -87,16 +87,18 @@ struct SettingsView: View {
                 switch row {
                     case .appIcon:
                         AppIconSelectorView()
+                    case .theme:
+                        ThemeSelectorView()
                     default:
                         Text("ASDF")
                 }
             }
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Done") {
+                    Button("done") {
                         dismiss()
                     }
-                    .tint(.white)
+                    .tint(.bodyText)
                 }
                 
                 ToolbarItem(placement: .principal) {
@@ -105,8 +107,7 @@ struct SettingsView: View {
                 }
             }
         }
-        .preferredColorScheme(.dark)
-        .tint(.white)
+        .tint(.bodyText)
     }
 }
 

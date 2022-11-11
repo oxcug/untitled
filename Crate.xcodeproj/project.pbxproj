@@ -62,6 +62,9 @@
 		27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */; };
 		27DE079B291DA5080006AC87 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE079A291DA5080006AC87 /* SettingsView.swift */; };
 		27DE079E291DB6E10006AC87 /* AppIconSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE079D291DB6E10006AC87 /* AppIconSelectorView.swift */; };
+		27DE07A0291E884B0006AC87 /* ThemeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE079F291E884B0006AC87 /* ThemeSelectorView.swift */; };
+		27DE07A2291E8A430006AC87 /* Color.swifts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE07A1291E8A430006AC87 /* Color.swifts.swift */; };
+		27DE07A4291E97D60006AC87 /* SemiBoldTextModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE07A3291E97D60006AC87 /* SemiBoldTextModifier.swift */; };
 		27DED94D2906A08E00CE9095 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94C2906A08E00CE9095 /* RoundedCorner.swift */; };
 		27DED9502906C27C00CE9095 /* Crate.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94E2906C27C00CE9095 /* Crate.xcdatamodeld */; };
 		27DED9522906C3FD00CE9095 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9512906C3FD00CE9095 /* DataController.swift */; };
@@ -146,6 +149,9 @@
 		27DBEA1328FAECB700B27850 /* View+floatingPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "View+floatingPanel.swift"; sourceTree = "<group>"; };
 		27DE079A291DA5080006AC87 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		27DE079D291DB6E10006AC87 /* AppIconSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconSelectorView.swift; sourceTree = "<group>"; };
+		27DE079F291E884B0006AC87 /* ThemeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSelectorView.swift; sourceTree = "<group>"; };
+		27DE07A1291E8A430006AC87 /* Color.swifts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swifts.swift; sourceTree = "<group>"; };
+		27DE07A3291E97D60006AC87 /* SemiBoldTextModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiBoldTextModifier.swift; sourceTree = "<group>"; };
 		27DED94C2906A08E00CE9095 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		27DED94F2906C27C00CE9095 /* Crate.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Crate.xcdatamodel; sourceTree = "<group>"; };
 		27DED9512906C3FD00CE9095 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -324,6 +330,7 @@
 				27DED94C2906A08E00CE9095 /* RoundedCorner.swift */,
 				27748E3528FCB87C00013857 /* EmojiTextField.swift */,
 				27D604CA28FDF25F00B4B3F2 /* CancelToolbarButton.swift */,
+				27DE07A3291E97D60006AC87 /* SemiBoldTextModifier.swift */,
 			);
 			path = "UI Elements";
 			sourceTree = "<group>";
@@ -348,6 +355,8 @@
 			children = (
 				27DE079A291DA5080006AC87 /* SettingsView.swift */,
 				27DE079D291DB6E10006AC87 /* AppIconSelectorView.swift */,
+				27DE079F291E884B0006AC87 /* ThemeSelectorView.swift */,
+				27DE07A1291E8A430006AC87 /* Color.swifts.swift */,
 			);
 			path = "App Settings";
 			sourceTree = "<group>";
@@ -534,7 +543,9 @@
 				27DED9522906C3FD00CE9095 /* DataController.swift in Sources */,
 				27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */,
 				27DE079B291DA5080006AC87 /* SettingsView.swift in Sources */,
+				27DE07A4291E97D60006AC87 /* SemiBoldTextModifier.swift in Sources */,
 				27DED94D2906A08E00CE9095 /* RoundedCorner.swift in Sources */,
+				27DE07A0291E884B0006AC87 /* ThemeSelectorView.swift in Sources */,
 				27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */,
 				27DBE9E828F8655E00B27850 /* Folder.swift in Sources */,
 				27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */,
@@ -556,6 +567,7 @@
 				27DBEA1528FAECB800B27850 /* View+floatingPanelContentMode.swift in Sources */,
 				27DBEA0728F95E2200B27850 /* ColorThief.swift in Sources */,
 				278F956928FD82920052D319 /* CGRect+Extensions.swift in Sources */,
+				27DE07A2291E8A430006AC87 /* Color.swifts.swift in Sources */,
 				27DBE9F028F8A70D00B27850 /* Color+Codable.swift in Sources */,
 				27DBE9F228F8AAE800B27850 /* ImagePayload.swift in Sources */,
 				27020E1C28F75F6000C94312 /* PersonSegmenter.swift in Sources */,

@@ -64,8 +64,8 @@ struct FullDetailImageShareView: View {
     var paletteStack: some View {
         VStack(alignment: .leading) {
             Text("PALETTE")
-                .foregroundColor(.white)
                 .font(.system(size: 14, weight: .semibold, design: .rounded))
+                .foregroundColor(.white)
             
             HStack {
                 ForEach(palette) { col in
@@ -102,8 +102,7 @@ struct ImageShareOptionView: View {
             
             VStack(spacing: 4) {
                 Text("Choose a format to share")
-                    .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(.white)
+                    .modifier(SemiBoldBodyTextModifier())
                 
                 Spacer()
                 
@@ -127,8 +126,8 @@ struct ImageShareOptionView: View {
                                     .font(.system(size: 13, weight: .semibold, design: .default))
                                     .padding(.vertical, 10)
                                     .padding(.horizontal, 14)
-                                    .foregroundColor(.black)
-                                    .background(RoundedRectangle(cornerRadius: 8).foregroundColor(.white))
+                                    .foregroundColor(Color(uiColor: .systemBackground))
+                                    .background(RoundedRectangle(cornerRadius: 8).foregroundColor(.bodyText))
                             }
                         }
                         .tint(.white)
@@ -149,7 +148,7 @@ struct ImageShareOptionView: View {
                                                                                palette: palette,
                                                                                variation: $0))
                 renderer.proposedSize = ProposedViewSize(UIScreen.main.bounds.size)
-                renderer.scale = 5
+                renderer.scale = 4
                 guard let data = renderer.uiImage?.pngData() else {
                     return nil
                 }
@@ -168,7 +167,7 @@ struct ImageShareOptionView_Previews: PreviewProvider {
                              image: .init(named: "modified_4.png")!,
                              color: .systemBlue,
                              palette: [.black, .white, .systemBrown, .systemBlue])
-        .background(.black)
+        .preferredColorScheme(.light)
     }
 }
 

@@ -19,26 +19,24 @@ struct HomeSettingsView: View {
         VStack(alignment: .leading, spacing: 18) {
             Text("Visuals")
                 .font(.system(size: 15, weight: .semibold, design: .default))
-                .foregroundColor(.white.opacity(0.8))
+                .foregroundColor(Color.bodyText.opacity(0.8))
             
             Separator()
                 .opacity(0.5)
             
             HStack(spacing: 15) {
                 Text("Zoom")
-                    .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(.white)
+                    .modifier(SemiBoldBodyTextModifier())
                
                 Spacer()
                 
                 Slider(value: $zoomFactor, in: 1...10, step: 0.25)
-                    .tint(.white)
+                    .tint(.bodyText)
             }
             
             HStack(alignment: .center, spacing: 15) {
                 Text("Text")
-                    .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(.white)
+                    .modifier(SemiBoldBodyTextModifier())
                 
                 Spacer()
                 

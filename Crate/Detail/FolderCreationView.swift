@@ -34,7 +34,7 @@ struct FolderCreationView: View {
                 .multilineTextAlignment(.center)
                 .padding()
                 .font(.system(size: 24, weight: .semibold, design: .default))
-                .background(RoundedRectangle(cornerRadius: 10).foregroundColor(.white.opacity(0.08)))
+                .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: UIColor.tertiarySystemFill)))
                 .foregroundColor(.white)
                 .focused($focusOnTextField)
             
@@ -50,21 +50,18 @@ struct FolderCreationView: View {
             } label: {
                 Text(actionText.lowercased())
                     .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(Color(uiColor: .black))
+                    .foregroundColor(Color(uiColor: .systemBackground))
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: .white)))
+                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: .label)))
             }
-            .background(Rectangle().foregroundColor(.black))
         }
         .padding()
-        .background(Color.black)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {
                 Text(actionText)
-                    .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(.white)
+                    .modifier(NavigationBarTextModifier())
             }
             
             ToolbarCancelButton()
@@ -75,7 +72,7 @@ struct FolderCreationView: View {
                 emoji = folder.emoji ?? ""
             }
             
-            actionText = "\(folder == nil ? "New": "Update") folder"
+            actionText = "\(folder == nil ? "new": "update") folder"
         }
         .onAppear {
             focusOnTextField = true
@@ -112,6 +109,13 @@ struct FolderCreationView_Previews: PreviewProvider {
         NavigationStack {
             FolderCreationView()
                 .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+                .preferredColorScheme(.dark)
+        }
+        
+        NavigationStack {
+            FolderCreationView()
+                .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+                .preferredColorScheme(.light)
         }
     }
 }

@@ -45,6 +45,14 @@ enum AppIcon: String, CaseIterable, Identifiable {
                 return "#29613D"
         }
     }
+    
+    var color: Color {
+        if self == .untitled {
+            return Color.bodyText
+        } else {
+            return Color(uiColor: UIColor(hexString: hex) ?? .label)
+        }
+    }
 }
 
 struct AppIconSelectorView: View {
@@ -79,16 +87,16 @@ struct AppIconSelectorView: View {
                             
                             Spacer()
                             
-                            if icon == activeIcon {
-                                Image(systemName: "checkmark")
-                            }
+                            Image(systemName: "checkmark")
+                                .opacity(icon == activeIcon ? 1 : 0)
                         }
+                        .contentShape(Rectangle())
                     }
                     .buttonStyle(.plain)
                 }
             }
         }
-        .navigationTitle("App Icon Gallery")
+        .navigationTitle("icon gallery")
         .navigationBarTitleDisplayMode(.inline)
     }
    

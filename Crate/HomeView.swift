@@ -66,6 +66,8 @@ struct HomeView: View {
     @StateObject var viewModel = PictureEntryViewModel()
     @StateObject var panelDelegate = SettingsPanelDelegate()
     @StateObject var detailViewModel = PictureEntryDetailViewModel()
+    
+    @AppStorage("active.icon") var activeIcon: AppIcon = .untitled
 
     var body: some View {
         NavigationStack {
@@ -99,7 +101,7 @@ struct HomeView: View {
                 ToolbarItem(placement: .principal) {
                     Text("untitled.")
                         .font(.system(size: 17, weight: .bold, design: .default))
-                        .foregroundColor(.white)
+                        .foregroundColor(activeIcon.color)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -107,7 +109,7 @@ struct HomeView: View {
                         showVisualSettings.toggle()
                     } label: {
                         Image(systemName: "eyes")
-                            .foregroundColor(.white)
+                            .foregroundColor(.bodyText)
                     }
                 }
                
@@ -116,14 +118,13 @@ struct HomeView: View {
                         showSettings.toggle()
                     } label: {
                         Image(systemName: "person.fill")
-                            .foregroundColor(.white)
+                            .foregroundColor(.bodyText)
                     }
                 }
             }
             
         }
-        .preferredColorScheme(.dark)
-        .tint(.white)
+        .tint(.bodyText)
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(imagesPayload: $imagesPayload)
         }
@@ -141,8 +142,7 @@ struct HomeView: View {
     func section(_ folder: Folder) -> some View {
         NavigationLink(value: folder) {
             Text(folder.fullName)
-                .font(.system(size: 16, weight: .semibold, design: .default))
-                .foregroundColor(.white)
+                .modifier(SemiBoldBodyTextModifier())
                 .padding(.vertical)
         }
         
