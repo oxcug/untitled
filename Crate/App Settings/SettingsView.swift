@@ -17,7 +17,7 @@ struct AlertPayload: Identifiable, Equatable {
 enum SettingRow: Int, Identifiable, CaseIterable {
     case appIcon, theme
     
-    case about, feedback, bugReport, help, invite, rate
+    case about, feedback, bugReport, contact, invite, rate
     
     var id: String {
         description
@@ -29,8 +29,8 @@ enum SettingRow: Int, Identifiable, CaseIterable {
                 return "Theme"
             case .appIcon:
                 return "App Icon"
-            case .help:
-                return "Help"
+            case .contact:
+                return "Contact us"
             case .about:
                 return "About"
             case .invite:
@@ -50,8 +50,8 @@ enum SettingRow: Int, Identifiable, CaseIterable {
                 return "moon.fill"
             case .appIcon:
                 return "app.fill"
-            case .help:
-                return "questionmark"
+            case .contact:
+                return "hand.wave.fill"
             case .about:
                 return "at"
             case .invite:
@@ -97,12 +97,12 @@ struct SettingsView: View {
                 }
                 
                 Section {
-                    ForEach([SettingRow.bugReport, SettingRow.feedback]) { row in
+                    ForEach([SettingRow.bugReport, SettingRow.feedback, SettingRow.contact]) { row in
                         Button {
-                            if row == SettingRow.feedback {
-                                showURL = "https://untitled-app.canny.io/feature-requests"
+                            if row == .contact {
+                                showBugReportUI(action: "send us a message")
                             } else {
-                                showBugReportUI()
+                                showBugReportUI(action: "quickly submit a \(row == .feedback ? "feedback" : "bug report")")
                             }
                         } label: {
                             SettingsCell(row: row)
@@ -111,7 +111,7 @@ struct SettingsView: View {
                 }
                 
                 Section {
-                    ForEach([SettingRow.about, SettingRow.help, SettingRow.invite, SettingRow.rate]) { row in
+                    ForEach([SettingRow.about,SettingRow.invite, SettingRow.rate]) { row in
                         NavigationLink(value: row) {
                             SettingsCell(row: row)
                         }
@@ -153,12 +153,15 @@ struct SettingsView: View {
         .presentAlert(alertPayload: $alertPayload)
     }
     
-    func showBugReportUI() {
+    func showBugReportUI(action: String) {
         if !didShowBugReportTutorial {
-            alertPayload = .init(emoji: "💡", message: "Shake your device to quickly report a bug")
-        }
-       
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            alertPayload = .init(emoji: "💡", message: "Shake your device to \(action)")
+            didShowBugReportTutorial = true
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                Instabug.show()
+            }
+        } else {
             Instabug.show()
         }
     }

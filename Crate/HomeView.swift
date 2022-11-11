@@ -100,7 +100,7 @@ struct HomeView: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("untitled.")
-                        .font(.system(size: 17, weight: .bold, design: .default))
+                        .font(.system(size: 18, weight: .bold, design: .default))
                         .foregroundColor(activeIcon.color)
                 }
                 
