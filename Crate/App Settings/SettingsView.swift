@@ -6,11 +6,18 @@
 //
 
 import SwiftUI
+import Instabug
+
+struct AlertPayload: Identifiable, Equatable {
+    let id = UUID()
+    let emoji: String
+    let message: String
+}
 
 enum SettingRow: Int, Identifiable, CaseIterable {
     case appIcon, theme
     
-    case about, help, invite
+    case about, feedback, bugReport, help, invite, rate
     
     var id: String {
         description
@@ -28,6 +35,12 @@ enum SettingRow: Int, Identifiable, CaseIterable {
                 return "About"
             case .invite:
                 return "Invite your friends"
+            case .feedback:
+                return "Feedback"
+            case .bugReport:
+                return "Bug report"
+            case .rate:
+                return "Rate untitled."
         }
     }
     
@@ -43,6 +56,12 @@ enum SettingRow: Int, Identifiable, CaseIterable {
                 return "at"
             case .invite:
                 return "envelope.fill"
+            case .feedback:
+                return "lightbulb.fill"
+            case .bugReport:
+                return "ant.fill"
+            case .rate:
+                return "heart.fill"
         }
     }
 }
@@ -60,6 +79,10 @@ struct SettingsCell: View {
 }
 
 struct SettingsView: View {
+    @State var showURL: String?
+    @State var alertPayload: AlertPayload?
+    
+    @AppStorage("did.show.bug.report.tutorial") var didShowBugReportTutorial = false
     @Environment(\.dismiss) var dismiss
     
     var body: some View {
@@ -74,7 +97,21 @@ struct SettingsView: View {
                 }
                 
                 Section {
-                    ForEach([SettingRow.about, SettingRow.help, SettingRow.invite]) { row in
+                    ForEach([SettingRow.bugReport, SettingRow.feedback]) { row in
+                        Button {
+                            if row == SettingRow.feedback {
+                                showURL = "https://untitled-app.canny.io/feature-requests"
+                            } else {
+                                showBugReportUI()
+                            }
+                        } label: {
+                            SettingsCell(row: row)
+                        }
+                    }
+                }
+                
+                Section {
+                    ForEach([SettingRow.about, SettingRow.help, SettingRow.invite, SettingRow.rate]) { row in
                         NavigationLink(value: row) {
                             SettingsCell(row: row)
                         }
@@ -110,6 +147,20 @@ struct SettingsView: View {
             }
         }
         .tint(.bodyText)
+        .sheet(item: $showURL) { url in
+            SafariView(url: URL(string: url)!)
+        }
+        .presentAlert(alertPayload: $alertPayload)
+    }
+    
+    func showBugReportUI() {
+        if !didShowBugReportTutorial {
+            alertPayload = .init(emoji: "💡", message: "Shake your device to quickly report a bug")
+        }
+       
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            Instabug.show()
+        }
     }
 }
 
@@ -117,6 +168,7 @@ struct SettingsView_Preview: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             SettingsView()
+                .preferredColorScheme(.light)
         }
     }
 }

@@ -33,12 +33,10 @@ struct AboutView: View {
             Section {
                 mural
             } header: { }
-            
+
             myTwitter
             
             licneses
-            
-            rate
         }
         .listStyle(.insetGrouped)
         .sheet(item: $launchURL) { url in
@@ -60,28 +58,20 @@ struct AboutView: View {
         }
     }
     
-    var rate: some View {
-        Button {
-            launchURL = "https://twitter.com/guard_if"
-        } label: {
-            HStack {
-                Image(systemName: "heart.fill")
-                Text("Rate untitled.")
-                    .modifier(BodyTextModifier())
-                
-                Spacer()
-            }
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-    }
-    
     var myTwitter: some View {
         Button {
-            launchURL = "https://twitter.com/guard_if"
+            if UIApplication.shared.canOpenURL(URL(string: "twitter://")!) {
+                UIApplication.shared.open(URL(string: "twitter://profiles/guard_if")!)
+            } else {
+                launchURL = "https://twitter.com/guard_if"
+            }
         } label: {
-            HStack {
-                Image(systemName: "bird.fill")
+            HStack(alignment: .center) {
+                Image("twitter")
+                    .resizable()
+                    .frame(width: 20, height: 20)
+                    .tint(Color.bodyText)
+                
                 Text("Made by @guard_if")
                     .modifier(BodyTextModifier())
                 
@@ -99,6 +89,7 @@ struct AboutView: View {
                     Text("untitled.")
                         .font(.system(size: 40, weight: .bold, design: .default))
                         .offset(x: CGFloat(i) * 24, y: CGFloat(i) * 24)
+                        .underline(i == 2)
                 }
             }
             .padding()

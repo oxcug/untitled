@@ -7,6 +7,7 @@
 
 import Combine
 import SwiftUI
+import Instabug
 
 struct DetailPayload: Identifiable, Hashable {
     let id: UUID
@@ -25,6 +26,10 @@ struct CrateApp: App {
     @AppStorage("show.labels") var showLabels = true
     @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
     @AppStorage("theme") var theme: Theme = .lightsOff
+    
+    init() {
+        Instabug.start(withToken: "2b7de71991b983519f193a88b22ce9e1", invocationEvents: [.shake, .screenshot])
+    }
     
     var body: some Scene {
         WindowGroup {

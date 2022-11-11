@@ -35,6 +35,29 @@ extension View {
         }
     }
     
+    func presentAlert(alertPayload: Binding<AlertPayload?>) -> some View {
+        onChange(of: alertPayload.wrappedValue) { isPresented in
+            let topMostController = self.topMostController()
+            let dismissExisting = {
+                if topMostController.isPanModalPresented  {
+                    topMostController.dismiss(animated: true)
+                }
+            }
+            
+            guard let payload = alertPayload.wrappedValue else {
+                dismissExisting()
+                return
+            }
+
+            dismissExisting()
+            
+            DispatchQueue.main.async {
+                let host = AlertViewController(payload: payload)
+                topMostController.presentPanModal(host)
+            }
+        }
+    }
+    
     func topMostController() -> UIViewController {
         var topController = UIApplication.shared.windows.first!.rootViewController!
         while (topController.presentedViewController != nil) {

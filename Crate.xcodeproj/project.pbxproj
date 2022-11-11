@@ -26,6 +26,10 @@
 		270953FD291BC68700645133 /* ImageShareOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270953FC291BC68700645133 /* ImageShareOptions.swift */; };
 		27276838291EB65700A779E2 /* LicensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276837291EB65700A779E2 /* LicensesView.swift */; };
 		2727683A291EB83B00A779E2 /* Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276839291EB83B00A779E2 /* Repo.swift */; };
+		2727683C291EC04A00A779E2 /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2727683B291EC04A00A779E2 /* HelpView.swift */; };
+		2727683F291EFBFA00A779E2 /* Instabug in Frameworks */ = {isa = PBXBuildFile; productRef = 2727683E291EFBFA00A779E2 /* Instabug */; };
+		27276842291EFF0700A779E2 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276840291EFF0700A779E2 /* AlertView.swift */; };
+		27276843291EFF0700A779E2 /* AlertViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276841291EFF0700A779E2 /* AlertViewController.swift */; };
 		275203532917D60D0076C4B5 /* HomeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275203522917D60D0076C4B5 /* HomeSettingsView.swift */; };
 		2752035C291876360076C4B5 /* PanModal in Frameworks */ = {isa = PBXBuildFile; productRef = 2752035B291876360076C4B5 /* PanModal */; };
 		2752035E2918766E0076C4B5 /* FullScreenHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2752035D2918766E0076C4B5 /* FullScreenHostingController.swift */; };
@@ -118,6 +122,9 @@
 		270953FC291BC68700645133 /* ImageShareOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageShareOptions.swift; sourceTree = "<group>"; };
 		27276837291EB65700A779E2 /* LicensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensesView.swift; sourceTree = "<group>"; };
 		27276839291EB83B00A779E2 /* Repo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repo.swift; sourceTree = "<group>"; };
+		2727683B291EC04A00A779E2 /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		27276840291EFF0700A779E2 /* AlertView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		27276841291EFF0700A779E2 /* AlertViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertViewController.swift; sourceTree = "<group>"; };
 		275203522917D60D0076C4B5 /* HomeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSettingsView.swift; sourceTree = "<group>"; };
 		2752035D2918766E0076C4B5 /* FullScreenHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenHostingController.swift; sourceTree = "<group>"; };
 		27748E3528FCB87C00013857 /* EmojiTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiTextField.swift; sourceTree = "<group>"; };
@@ -172,6 +179,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2727683F291EFBFA00A779E2 /* Instabug in Frameworks */,
 				27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */,
 				2752035C291876360076C4B5 /* PanModal in Frameworks */,
 			);
@@ -311,6 +319,8 @@
 				27AB5910291A951800F4DB62 /* Modal.swift */,
 				2752035D2918766E0076C4B5 /* FullScreenHostingController.swift */,
 				27AB5915291A98DA00F4DB62 /* PartialModalHostingController.swift */,
+				27276840291EFF0700A779E2 /* AlertView.swift */,
+				27276841291EFF0700A779E2 /* AlertViewController.swift */,
 			);
 			path = Modal;
 			sourceTree = "<group>";
@@ -359,9 +369,10 @@
 			isa = PBXGroup;
 			children = (
 				27DE079A291DA5080006AC87 /* SettingsView.swift */,
+				27DE07A5291EA4FF0006AC87 /* AboutView.swift */,
+				2727683B291EC04A00A779E2 /* HelpView.swift */,
 				27DE079D291DB6E10006AC87 /* AppIconSelectorView.swift */,
 				27DE079F291E884B0006AC87 /* ThemeSelectorView.swift */,
-				27DE07A5291EA4FF0006AC87 /* AboutView.swift */,
 				27276837291EB65700A779E2 /* LicensesView.swift */,
 				27276839291EB83B00A779E2 /* Repo.swift */,
 			);
@@ -409,6 +420,7 @@
 			packageProductDependencies = (
 				27DBEA0928FAEBB600B27850 /* FloatingPanel */,
 				2752035B291876360076C4B5 /* PanModal */,
+				2727683E291EFBFA00A779E2 /* Instabug */,
 			);
 			productName = Crate;
 			productReference = 27020DE028F6C49C00C94312 /* untitled.app */;
@@ -485,6 +497,7 @@
 			packageReferences = (
 				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
 				2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */,
+				2727683D291EFBFA00A779E2 /* XCRemoteSwiftPackageReference "Instabug-SP" */,
 			);
 			productRefGroup = 27020DE128F6C49C00C94312 /* Products */;
 			projectDirPath = "";
@@ -571,6 +584,7 @@
 				2727683A291EB83B00A779E2 /* Repo.swift in Sources */,
 				27DBEA1728FAECB800B27850 /* UIHostingController+ignoreKeyboard.swift in Sources */,
 				27A8EEA728FC9CE3004DDCE9 /* FolderSelectionView.swift in Sources */,
+				27276843291EFF0700A779E2 /* AlertViewController.swift in Sources */,
 				27A8EEA328FC1267004DDCE9 /* TextProcessor.swift in Sources */,
 				27DBEA1528FAECB800B27850 /* View+floatingPanelContentMode.swift in Sources */,
 				27DBEA0728F95E2200B27850 /* ColorThief.swift in Sources */,
@@ -582,11 +596,13 @@
 				27AB5911291A951800F4DB62 /* Modal.swift in Sources */,
 				27A8EEA528FC3B98004DDCE9 /* ImageReviewViewModel.swift in Sources */,
 				27020DE428F6C49C00C94312 /* CrateApp.swift in Sources */,
+				2727683C291EC04A00A779E2 /* HelpView.swift in Sources */,
 				27DED9962907483400CE9095 /* PictureEntryViewModel.swift in Sources */,
 				27AB5913291A979B00F4DB62 /* UINavigationController+Back.swift in Sources */,
 				27DED9902906D5A800CE9095 /* BoundingBox.swift in Sources */,
 				27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */,
 				27A8EEA928FCAF7C004DDCE9 /* FolderCreationView.swift in Sources */,
+				27276842291EFF0700A779E2 /* AlertView.swift in Sources */,
 				27DBE9EB28F8658400B27850 /* Separator.swift in Sources */,
 				27DED9502906C27C00CE9095 /* Crate.xcdatamodeld in Sources */,
 			);
@@ -921,6 +937,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		2727683D291EFBFA00A779E2 /* XCRemoteSwiftPackageReference "Instabug-SP" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Instabug/Instabug-SP";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
 		2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/slackhq/PanModal.git";
@@ -940,6 +964,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		2727683E291EFBFA00A779E2 /* Instabug */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2727683D291EFBFA00A779E2 /* XCRemoteSwiftPackageReference "Instabug-SP" */;
+			productName = Instabug;
+		};
 		2752035B291876360076C4B5 /* PanModal */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */;

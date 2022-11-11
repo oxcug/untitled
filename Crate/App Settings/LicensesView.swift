@@ -14,7 +14,7 @@ struct RepoView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text(repo.name)
                 .font(.system(size: 18, weight: .semibold))
-                .foregroundColor(.blue)
+                .foregroundColor(.bodyText)
             
             Text(repo.copyright)
                 .fontWeight(.semibold)
@@ -66,6 +66,8 @@ Made in London, UK
             .listRowSeparator(.hidden)
         }
         .listStyle(.plain)
+        .navigationTitle("licenses.")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 

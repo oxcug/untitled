@@ -10,16 +10,6 @@ import SwiftUI
 
 final class PartialModalHostingController<Content>: UIHostingController<Content> where Content : View {
     var height: CGFloat = 200
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-//        view.backgroundColor = .init(hexString: "#141414") ?? .black
-    }
-    
-//    override var preferredStatusBarStyle: UIStatusBarStyle {
-//        .lightContent
-//    }
 }
 
 extension PartialModalHostingController: PanModalPresentable {
