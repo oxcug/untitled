@@ -89,6 +89,8 @@ struct SettingsView: View {
                         AppIconSelectorView()
                     case .theme:
                         ThemeSelectorView()
+                    case .about:
+                        AboutView()
                     default:
                         Text("ASDF")
                 }

@@ -7,7 +7,6 @@
 
 import Combine
 import SwiftUI
-import Introspect
 import UIKit
 
 struct EntryEntity: Identifiable, Equatable, Hashable {
@@ -329,20 +328,6 @@ struct ImageDetailView: View {
             }
         }
         .padding(.vertical)
-    }
-}
-
-extension View {
-    public func introspectTabScrollView(customize: @escaping (UIScrollView) -> ()) -> some View {
-        return inject(UIKitIntrospectionView(
-            selector: { introspectionView in
-                guard let viewHost = Introspect.findViewHost(from: introspectionView) else {
-                    return nil
-                }
-                return Introspect.previousSibling(containing: UIScrollView.self, from: viewHost)
-            },
-            customize: customize
-        ))
     }
 }
 

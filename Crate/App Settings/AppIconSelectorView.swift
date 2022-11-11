@@ -96,7 +96,7 @@ struct AppIconSelectorView: View {
                 }
             }
         }
-        .navigationTitle("icon gallery")
+        .navigationTitle("app icon.")
         .navigationBarTitleDisplayMode(.inline)
     }
    

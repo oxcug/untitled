@@ -24,8 +24,9 @@
 		270953F9291A9D4100645133 /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270953F8291A9D4100645133 /* UIColor+Hex.swift */; };
 		270953FB291BC66A00645133 /* View+Snapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270953FA291BC66A00645133 /* View+Snapshot.swift */; };
 		270953FD291BC68700645133 /* ImageShareOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 270953FC291BC68700645133 /* ImageShareOptions.swift */; };
+		27276838291EB65700A779E2 /* LicensesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276837291EB65700A779E2 /* LicensesView.swift */; };
+		2727683A291EB83B00A779E2 /* Repo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27276839291EB83B00A779E2 /* Repo.swift */; };
 		275203532917D60D0076C4B5 /* HomeSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 275203522917D60D0076C4B5 /* HomeSettingsView.swift */; };
-		275203592917F8050076C4B5 /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 275203582917F8050076C4B5 /* Introspect */; };
 		2752035C291876360076C4B5 /* PanModal in Frameworks */ = {isa = PBXBuildFile; productRef = 2752035B291876360076C4B5 /* PanModal */; };
 		2752035E2918766E0076C4B5 /* FullScreenHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2752035D2918766E0076C4B5 /* FullScreenHostingController.swift */; };
 		27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27748E3528FCB87C00013857 /* EmojiTextField.swift */; };
@@ -63,8 +64,9 @@
 		27DE079B291DA5080006AC87 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE079A291DA5080006AC87 /* SettingsView.swift */; };
 		27DE079E291DB6E10006AC87 /* AppIconSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE079D291DB6E10006AC87 /* AppIconSelectorView.swift */; };
 		27DE07A0291E884B0006AC87 /* ThemeSelectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE079F291E884B0006AC87 /* ThemeSelectorView.swift */; };
-		27DE07A2291E8A430006AC87 /* Color.swifts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE07A1291E8A430006AC87 /* Color.swifts.swift */; };
+		27DE07A2291E8A430006AC87 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE07A1291E8A430006AC87 /* Colors.swift */; };
 		27DE07A4291E97D60006AC87 /* SemiBoldTextModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE07A3291E97D60006AC87 /* SemiBoldTextModifier.swift */; };
+		27DE07A6291EA4FF0006AC87 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DE07A5291EA4FF0006AC87 /* AboutView.swift */; };
 		27DED94D2906A08E00CE9095 /* RoundedCorner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94C2906A08E00CE9095 /* RoundedCorner.swift */; };
 		27DED9502906C27C00CE9095 /* Crate.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 27DED94E2906C27C00CE9095 /* Crate.xcdatamodeld */; };
 		27DED9522906C3FD00CE9095 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9512906C3FD00CE9095 /* DataController.swift */; };
@@ -114,6 +116,8 @@
 		270953F8291A9D4100645133 /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
 		270953FA291BC66A00645133 /* View+Snapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Snapshot.swift"; sourceTree = "<group>"; };
 		270953FC291BC68700645133 /* ImageShareOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageShareOptions.swift; sourceTree = "<group>"; };
+		27276837291EB65700A779E2 /* LicensesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicensesView.swift; sourceTree = "<group>"; };
+		27276839291EB83B00A779E2 /* Repo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repo.swift; sourceTree = "<group>"; };
 		275203522917D60D0076C4B5 /* HomeSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeSettingsView.swift; sourceTree = "<group>"; };
 		2752035D2918766E0076C4B5 /* FullScreenHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenHostingController.swift; sourceTree = "<group>"; };
 		27748E3528FCB87C00013857 /* EmojiTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmojiTextField.swift; sourceTree = "<group>"; };
@@ -150,8 +154,9 @@
 		27DE079A291DA5080006AC87 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		27DE079D291DB6E10006AC87 /* AppIconSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppIconSelectorView.swift; sourceTree = "<group>"; };
 		27DE079F291E884B0006AC87 /* ThemeSelectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeSelectorView.swift; sourceTree = "<group>"; };
-		27DE07A1291E8A430006AC87 /* Color.swifts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swifts.swift; sourceTree = "<group>"; };
+		27DE07A1291E8A430006AC87 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		27DE07A3291E97D60006AC87 /* SemiBoldTextModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SemiBoldTextModifier.swift; sourceTree = "<group>"; };
+		27DE07A5291EA4FF0006AC87 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		27DED94C2906A08E00CE9095 /* RoundedCorner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedCorner.swift; sourceTree = "<group>"; };
 		27DED94F2906C27C00CE9095 /* Crate.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Crate.xcdatamodel; sourceTree = "<group>"; };
 		27DED9512906C3FD00CE9095 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
@@ -168,7 +173,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */,
-				275203592917F8050076C4B5 /* Introspect in Frameworks */,
 				2752035C291876360076C4B5 /* PanModal in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -326,6 +330,7 @@
 		27DBE9EC28F8658800B27850 /* UI Elements */ = {
 			isa = PBXGroup;
 			children = (
+				27DE07A1291E8A430006AC87 /* Colors.swift */,
 				27DBE9EA28F8658400B27850 /* Separator.swift */,
 				27DED94C2906A08E00CE9095 /* RoundedCorner.swift */,
 				27748E3528FCB87C00013857 /* EmojiTextField.swift */,
@@ -356,7 +361,9 @@
 				27DE079A291DA5080006AC87 /* SettingsView.swift */,
 				27DE079D291DB6E10006AC87 /* AppIconSelectorView.swift */,
 				27DE079F291E884B0006AC87 /* ThemeSelectorView.swift */,
-				27DE07A1291E8A430006AC87 /* Color.swifts.swift */,
+				27DE07A5291EA4FF0006AC87 /* AboutView.swift */,
+				27276837291EB65700A779E2 /* LicensesView.swift */,
+				27276839291EB83B00A779E2 /* Repo.swift */,
 			);
 			path = "App Settings";
 			sourceTree = "<group>";
@@ -401,7 +408,6 @@
 			name = untitled;
 			packageProductDependencies = (
 				27DBEA0928FAEBB600B27850 /* FloatingPanel */,
-				275203582917F8050076C4B5 /* Introspect */,
 				2752035B291876360076C4B5 /* PanModal */,
 			);
 			productName = Crate;
@@ -478,7 +484,6 @@
 			mainGroup = 27020DD728F6C49C00C94312;
 			packageReferences = (
 				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
-				275203572917F8050076C4B5 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */,
 			);
 			productRefGroup = 27020DE128F6C49C00C94312 /* Products */;
@@ -539,6 +544,7 @@
 				27020E1E28F75FE500C94312 /* ImageProcessor.swift in Sources */,
 				275203532917D60D0076C4B5 /* HomeSettingsView.swift in Sources */,
 				27020E1428F6D39A00C94312 /* ImagePicker.swift in Sources */,
+				27276838291EB65700A779E2 /* LicensesView.swift in Sources */,
 				27DBEA1828FAECB800B27850 /* View+floatingPanelSurfaceAppearance.swift in Sources */,
 				27DED9522906C3FD00CE9095 /* DataController.swift in Sources */,
 				27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */,
@@ -550,6 +556,7 @@
 				27DBE9E828F8655E00B27850 /* Folder.swift in Sources */,
 				27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */,
 				27DBE9EE28F8669400B27850 /* ImageStorage.swift in Sources */,
+				27DE07A6291EA4FF0006AC87 /* AboutView.swift in Sources */,
 				270953FB291BC66A00645133 /* View+Snapshot.swift in Sources */,
 				27020E1628F6D88C00C94312 /* ImageReview.swift in Sources */,
 				27DE079E291DB6E10006AC87 /* AppIconSelectorView.swift in Sources */,
@@ -561,13 +568,14 @@
 				27DED99A290749E100CE9095 /* SettingsPanelDelegate.swift in Sources */,
 				270953F9291A9D4100645133 /* UIColor+Hex.swift in Sources */,
 				27020E2128F762F800C94312 /* UIImage+Extensions.swift in Sources */,
+				2727683A291EB83B00A779E2 /* Repo.swift in Sources */,
 				27DBEA1728FAECB800B27850 /* UIHostingController+ignoreKeyboard.swift in Sources */,
 				27A8EEA728FC9CE3004DDCE9 /* FolderSelectionView.swift in Sources */,
 				27A8EEA328FC1267004DDCE9 /* TextProcessor.swift in Sources */,
 				27DBEA1528FAECB800B27850 /* View+floatingPanelContentMode.swift in Sources */,
 				27DBEA0728F95E2200B27850 /* ColorThief.swift in Sources */,
 				278F956928FD82920052D319 /* CGRect+Extensions.swift in Sources */,
-				27DE07A2291E8A430006AC87 /* Color.swifts.swift in Sources */,
+				27DE07A2291E8A430006AC87 /* Colors.swift in Sources */,
 				27DBE9F028F8A70D00B27850 /* Color+Codable.swift in Sources */,
 				27DBE9F228F8AAE800B27850 /* ImagePayload.swift in Sources */,
 				27020E1C28F75F6000C94312 /* PersonSegmenter.swift in Sources */,
@@ -913,14 +921,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		275203572917F8050076C4B5 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect.git";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 		2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/slackhq/PanModal.git";
@@ -940,11 +940,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		275203582917F8050076C4B5 /* Introspect */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 275203572917F8050076C4B5 /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
-			productName = Introspect;
-		};
 		2752035B291876360076C4B5 /* PanModal */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */;
