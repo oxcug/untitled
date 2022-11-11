@@ -1,6 +1,6 @@
 //
 //  HomeSettingsView.swift
-//  Crate
+//  untitled
 //
 //  Created by Mike Choi on 11/6/22.
 //
@@ -16,28 +16,23 @@ struct HomeSettingsView: View {
     @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 24) {
-            Text("Settings")
-                .font(.system(size: 24, weight: .semibold, design: .default))
-                .foregroundColor(.white)
+        VStack(alignment: .leading, spacing: 18) {
+            Text("Visuals")
+                .font(.system(size: 15, weight: .semibold, design: .default))
+                .foregroundColor(.white.opacity(0.8))
             
-            VStack(alignment: .leading, spacing: 15) {
+            Separator()
+                .opacity(0.5)
+            
+            HStack(spacing: 15) {
                 Text("Zoom")
                     .font(.system(size: 15, weight: .semibold, design: .default))
                     .foregroundColor(.white)
+               
+                Spacer()
                 
-                HStack(spacing: 12) {
-                    Image(systemName: "minus.magnifyingglass")
-                        .font(.system(size: 20, weight: .light, design: .default))
-                        .foregroundColor(.white)
-                    
-                    Slider(value: $zoomFactor, in: 1...10, step: 0.25)
-                        .tint(.white)
-                    
-                    Image(systemName: "plus.magnifyingglass")
-                        .font(.system(size: 20, weight: .light, design: .default))
-                        .foregroundColor(.white)
-                }
+                Slider(value: $zoomFactor, in: 1...10, step: 0.25)
+                    .tint(.white)
             }
             
             HStack(alignment: .center, spacing: 15) {
@@ -50,6 +45,8 @@ struct HomeSettingsView: View {
                 Toggle(isOn: $showLabels) { }
                     .tint(.white.opacity(0.4))
             }
+            
+            Spacer()
         }
         .padding()
         .onChange(of: showSettings) { _ in
@@ -63,9 +60,9 @@ struct HomeSettingsView_Previews: PreviewProvider {
     @State static var showSettings = true
 
     static var previews: some View {
-        HomeView(detailPayload: .dummy, showSettings: $showSettings)
+        HomeView(detailPayload: .dummy, showSettings: $showSettings, showVisualSettings: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
-            .presentModal(isPresented: $showSettings) {
+            .presentModal(isPresented: $showSettings, height: 200) {
                 HomeSettingsView(showSettings: $showSettings)
             }
     }

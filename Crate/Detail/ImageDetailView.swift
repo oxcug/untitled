@@ -1,6 +1,6 @@
 //
 //  ImageDetailView.swift
-//  Crate
+//  untitled
 //
 //  Created by Mike Choi on 10/13/22.
 //
@@ -147,6 +147,7 @@ struct ImageDetailView: View {
     @State var scale: CGFloat = .zero
     @State var scalePoisition: CGPoint = .zero
     @State var showEditModal = false
+    @State var showShareModal = false
     
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
     @Environment(\.dismiss) var dismiss
@@ -195,6 +196,15 @@ struct ImageDetailView: View {
                 ImageReview(images: nil, detail: detailPayload)
             }
         }
+        .presentModal(isPresented: $showShareModal, height: UIScreen.main.bounds.height * 0.45) {
+            if let image = viewModel.images[viewModel.cur.id] {
+                ImageShareOptionView(name: viewModel.name,
+                                     dateString: viewModel.dateString,
+                                     image: image,
+                                     color: viewModel.backgroundColor,
+                                     palette: viewModel.palette)
+            }
+        }
     }
     
     var modalHeader: some View {
@@ -230,21 +240,15 @@ struct ImageDetailView: View {
                 .disabled(true)
             
             TabView(selection: $viewModel.cur) {
-                if viewModel.entries.count > 0 {
                     ForEach(viewModel.entries, id: \.self) { entry in
                         Image(uiImage: viewModel.images[entry.id] ?? UIImage())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(height: reader.size.height * 0.6, alignment: .center)
                             .addPinchToZoom(isZooming: $isZooming, offset: $offset, scale: $scale, scalePosition: $scalePoisition)
                     }
-                } else {
-                    Text("No selection")
-                        .foregroundColor(.gray)
-                        .font(.system(size: 16, weight: .semibold, design: .default))
-                }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
+            .frame(height: reader.size.height * 0.6, alignment: .center)
             .opacity(isZooming ? 0 : 1)
         }
         .zIndex(isZooming ? 1000 : 0)
@@ -276,6 +280,7 @@ struct ImageDetailView: View {
                 }
                 
                 Button {
+                    showShareModal.toggle()
                 } label: {
                     Label("Share", systemImage: "square.and.arrow.up")
                 }
@@ -351,7 +356,7 @@ struct ImageDetailView_Previews: PreviewProvider {
     @StateObject static var detailViewModel = PictureEntryDetailViewModel()
     
     static var previews: some View {
-        HomeView(detailPayload: .dummy, showSettings: .constant(false))
+        HomeView(detailPayload: .dummy, showSettings: .constant(false), showVisualSettings: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
             .floatingPanelSurfaceAppearance(.phone)
             .floatingPanelContentMode(.fitToBounds)

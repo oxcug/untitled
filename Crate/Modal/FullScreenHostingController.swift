@@ -1,6 +1,6 @@
 //
 //  DetailNavigationController.swift
-//  Crate
+//  untitled
 //
 //  Created by Mike Choi on 11/6/22.
 //

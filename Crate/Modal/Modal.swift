@@ -1,6 +1,6 @@
 //
 //  Modal.swift
-//  Crate
+//  untitled
 //
 //  Created by Mike Choi on 11/8/22.
 //
@@ -22,18 +22,15 @@ extension View {
         }
     }
     
-    func presentModal<Content: View>(isPresented: Binding<Bool>, @ViewBuilder content: @escaping () -> Content) -> some View {
+    func presentModal<Content: View>(isPresented: Binding<Bool>, height: CGFloat, @ViewBuilder content: @escaping () -> Content) -> some View {
         onChange(of: isPresented.wrappedValue) { isPresented in
             let topMostController = self.topMostController()
             
-            if (!topMostController.isPanModalPresented) {
-                DispatchQueue.main.async {
-                    let rootView = content()
-                    let host = PartialModalHostingController(rootView: rootView)
-                    topMostController.presentPanModal(host)
-                }
-            } else {
-                topMostController.dismiss(animated: true)
+            DispatchQueue.main.async {
+                let rootView = content()
+                let host = PartialModalHostingController(rootView: rootView)
+                host.height = height
+                topMostController.presentPanModal(host)
             }
         }
     }

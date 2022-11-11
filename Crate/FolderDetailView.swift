@@ -1,6 +1,6 @@
 //
 //  FolderDetailView.swift
-//  Crate
+//  untitled
 //
 //  Created by Mike Choi on 11/8/22.
 //
@@ -39,10 +39,13 @@ struct FolderDetailView: View {
             title = folder.fullName
         }
         .onChange(of: zoomFactor, perform: { newValue in
-            if zoomFactor > 4 {
-                columns = [.init(.flexible())]
-            } else {
-                columns = [.init(.flexible()), .init(.flexible())]
+            switch newValue {
+                case let x where (0...3).contains(x):
+                    columns = Array(repeating: .init(.flexible()), count: 3)
+                case let x where (3...5).contains(x):
+                    columns = Array(repeating: .init(.flexible()), count: 2)
+                default:
+                    columns = Array(repeating: .init(.flexible()), count: 1)
             }
         })
         .navigationBarTitleDisplayMode(.inline)
@@ -78,7 +81,7 @@ struct FolderDetailView: View {
                 }
             }
         }
-        .presentModal(isPresented: $showSettings) {
+        .presentModal(isPresented: $showSettings, height: 200) {
             HomeSettingsView(showSettings: $showSettings)
         }
         .presentFullScreenModal(item: $detailPayload) { payload in

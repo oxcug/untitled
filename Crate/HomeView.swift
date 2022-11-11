@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  Crate
+//  untitled
 //
 //  Created by Mike Choi on 10/12/22.
 //
@@ -49,6 +49,7 @@ struct EntryCell: View {
 struct HomeView: View {
     @State var detailPayload: DetailPayload = .dummy
     @Binding var showSettings: Bool
+    @Binding var showVisualSettings: Bool
     
     @State var imagesPayload: ImagesPayload?
     @State var showingImagePicker = false
@@ -96,20 +97,30 @@ struct HomeView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .principal) {
-                    Text("Crate")
-                        .font(.system(size: 17, weight: .semibold, design: .default))
+                    Text("untitled.")
+                        .font(.system(size: 17, weight: .bold, design: .default))
                         .foregroundColor(.white)
                 }
                 
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button {
+                        showVisualSettings.toggle()
+                    } label: {
+                        Image(systemName: "eyes")
+                            .foregroundColor(.white)
+                    }
+                }
+               
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
                         showSettings.toggle()
                     } label: {
-                        Image(systemName: "gear")
+                        Image(systemName: "person.fill")
                             .foregroundColor(.white)
                     }
                 }
             }
+            
         }
         .preferredColorScheme(.dark)
         .tint(.white)
@@ -152,7 +163,7 @@ struct HomeView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(detailPayload: .dummy, showSettings: .constant(false))
+        HomeView(detailPayload: .dummy, showSettings: .constant(false), showVisualSettings: .constant(false))
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "27020DDF28F6C49C00C94312"
-               BuildableName = "Crate.app"
-               BlueprintName = "Crate"
+               BuildableName = "untitled.app"
+               BlueprintName = "untitled"
                ReferencedContainer = "container:Crate.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -34,8 +34,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "27020DF528F6C49C00C94312"
-               BuildableName = "CrateTests.xctest"
-               BlueprintName = "CrateTests"
+               BuildableName = "untitledTests.xctest"
+               BlueprintName = "untitledTests"
                ReferencedContainer = "container:Crate.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -45,8 +45,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "27020DFF28F6C49C00C94312"
-               BuildableName = "CrateUITests.xctest"
-               BlueprintName = "CrateUITests"
+               BuildableName = "untitledUITests.xctest"
+               BlueprintName = "untitledUITests"
                ReferencedContainer = "container:Crate.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -67,8 +67,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "27020DDF28F6C49C00C94312"
-            BuildableName = "Crate.app"
-            BlueprintName = "Crate"
+            BuildableName = "untitled.app"
+            BlueprintName = "untitled"
             ReferencedContainer = "container:Crate.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -84,8 +84,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "27020DDF28F6C49C00C94312"
-            BuildableName = "Crate.app"
-            BlueprintName = "Crate"
+            BuildableName = "untitled.app"
+            BlueprintName = "untitled"
             ReferencedContainer = "container:Crate.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

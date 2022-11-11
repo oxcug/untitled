@@ -1,6 +1,6 @@
 //
 //  CrateApp.swift
-//  Crate
+//  untitled
 //
 //  Created by Mike Choi on 10/12/22.
 //
@@ -19,6 +19,7 @@ struct DetailPayload: Identifiable, Hashable {
 @main
 struct CrateApp: App {
     @State var detailPayload: DetailPayload = .dummy
+    @State var showVisualSettings = false
     @State var showSettings = false
     
     @AppStorage("show.labels") var showLabels = true
@@ -26,11 +27,14 @@ struct CrateApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HomeView(showSettings: $showSettings)
+            HomeView(showSettings: $showSettings, showVisualSettings: $showVisualSettings)
                 .preferredColorScheme(.dark)
                 .environment(\.managedObjectContext, DataController.shared.container.viewContext)
-                .presentModal(isPresented: $showSettings) {
+                .presentModal(isPresented: $showVisualSettings, height: 200) {
                     HomeSettingsView(showSettings: $showSettings)
+                }
+                .sheet(isPresented: $showSettings) {
+                    SettingsView()
                 }
         }
     }

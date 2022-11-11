@@ -1,6 +1,6 @@
 //
 //  PartialModalHostingController.swift
-//  Crate
+//  untitled
 //
 //  Created by Mike Choi on 11/8/22.
 //
@@ -9,6 +9,8 @@ import PanModal
 import SwiftUI
 
 final class PartialModalHostingController<Content>: UIHostingController<Content> where Content : View {
+    var height: CGFloat = 200
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -30,7 +32,7 @@ extension PartialModalHostingController: PanModalPresentable {
     }
     
     var longFormHeight: PanModalHeight {
-        .contentHeight(200)
+        .contentHeight(height)
     }
 
     var springDamping: CGFloat {
