@@ -70,7 +70,6 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
    
     @Published var textBoundingBoxes: [BoundingBox] = []
     @Published var titleBox: BoundingBox?
-    @Published var selectedTextBoundingBoxes: [BoundingBox] = []
     
     @Published var includeSegmentedImage = true
     @Published var segmentedImage: SegmentedImage?
@@ -149,24 +148,12 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     
     func didTapBoundingBox(_ box: BoundingBox) {
         DispatchQueue.main.async {
-            // First tap is the title
-            if self.titleBox == nil {
-                self.titleBox = box
-                self.name = box.string
-                self.selectedTextBoundingBoxes.removeAll { $0 == box }
-                return
-            }
-            
             if box == self.titleBox {
                 self.titleBox = nil
                 self.name = ""
-                return
-            }
-            
-            if let idx = self.selectedTextBoundingBoxes.firstIndex(of: box) {
-                self.selectedTextBoundingBoxes.remove(at: idx)
             } else {
-                self.selectedTextBoundingBoxes.append(box)
+                self.titleBox = box
+                self.name = box.string
             }
         }
     }

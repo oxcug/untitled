@@ -151,6 +151,7 @@ struct ImageDetailView: View {
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var viewContext
+    @AppStorage("theme") var theme: Theme = .lightsOff
     
     var body: some View {
         GeometryReader { reader in
@@ -194,6 +195,7 @@ struct ImageDetailView: View {
             NavigationStack {
                 ImageReview(images: nil, detail: detailPayload)
             }
+            .preferredColorScheme(theme.colorScheme)
         }
         .presentModal(isPresented: $showShareModal, height: UIScreen.main.bounds.height * 0.45) {
             if let image = viewModel.images[viewModel.cur.id] {

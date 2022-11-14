@@ -36,28 +36,25 @@ struct FolderSelectionView: View {
                 } label: {
                     HStack(spacing: 10) {
                         Text(folder.emoji ?? "")
-                            .foregroundColor(.white)
                             .font(.system(size: 22, weight: .semibold, design: .default))
                             .frame(width: 40)
                         
                         Text(folder.name)
-                            .foregroundColor(.white)
                             .font(.system(size: 15, weight: .semibold, design: .default))
                         
                         Spacer()
                         
                         Image(systemName: "checkmark.circle.fill")
-                            .foregroundColor(.white)
+                            .foregroundColor(.bodyText)
                             .opacity(((selectedFolder?.id ?? UUID()) == folder.id) ? 1 : 0)
                             .font(.system(size: 17, weight: .semibold, design: .default))
                     }
                     .padding(.vertical, 10)
                 }
             }
-            .listRowBackground(Color.black)
             .listRowSeparatorTint(Color.white.opacity(0.1))
             .listRowSeparator(.hidden, edges: .top)
-               
+            
             Button {
                 selectionFeedback.selectionChanged()
                 showFolderCreationModal = true
@@ -65,7 +62,7 @@ struct FolderSelectionView: View {
                 HStack(spacing: 10) {
                     Image(systemName: "plus.circle.fill")
                         .symbolRenderingMode(.hierarchical)
-                        .foregroundColor(.white)
+                        .foregroundColor(.bodyText)
                         .font(.system(size: 24, weight: .semibold, design: .default))
                         .frame(width: 40)
                     
@@ -74,12 +71,10 @@ struct FolderSelectionView: View {
                 }
                 .padding(.vertical, 10)
             }
-            .listRowBackground(Color.black)
             .listRowSeparatorTint(Color.white.opacity(0.1))
             .listRowSeparator(.hidden, edges: .top)
         }
         .listStyle(.plain)
-        .background(Color.black)
         .scrollContentBackground(.hidden)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -112,7 +107,14 @@ struct FolderSelectionView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationStack {
             FolderSelectionView(selectedFolder: .constant(nil))
-            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+                .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+                .preferredColorScheme(.light)
+        }
+        
+        NavigationStack {
+            FolderSelectionView(selectedFolder: .constant(nil))
+                .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+                .preferredColorScheme(.dark)
         }
     }
 }

@@ -42,37 +42,27 @@ struct SingleImageReview: View {
             List {
                 imagePreview
                     .frame(maxWidth: .infinity, alignment: .center)
-                    .listRowBackground(Color.black)
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
                     .id(0)
                 
                 TextField("Give it a name...", text: $viewModel.name)
                     .font(.system(size: 20, weight: .semibold, design: .default))
-                    .foregroundColor(.white)
+                    .foregroundColor(.bodyText)
                     .padding(.vertical, 8)
                     .multilineTextAlignment(.center)
                     .id(1)
                 
                 categoryRow
-                    .listRowBackground(Color.black)
                     .id(2)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Description")
                         .modifier(SemiBoldBodyTextModifier())
-                   
-                    VStack(alignment: .leading, spacing: 4) {
-                        ForEach(viewModel.selectedTextBoundingBoxes) { box in
-                            Text(box.string)
-                                .font(.system(size: 15, weight: .regular, design: .default))
-                        }
-                    }
                 }
                 
                 Spacer(minLength: 100 + keyboardHeight)
                     .listRowSeparator(.hidden)
-                    .listRowBackground(Color.black)
                     .id(3)
             }
             .listStyle(.plain)
@@ -127,7 +117,6 @@ struct SingleImageReview: View {
             ForEach(viewModel.textBoundingBoxes) { box in
                 let rect = box.box
                 let isTitle = (viewModel.titleBox == box)
-                let isSelected = (viewModel.selectedTextBoundingBoxes.contains(box)) || isTitle
                 
                 Button {
                     viewModel.didTapBoundingBox(box)
@@ -139,7 +128,7 @@ struct SingleImageReview: View {
                     }
                 } label: {
                     RoundedRectangle(cornerRadius: 4)
-                        .foregroundColor(.white.opacity(isSelected ? 0.5 : 0.3))
+                        .foregroundColor(.white.opacity(isTitle ? 0.5 : 0.3))
                         .background(
                             Rectangle()
                                 .foregroundColor(.clear)
@@ -148,7 +137,7 @@ struct SingleImageReview: View {
                                                            tr: 4,
                                                            bl: 4,
                                                            br: isTitle ? 0 : 4))
-                                .opacity(isSelected ? 1 : 0)
+                                .opacity(isTitle ? 1 : 0)
                         )
                         .overlay(
                             Text("TITLE")
@@ -186,13 +175,13 @@ struct SingleImageReview: View {
                     if let selectedFolder = viewModel.folder {
                         Text(selectedFolder.fullName)
                             .font(.system(size: 12, weight: .semibold, design: .default))
-                            .foregroundColor(.white)
+                            .foregroundColor(.bodyText)
                             .padding(12)
                             .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
                     } else {
                         Text("No selection")
                             .font(.system(size: 12, weight: .semibold, design: .default))
-                            .foregroundColor(.white)
+                            .foregroundColor(.bodyText)
                             .padding(12)
                             .background(RoundedRectangle(cornerRadius: 20).foregroundColor(.gray).opacity(0.2))
                     }
@@ -227,7 +216,6 @@ struct ImageReview: View {
                 }
                 
                 nextFooter
-                    .background(Color.black, ignoresSafeAreaEdges: .bottom)
             }
             .toolbar {
                 ToolbarCancelButton()
@@ -235,7 +223,7 @@ struct ImageReview: View {
                 ToolbarItem(placement: .principal) {
                     Text(title)
                         .font(.system(size: 15, weight: .semibold, design: .default))
-                        .foregroundColor(.white)
+                        .foregroundColor(.bodyText)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
@@ -262,20 +250,19 @@ struct ImageReview: View {
                     .foregroundColor(.red)
                 
                 Spacer()
-                                
+                
                 let isLastOne = (selectedPage == (images?.count ?? 1) - 1)
                 
                 Button {
-                   save(isLastOne)
+                    save(isLastOne)
                 } label: {
                     Text(isLastOne ? "Finish" : "Next")
                         .font(.system(size: 14, weight: .semibold, design: .default))
-                        .foregroundColor(Color(uiColor: .black))
+                        .foregroundColor(Color(uiColor: .secondarySystemBackground))
                         .frame(width: 50)
                         .padding(8)
-                        .background(Capsule(style: .circular).foregroundColor(Color(uiColor: .white)))
+                        .background(Capsule(style: .circular).foregroundColor(.bodyText))
                 }
-                .background(Rectangle().foregroundColor(.black))
             }
             .padding(.top, 15)
             .padding(.horizontal, 15)
@@ -321,6 +308,11 @@ struct ImageReview: View {
 struct ImageReview_Previews: PreviewProvider {
     static var previews: some View {
         ImageReview(images: [UIImage(named: "represent.jpeg")!], detail: nil)
+            .preferredColorScheme(.light)
+            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+        
+        ImageReview(images: [UIImage(named: "represent.jpeg")!], detail: nil)
+            .preferredColorScheme(.dark)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }
