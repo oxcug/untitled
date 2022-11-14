@@ -75,6 +75,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     @Published var segmentedImage: SegmentedImage?
     @Published var imageSize: CGSize = .zero
     @Published var colors: [MMCQ.Color]?
+    @Published var tappableBounds: CGRect?
     
     // MARK: -  processors
   
@@ -134,6 +135,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         }
         
         segmentedImage = personSegmenter.segment(image: fixedImage)
+        tappableBounds = segmentedImage?.original.imageResized(to: imageSize).cropRect()
         
         paletteQueue.async {
             guard let segmented = self.segmentedImage else {
@@ -170,7 +172,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         entry.date = Date()
         
         entry.original = ImageStorage.shared.write(image, entryID: entryID, isOriginal: true)
-        entry.modified = ImageStorage.shared.write(segmentedImage?.original.cropImageByAlpha(), entryID: entryID, isOriginal: false)
+        entry.modified = ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entryID, isOriginal: false)
         entry.boxes = NSArray()
         entry.folder = folder.coreDataObject
         entry.colors = (colors ?? []).map { $0.id }
@@ -181,7 +183,8 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         } catch {
             let nsError = error as NSError
             fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-//            return false
         }
     }
 }
+
+

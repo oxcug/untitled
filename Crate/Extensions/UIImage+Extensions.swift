@@ -39,72 +39,6 @@ extension UIImage {
 }
 
 extension UIImage {
-    func cropImageByAlpha() -> UIImage {
-        let cgImage = self.cgImage
-        let context = createARGBBitmapContextFromImage(inImage: cgImage!)
-        let height = cgImage!.height
-        let width = cgImage!.width
-        
-        var rect: CGRect = CGRect(x: 0, y: 0, width: CGFloat(width), height: CGFloat(height))
-        context?.draw(cgImage!, in: rect)
-        
-        let pixelData = self.cgImage!.dataProvider!.data
-        let data: UnsafePointer<UInt8> = CFDataGetBytePtr(pixelData)
-        
-        var minX = width
-        var minY = height
-        var maxX: Int = 0
-        var maxY: Int = 0
-        
-        //Filter through data and look for non-transparent pixels.
-        for y in 0..<height {
-            for x in 0..<width {
-                let pixelIndex = (width * y + x) * 4 /* 4 for A, R, G, B */
-                
-                if data[Int(pixelIndex)] != 0 { //Alpha value is not zero pixel is not transparent.
-                    if (x < minX) {
-                        minX = x
-                    }
-                    if (x > maxX) {
-                        maxX = x
-                    }
-                    if (y < minY) {
-                        minY = y
-                    }
-                    if (y > maxY) {
-                        maxY = y
-                    }
-                }
-            }
-        }
-        
-        rect = CGRect( x: CGFloat(minX), y: CGFloat(minY), width: CGFloat(maxX-minX), height: CGFloat(maxY-minY))
-        let imageScale:CGFloat = self.scale
-        let cgiImage = self.cgImage?.cropping(to: rect)
-        return UIImage(cgImage: cgiImage!, scale: imageScale, orientation: self.imageOrientation)
-    }
-    
-    private func createARGBBitmapContextFromImage(inImage: CGImage) -> CGContext? {
-        
-        let width = cgImage!.width
-        let height = cgImage!.height
-        
-        let bitmapBytesPerRow = width * 4
-        let bitmapByteCount = bitmapBytesPerRow * height
-        
-        let colorSpace = CGColorSpaceCreateDeviceRGB()
-        let bitmapData = malloc(bitmapByteCount)
-        if bitmapData == nil {
-            return nil
-        }
-        
-        let context = CGContext (data: bitmapData, width: width, height: height, bitsPerComponent: 8, bytesPerRow: bitmapBytesPerRow, space: colorSpace, bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue)
-        
-        return context
-    }
-}
-
-extension UIImage {
     /// There are two main ways to get the color from an image, just a simple "sum up an average" or by squaring their sums. Each has their advantages, but the 'simple' option *seems* better for average color of entire image and closely mirrors CoreImage. Details: https://sighack.com/post/averaging-rgb-colors-the-right-way
     enum AverageColorAlgorithm {
         case simple
@@ -191,4 +125,143 @@ extension UIImage {
     private func blue(for pixelData: UInt32) -> UInt8 {
         return UInt8((pixelData >> 0) & 255)
     }
+}
+
+extension UIImage {
+
+    /// Crops the insets of transparency around the image.
+    ///
+    /// - Parameters:
+    ///   - maximumAlphaChannel: The maximum alpha channel value to consider  _transparent_ and thus crop. Any alpha value
+    ///         strictly greater than `maximumAlphaChannel` will be considered opaque.
+    func trimmingTransparentPixels(maximumAlphaChannel: UInt8 = 0) -> UIImage? {
+        guard size.height > 1 && size.width > 1
+            else { return self }
+
+        guard let cgImage = cgImage?.trimmingTransparentPixels(maximumAlphaChannel: maximumAlphaChannel)
+            else { return nil }
+
+        return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
+    }
+    
+    func cropRect(maximumAlphaChannel: UInt8 = 0) -> CGRect? {
+        guard size.height > 1 && size.width > 1
+            else { return nil }
+
+        guard let rect = cgImage?.cropRect(maximumAlphaChannel: maximumAlphaChannel)
+            else { return nil }
+
+        return CGRect(x: rect.minX / scale, y: rect.minY / scale, width: rect.width / scale, height: rect.height / scale)
+    }
+}
+
+extension CGImage {
+
+    /// Crops the insets of transparency around the image.
+    ///
+    /// - Parameters:
+    ///   - maximumAlphaChannel: The maximum alpha channel value to consider  _transparent_ and thus crop. Any alpha value
+    ///         strictly greater than `maximumAlphaChannel` will be considered opaque.
+    func trimmingTransparentPixels(maximumAlphaChannel: UInt8 = 0) -> CGImage? {
+        return _CGImageTransparencyTrimmer(image: self, maximumAlphaChannel: maximumAlphaChannel)?.trim()
+    }
+
+    func cropRect(maximumAlphaChannel: UInt8 = 0) -> CGRect? {
+        return _CGImageTransparencyTrimmer(image: self, maximumAlphaChannel: maximumAlphaChannel)?.cropRect()
+    }
+}
+
+private struct _CGImageTransparencyTrimmer {
+
+    let image: CGImage
+    let maximumAlphaChannel: UInt8
+    let cgContext: CGContext
+    let zeroByteBlock: UnsafeMutableRawPointer
+    let pixelRowRange: Range<Int>
+    let pixelColumnRange: Range<Int>
+
+    init?(image: CGImage, maximumAlphaChannel: UInt8) {
+        guard let cgContext = CGContext(data: nil,
+                                        width: image.width,
+                                        height: image.height,
+                                        bitsPerComponent: 8,
+                                        bytesPerRow: 0,
+                                        space: CGColorSpaceCreateDeviceGray(),
+                                        bitmapInfo: CGImageAlphaInfo.alphaOnly.rawValue),
+            cgContext.data != nil
+            else { return nil }
+
+        cgContext.draw(image,
+                       in: CGRect(origin: .zero,
+                                  size: CGSize(width: image.width,
+                                               height: image.height)))
+
+        guard let zeroByteBlock = calloc(image.width, MemoryLayout<UInt8>.size)
+            else { return nil }
+
+        self.image = image
+        self.maximumAlphaChannel = maximumAlphaChannel
+        self.cgContext = cgContext
+        self.zeroByteBlock = zeroByteBlock
+
+        pixelRowRange = 0..<image.height
+        pixelColumnRange = 0..<image.width
+    }
+    
+    func cropRect() -> CGRect? {
+        guard let topInset = firstOpaquePixelRow(in: pixelRowRange),
+            let bottomOpaqueRow = firstOpaquePixelRow(in: pixelRowRange.reversed()),
+            let leftInset = firstOpaquePixelColumn(in: pixelColumnRange),
+            let rightOpaqueColumn = firstOpaquePixelColumn(in: pixelColumnRange.reversed())
+            else { return nil }
+
+        let bottomInset = (image.height - 1) - bottomOpaqueRow
+        let rightInset = (image.width - 1) - rightOpaqueColumn
+
+        guard !(topInset == 0 && bottomInset == 0 && leftInset == 0 && rightInset == 0)
+            else { return nil }
+
+        return CGRect(origin: CGPoint(x: leftInset, y: topInset),
+                      size: CGSize(width: image.width - (leftInset + rightInset),
+                                   height: image.height - (topInset + bottomInset)))
+    }
+
+    func trim() -> CGImage? {
+        guard let cropRect = cropRect() else {
+            return image
+        }
+        
+        return image.cropping(to: cropRect)
+    }
+
+    @inlinable
+    func isPixelOpaque(column: Int, row: Int) -> Bool {
+        // Sanity check: It is safe to get the data pointer in iOS 4.0+ and macOS 10.6+ only.
+        assert(cgContext.data != nil)
+        return cgContext.data!.load(fromByteOffset: (row * cgContext.bytesPerRow) + column, as: UInt8.self)
+            > maximumAlphaChannel
+    }
+
+    @inlinable
+    func isPixelRowTransparent(_ row: Int) -> Bool {
+        assert(cgContext.data != nil)
+        // `memcmp` will efficiently check if the entire pixel row has zero alpha values
+        return memcmp(cgContext.data! + (row * cgContext.bytesPerRow), zeroByteBlock, image.width) == 0
+            // When the entire row is NOT zeroed, we proceed to check each pixel's alpha
+            // value individually until we locate the first "opaque" pixel (very ~not~ efficient).
+            || !pixelColumnRange.contains(where: { isPixelOpaque(column: $0, row: row) })
+    }
+
+    @inlinable
+    func firstOpaquePixelRow<T: Sequence>(in rowRange: T) -> Int? where T.Element == Int {
+        return rowRange.first(where: { !isPixelRowTransparent($0) })
+    }
+
+    @inlinable
+    func firstOpaquePixelColumn<T: Sequence>(in columnRange: T) -> Int? where T.Element == Int {
+        return columnRange.first(where: { column in
+            pixelRowRange.contains(where: { isPixelOpaque(column: column, row: $0) })
+        })
+    }
+
 }

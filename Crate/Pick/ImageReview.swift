@@ -98,20 +98,23 @@ struct SingleImageReview: View {
                 }
             
             if let segmented = viewModel.segmentedImage {
+                Image(uiImage: viewModel.includeSegmentedImage ? segmented.active : segmented.inactive)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: imageHeight)
+                    .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(height: imageHeight)
+                
                 Button {
                     viewModel.includeSegmentedImage.toggle()
                     selectionFeedback.selectionChanged()
                 } label: {
-                    Image(uiImage: viewModel.includeSegmentedImage ? segmented.active : segmented.inactive)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: imageHeight)
-                        .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
+                    Rectangle()
+                        .frame(width: viewModel.tappableBounds?.width ?? 0, height: viewModel.tappableBounds?.height ?? 0)
+                        .offset(x: viewModel.tappableBounds?.minX ?? 0, y: viewModel.tappableBounds?.minY ?? 0)
                 }
                 .buttonStyle(.plain)
-                .aspectRatio(contentMode: .fit)
-                .frame(height: imageHeight)
-                .zIndex(0)
             }
             
             ForEach(viewModel.textBoundingBoxes) { box in
