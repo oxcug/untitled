@@ -10,7 +10,7 @@ import Vision
 
 final class TextProcessor: ObservableObject {
     func performRecognition(image: UIImage) async -> [BoundingBox] {
-        guard let cgImage = image.fixOrientation().cgImage else {
+        guard let cgImage = image.cgImage else {
             return []
         }
         

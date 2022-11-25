@@ -292,7 +292,7 @@ struct ImageReview: View {
                             .foregroundColor(Color(uiColor: .secondarySystemBackground))
                     }
                 }
-                .frame(width: 50)
+                .frame(width: 50, height: 20)
                 .padding(8)
                 .background(Capsule(style: .circular).foregroundColor(.bodyText))
 

@@ -44,7 +44,7 @@ struct EntryEntity: Identifiable, Equatable, Hashable {
 struct ImageDetailView: View {
     let detailPayload: DetailPayload
     let selectionFeedbackGenerator = UIImpactFeedbackGenerator(style: .rigid)
-   
+    
     @State var isZooming = false
     @State var offset: CGPoint = .zero
     @State var scale: CGFloat = .zero
@@ -159,13 +159,14 @@ struct ImageDetailView: View {
                 .disabled(true)
             
             TabView(selection: $viewModel.cur) {
-                    ForEach(viewModel.entries, id: \.self) { entry in
-                        Image(uiImage: viewModel.images[entry.id] ?? UIImage())
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .contentShape(Rectangle())
-                            .addPinchToZoom(isZooming: $isZooming, offset: $offset, scale: $scale, scalePosition: $scalePoisition)
-                    }
+                ForEach(viewModel.entries, id: \.self) { entry in
+                    Image(uiImage: viewModel.images[entry.id] ?? UIImage())
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxWidth: .infinity)
+                        .contentShape(Rectangle())
+                        .addPinchToZoom(isZooming: $isZooming, offset: $offset, scale: $scale, scalePosition: $scalePoisition)
+                }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .frame(height: reader.size.height * heightRatio, alignment: .center)

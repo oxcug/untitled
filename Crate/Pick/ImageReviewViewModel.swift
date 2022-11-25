@@ -94,7 +94,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     static let dummy = ImageReviewViewModel(image: UIImage(), pageNumber: -1)
     
     init(image: UIImage, pageNumber: Int) {
-        self.image = image
+        self.image = image.fixOrientation()
         self.pageNumber = pageNumber
     }
     
@@ -102,7 +102,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         guard let entry = detail.detail, let folder = detail.folder else { return nil}
         self.pageNumber = 0
         self.folder = folder
-        self.image = ImageStorage.shared.loadImage(named: entry.original) ?? UIImage()
+        self.image = ImageStorage.shared.loadImage(named: entry.original)?.fixOrientation() ?? UIImage()
         self.description = detail.detail?.detailText ?? ""
     }
     
@@ -160,7 +160,6 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
             .receive(on: RunLoop.main)
             .sink { [weak self] image in
                 guard let self = self else { return }
-                print("RPCESSINGALKSDJFALSKDJF")
                 
                 Task(priority: .userInitiated) {
                     self.tappableBounds = await image.original.imageResized(to: imageSize).cropRect()

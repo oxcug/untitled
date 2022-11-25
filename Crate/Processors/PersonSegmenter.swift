@@ -15,7 +15,7 @@ final class PersonSegmenter {
     let request = VNGeneratePersonSegmentationRequest()
     
     func segment(image: UIImage) async -> SegmentedImage? {
-        guard let foregroundImage = image.fixOrientation().cgImage else {
+        guard let foregroundImage = image.cgImage else {
             print("Missing required images")
             return nil
         }
