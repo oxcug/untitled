@@ -76,9 +76,11 @@
 		27DED9522906C3FD00CE9095 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9512906C3FD00CE9095 /* DataController.swift */; };
 		27DED9902906D5A800CE9095 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED98F2906D5A800CE9095 /* BoundingBox.swift */; };
 		27DED9922906E77700CE9095 /* Sequence+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9912906E77700CE9095 /* Sequence+Extensions.swift */; };
-		27DED9942907409600CE9095 /* DemoPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9932907409600CE9095 /* DemoPanelDelegate.swift */; };
 		27DED9962907483400CE9095 /* PictureEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9952907483400CE9095 /* PictureEntryViewModel.swift */; };
 		27DED99A290749E100CE9095 /* SettingsPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED999290749E100CE9095 /* SettingsPanelDelegate.swift */; };
+		27F7DF8029311FF500F2DEAB /* MoreText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7DF7F29311FF500F2DEAB /* MoreText.swift */; };
+		27F7DF8229312CC500F2DEAB /* PictureEntryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7DF8129312CC500F2DEAB /* PictureEntryDetailViewModel.swift */; };
+		27F7DF8429312D3900F2DEAB /* MoreTextModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7DF8329312D3900F2DEAB /* MoreTextModalView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -169,9 +171,11 @@
 		27DED9512906C3FD00CE9095 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		27DED98F2906D5A800CE9095 /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		27DED9912906E77700CE9095 /* Sequence+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Extensions.swift"; sourceTree = "<group>"; };
-		27DED9932907409600CE9095 /* DemoPanelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoPanelDelegate.swift; sourceTree = "<group>"; };
 		27DED9952907483400CE9095 /* PictureEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEntryViewModel.swift; sourceTree = "<group>"; };
 		27DED999290749E100CE9095 /* SettingsPanelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPanelDelegate.swift; sourceTree = "<group>"; };
+		27F7DF7F29311FF500F2DEAB /* MoreText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreText.swift; sourceTree = "<group>"; };
+		27F7DF8129312CC500F2DEAB /* PictureEntryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEntryDetailViewModel.swift; sourceTree = "<group>"; };
+		27F7DF8329312D3900F2DEAB /* MoreTextModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreTextModalView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -360,7 +364,6 @@
 				27DBEA0D28FAECB700B27850 /* View+floatingPanelContentMode.swift */,
 				27DBEA0E28FAECB700B27850 /* View+floatingPanelGrabberHandlePadding.swift */,
 				27DBEA1028FAECB700B27850 /* View+floatingPanelSurfaceAppearance.swift */,
-				27DED9932907409600CE9095 /* DemoPanelDelegate.swift */,
 			);
 			path = FloatingPanel;
 			sourceTree = "<group>";
@@ -385,7 +388,10 @@
 				27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */,
 				27A8EEA828FCAF7C004DDCE9 /* FolderCreationView.swift */,
 				27DED9952907483400CE9095 /* PictureEntryViewModel.swift */,
+				27F7DF8129312CC500F2DEAB /* PictureEntryDetailViewModel.swift */,
 				27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */,
+				27F7DF7F29311FF500F2DEAB /* MoreText.swift */,
+				27F7DF8329312D3900F2DEAB /* MoreTextModalView.swift */,
 				270953FC291BC68700645133 /* ImageShareOptions.swift */,
 			);
 			path = Detail;
@@ -568,12 +574,12 @@
 				27DBEA1A28FAECB800B27850 /* View+floatingPanelContentInsetAdjustmentBehavior.swift in Sources */,
 				27DBE9E828F8655E00B27850 /* Folder.swift in Sources */,
 				27DBEA1928FAECB800B27850 /* FloatingPanelView.swift in Sources */,
+				27F7DF8429312D3900F2DEAB /* MoreTextModalView.swift in Sources */,
 				27DBE9EE28F8669400B27850 /* ImageStorage.swift in Sources */,
 				27DE07A6291EA4FF0006AC87 /* AboutView.swift in Sources */,
 				270953FB291BC66A00645133 /* View+Snapshot.swift in Sources */,
 				27020E1628F6D88C00C94312 /* ImageReview.swift in Sources */,
 				27DE079E291DB6E10006AC87 /* AppIconSelectorView.swift in Sources */,
-				27DED9942907409600CE9095 /* DemoPanelDelegate.swift in Sources */,
 				27020DE628F6C49C00C94312 /* HomeView.swift in Sources */,
 				27AB5916291A98DA00F4DB62 /* PartialModalHostingController.swift in Sources */,
 				27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */,
@@ -598,6 +604,8 @@
 				27020DE428F6C49C00C94312 /* CrateApp.swift in Sources */,
 				2727683C291EC04A00A779E2 /* HelpView.swift in Sources */,
 				27DED9962907483400CE9095 /* PictureEntryViewModel.swift in Sources */,
+				27F7DF8229312CC500F2DEAB /* PictureEntryDetailViewModel.swift in Sources */,
+				27F7DF8029311FF500F2DEAB /* MoreText.swift in Sources */,
 				27AB5913291A979B00F4DB62 /* UINavigationController+Back.swift in Sources */,
 				27DED9902906D5A800CE9095 /* BoundingBox.swift in Sources */,
 				27DBEA1B28FAECB800B27850 /* View+floatingPanel.swift in Sources */,

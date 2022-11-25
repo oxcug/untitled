@@ -28,112 +28,16 @@ struct EntryEntity: Identifiable, Equatable, Hashable {
     var date: Date? {
         entry?.date
     }
-}
-
-final class PictureEntryDetailViewModel: ObservableObject {
-    lazy var relativeDateFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateStyle = .short
-        df.doesRelativeDateFormatting = true
-        return df
-    }()
     
-    var payload: DetailPayload = .dummy {
-        didSet {
-            reload(payload: payload)
-        }
-    }
-    
-    @Published var cur: EntryEntity = .init(id: UUID(), entry: nil)
-    @Published var entries: [EntryEntity] = []
-    @Published var images: [UUID: UIImage] = [:]
-    
-    @Published var name = "Untitled"
-    @Published var folderName = "Untitled"
-    @Published var dateString = "The Void"
-    @Published var palette: [UIColor] = []
-    @Published var paletteCache: [UUID: [UIColor]] = [:]
-    
-    @Published var backgroundColor: UIColor = .black
-    
-    func reset() {
-        backgroundColor = .black
-        entries = []
-    }
-    
-    func deleteCurrent() {
-        guard let curIdx = entries.firstIndex(of: cur) else {
-           return
+    var detail: String? {
+        guard let description = entry?.detailText else {
+            return nil
         }
         
-        backgroundColor = .black
-        entries.remove(at: curIdx)
-        
-        let nextIdx: Int
-        switch curIdx {
-            case let idx where idx > entries.count - 1:
-                nextIdx = idx - 1
-            case let idx where idx == 0:
-                nextIdx = 0
-            default:
-                nextIdx = curIdx - 1
+        let strippedDescription = description.reversed().trimmingPrefix { elem in
+            elem == "\n"
         }
-        
-        if entries.count > 0 {
-            cur = entries[nextIdx]
-        } else {
-            cur = .init(id: UUID(), entry: nil)
-        }
-        
-        reload(entry: cur)
-    }
-    
-    func reload(payload: DetailPayload) {
-        guard let entry = payload.detail,
-              let folder = payload.folder,
-              let currentIndexInFolder = folder.entries.firstIndex(of: entry) else {
-            return
-        }
-        
-        folderName = folder.fullName
-        
-        let existingEntries = folder.entries.map { EntryEntity(id: $0.id ?? UUID(), entry: $0) }
-        entries = existingEntries.dropFirst(Int(currentIndexInFolder)) + existingEntries.dropLast(existingEntries.count - Int(currentIndexInFolder))
-        images = Dictionary(uniqueKeysWithValues: entries.map {
-            ($0.id, ImageStorage.shared.loadImage(named: $0.modified) ?? UIImage())
-        })
-        
-        if let first = entries.first {
-            reload(entry: first)
-            cur = first
-        }
-    }
-    
-    func reload(entry: EntryEntity)  {
-        palette = loadPalette(entry: entry)
-        backgroundColor = palette.first ?? .black
-        
-        name = entry.name
-        if name.count == 0 {
-            name = "Untitled"
-        }
-        
-        if let date = entry.date {
-            dateString = relativeDateFormatter.string(from: date)
-        } else {
-            dateString = "the void"
-        }
-    }
-    
-    func loadPalette(entry: EntryEntity) -> [UIColor] {
-        if let cachedPalette = paletteCache[entry.id] {
-            return cachedPalette
-        } else {
-            let colorStrings = entry.colors ?? []
-            let palette = colorStrings.map { MMCQ.Color(rgbID: $0).makeUIColor() }
-            paletteCache[entry.id] = palette
-            return palette
-        }
+        return String(strippedDescription.reversed())
     }
 }
 
@@ -147,11 +51,14 @@ struct ImageDetailView: View {
     @State var scalePoisition: CGPoint = .zero
     @State var showEditModal = false
     @State var showShareModal = false
+    @State var showDescriptionModal = false
     
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var viewContext
     @AppStorage("theme") var theme: Theme = .lightsOff
+    
+    let heightRatio = 0.58
     
     var body: some View {
         GeometryReader { reader in
@@ -172,6 +79,12 @@ struct ImageDetailView: View {
                     .padding(.horizontal, 20)
                     .opacity(isZooming ? 0.3 : 1)
                     .animation(.easeInOut(duration: 0.2), value: isZooming)
+                
+                if let description = viewModel.description {
+                    MoreText(text: description, backgroundColor: $viewModel.backgroundColor) {
+                        showDescriptionModal = true
+                    }
+                }
                 
                 Spacer()
             }
@@ -196,6 +109,11 @@ struct ImageDetailView: View {
                 ImageReview(images: nil, detail: detailPayload)
             }
             .preferredColorScheme(theme.colorScheme)
+        }
+        .sheet(isPresented: $showDescriptionModal) {
+            NavigationStack {
+                MoreTextModalView(title: viewModel.name, text: viewModel.description ?? "")
+            }
         }
         .presentModal(isPresented: $showShareModal, height: UIScreen.main.bounds.height * 0.45) {
             if let image = viewModel.images[viewModel.cur.id] {
@@ -234,7 +152,7 @@ struct ImageDetailView: View {
             Image(uiImage: viewModel.images[viewModel.cur.id] ?? UIImage())
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(height: reader.size.height * 0.6, alignment: .center)
+                .frame(height: reader.size.height * heightRatio, alignment: .center)
                 .opacity(isZooming ? 1 : 0)
                 .offset(x: offset.x, y: offset.y)
                 .scaleEffect(1 + (scale < 0 ? 0 : scale), anchor: .init(x: scalePoisition.x, y: scalePoisition.y))
@@ -249,7 +167,7 @@ struct ImageDetailView: View {
                     }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
-            .frame(height: reader.size.height * 0.6, alignment: .center)
+            .frame(height: reader.size.height * heightRatio, alignment: .center)
             .opacity(isZooming ? 0 : 1)
         }
         .zIndex(isZooming ? 1000 : 0)
@@ -339,14 +257,13 @@ struct ImageDetailView_Previews: PreviewProvider {
         return obj
     }()
     
-    @StateObject static var panelDelegate = DemoFloatingPanelDelegate()
     @StateObject static var detailViewModel = PictureEntryDetailViewModel()
     
     static var previews: some View {
-        HomeView(detailPayload: .dummy, showSettings: .constant(false), showVisualSettings: .constant(false))
+        ImageDetailView(detailPayload: .dummy)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
-            .floatingPanelSurfaceAppearance(.phone)
-            .floatingPanelContentMode(.fitToBounds)
-            .floatingPanelContentInsetAdjustmentBehavior(.never)
+            .onAppear {
+                detailViewModel.reload(payload: .dummy)
+            }
     }
 }

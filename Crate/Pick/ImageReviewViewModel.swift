@@ -103,6 +103,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         self.pageNumber = 0
         self.folder = folder
         self.image = ImageStorage.shared.loadImage(named: entry.original) ?? UIImage()
+        self.description = detail.detail?.detailText ?? ""
     }
     
     func didTapFolder(_ folder: PictureFolder) async {
@@ -208,5 +209,3 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         }
     }
 }
-
-
