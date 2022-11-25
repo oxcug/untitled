@@ -9,45 +9,42 @@ import UIKit
 import Vision
 
 final class TextProcessor: ObservableObject {
-    @Published var boundingRects: [BoundingBox] = []
-    var imageSize: CGSize = .zero
-    
-    func reset() {
-        imageSize = .zero
-        boundingRects = []
-    }
-    
-    func performRecognition(image: UIImage) {
-        guard let cgImage = image.cgImage else {
-            return
+    func performRecognition(image: UIImage) async -> [BoundingBox] {
+        guard let cgImage = image.fixOrientation().cgImage else {
+            return []
         }
         
-        imageSize = image.size
-
         let requestHandler = VNImageRequestHandler(cgImage: cgImage)
 
         // Create a new request to recognize text.
-        let request = VNRecognizeTextRequest(completionHandler: recognizeTextHandler)
-        request.recognitionLevel = .accurate
-        request.recognitionLanguages = ["en-US"]
-        request.revision = 2
-
-        do {
-            // Perform the text-recognition request.
-            try requestHandler.perform([request])
-        } catch {
-            print("Unable to perform the requests: \(error).")
+        return await withCheckedContinuation { continuation in
+            let request = VNRecognizeTextRequest(completionHandler: { request, error in
+                let res = self.recognizeTextHandler(request: request, error: error)
+                continuation.resume(returning: res)
+            })
+            
+            request.recognitionLevel = .accurate
+            request.recognitionLanguages = ["en-US"]
+            request.revision = 2
+            
+            do {
+                // Perform the text-recognition request.
+                try requestHandler.perform([request])
+            } catch {
+                print("Unable to perform the requests: \(error).")
+                continuation.resume(returning: [])
+            }
         }
     }
     
-    func recognizeTextHandler(request: VNRequest, error: Error?) {
+    func recognizeTextHandler(request: VNRequest, error: Error?) -> [BoundingBox] {
         guard let observations = request.results as? [VNRecognizedTextObservation] else {
-            return
+            return []
         }
        
         let theBest = observations.compactMap { $0.topCandidates(1).first }
 
-        boundingRects = theBest.map { cand in
+        return theBest.map { cand in
             print(cand.string, cand.confidence)
             // Find the bounding-box observation for the string range.
             let stringRange = cand.string.startIndex..<cand.string.endIndex

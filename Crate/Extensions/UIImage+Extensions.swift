@@ -134,21 +134,21 @@ extension UIImage {
     /// - Parameters:
     ///   - maximumAlphaChannel: The maximum alpha channel value to consider  _transparent_ and thus crop. Any alpha value
     ///         strictly greater than `maximumAlphaChannel` will be considered opaque.
-    func trimmingTransparentPixels(maximumAlphaChannel: UInt8 = 0) -> UIImage? {
+    func trimmingTransparentPixels(maximumAlphaChannel: UInt8 = 0) async -> UIImage? {
         guard size.height > 1 && size.width > 1
             else { return self }
 
-        guard let cgImage = cgImage?.trimmingTransparentPixels(maximumAlphaChannel: maximumAlphaChannel)
+        guard let cgImage = await cgImage?.trimmingTransparentPixels(maximumAlphaChannel: maximumAlphaChannel)
             else { return nil }
 
         return UIImage(cgImage: cgImage, scale: scale, orientation: imageOrientation)
     }
     
-    func cropRect(maximumAlphaChannel: UInt8 = 0) -> CGRect? {
+    func cropRect(maximumAlphaChannel: UInt8 = 0) async -> CGRect? {
         guard size.height > 1 && size.width > 1
             else { return nil }
 
-        guard let rect = cgImage?.cropRect(maximumAlphaChannel: maximumAlphaChannel)
+        guard let rect = await cgImage?.cropRect(maximumAlphaChannel: maximumAlphaChannel)
             else { return nil }
 
         return CGRect(x: rect.minX / scale, y: rect.minY / scale, width: rect.width / scale, height: rect.height / scale)
@@ -162,12 +162,12 @@ extension CGImage {
     /// - Parameters:
     ///   - maximumAlphaChannel: The maximum alpha channel value to consider  _transparent_ and thus crop. Any alpha value
     ///         strictly greater than `maximumAlphaChannel` will be considered opaque.
-    func trimmingTransparentPixels(maximumAlphaChannel: UInt8 = 0) -> CGImage? {
-        return _CGImageTransparencyTrimmer(image: self, maximumAlphaChannel: maximumAlphaChannel)?.trim()
+    func trimmingTransparentPixels(maximumAlphaChannel: UInt8 = 0) async -> CGImage? {
+        await _CGImageTransparencyTrimmer(image: self, maximumAlphaChannel: maximumAlphaChannel)?.trim()
     }
 
-    func cropRect(maximumAlphaChannel: UInt8 = 0) -> CGRect? {
-        return _CGImageTransparencyTrimmer(image: self, maximumAlphaChannel: maximumAlphaChannel)?.cropRect()
+    func cropRect(maximumAlphaChannel: UInt8 = 0) async -> CGRect? {
+        await _CGImageTransparencyTrimmer(image: self, maximumAlphaChannel: maximumAlphaChannel)?.cropRect()
     }
 }
 
@@ -208,13 +208,20 @@ private struct _CGImageTransparencyTrimmer {
         pixelColumnRange = 0..<image.width
     }
     
-    func cropRect() -> CGRect? {
-        guard let topInset = firstOpaquePixelRow(in: pixelRowRange),
-            let bottomOpaqueRow = firstOpaquePixelRow(in: pixelRowRange.reversed()),
-            let leftInset = firstOpaquePixelColumn(in: pixelColumnRange),
-            let rightOpaqueColumn = firstOpaquePixelColumn(in: pixelColumnRange.reversed())
-            else { return nil }
-
+    func cropRect() async -> CGRect? {
+        let reversed = pixelRowRange.reversed()
+        async let topInset = firstOpaquePixelRow(in: pixelRowRange)
+        async let bottomOpaqueRow = firstOpaquePixelRow(in: reversed)
+        async let leftInset = firstOpaquePixelColumn(in: pixelColumnRange)
+        async let rightOpaqueColumn = firstOpaquePixelColumn(in: reversed)
+        
+        guard let topInset = await topInset,
+              let bottomOpaqueRow = await bottomOpaqueRow,
+              let leftInset = await leftInset,
+              let rightOpaqueColumn = await rightOpaqueColumn else {
+            return nil
+        }
+        
         let bottomInset = (image.height - 1) - bottomOpaqueRow
         let rightInset = (image.width - 1) - rightOpaqueColumn
 
@@ -226,8 +233,8 @@ private struct _CGImageTransparencyTrimmer {
                                    height: image.height - (topInset + bottomInset)))
     }
 
-    func trim() -> CGImage? {
-        guard let cropRect = cropRect() else {
+    func trim() async -> CGImage? {
+        guard let cropRect = await cropRect() else {
             return image
         }
         
@@ -253,12 +260,15 @@ private struct _CGImageTransparencyTrimmer {
     }
 
     @inlinable
-    func firstOpaquePixelRow<T: Sequence>(in rowRange: T) -> Int? where T.Element == Int {
+    func firstOpaquePixelRow<T: Sequence>(in rowRange: T) async -> Int? where T.Element == Int {
+        print("FIRST OPAQUE ROW")
         return rowRange.first(where: { !isPixelRowTransparent($0) })
     }
 
     @inlinable
-    func firstOpaquePixelColumn<T: Sequence>(in columnRange: T) -> Int? where T.Element == Int {
+    func firstOpaquePixelColumn<T: Sequence>(in columnRange: T) async -> Int? where T.Element == Int {
+            print("FIRST OPAQUE COLOUMN")
+
         return columnRange.first(where: { column in
             pixelRowRange.contains(where: { isPixelOpaque(column: column, row: $0) })
         })

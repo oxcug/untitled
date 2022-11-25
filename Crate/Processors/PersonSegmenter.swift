@@ -14,7 +14,7 @@ final class PersonSegmenter {
     let context = CIContext()
     let request = VNGeneratePersonSegmentationRequest()
     
-    func segment(image: UIImage) -> SegmentedImage? {
+    func segment(image: UIImage) async -> SegmentedImage? {
         guard let foregroundImage = image.fixOrientation().cgImage else {
             print("Missing required images")
             return nil
@@ -49,7 +49,7 @@ final class PersonSegmenter {
             if let res = renderAsUIImage(output) {
                 return SegmentedImage(original: res,
                                       active: outlineBorder(image: output, color: CIImage(color: CIColor(color: .systemBlue))) ?? UIImage(),
-                                      inactive: outlineBorder(image: output, color: CIImage(color: CIColor(color: .systemGray.withAlphaComponent(0.5)))) ?? UIImage())
+                                      inactive: outlineBorder(image: output, color: CIImage(color: CIColor(color: .systemGray.withAlphaComponent(0.8)))) ?? UIImage())
             }
         } catch {
             print("Error processing person segmentation request")

@@ -40,11 +40,31 @@ struct SingleImageReview: View {
     var body: some View {
         ScrollViewReader { scrollViewProxy in
             List {
-                imagePreview
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
-                    .id(0)
+                ZStack {
+                    imagePreview
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
+                        .id(0)
+                        .overlay(
+                            Rectangle()
+                                .frame(width: viewModel.tappableBounds?.width ?? 0, height: viewModel.tappableBounds?.height ?? 0)
+                                .offset(x: viewModel.tappableBounds?.minX ?? 0, y: viewModel.tappableBounds?.minY ?? 0)
+                                .foregroundColor(Color.black.opacity(0.0001))
+                                .onTapGesture {
+                                    withAnimation(.easeInOut(duration: 0.2)) {
+                                        viewModel.includeSegmentedImage.toggle()
+                                    }
+                                    selectionFeedback.selectionChanged()
+                                }
+                        )
+                    
+                    if viewModel.tappableBounds == nil {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .controlSize(.large)
+                    }
+                }
                 
                 TextField("Give it a name...", text: $viewModel.name)
                     .font(.system(size: 20, weight: .semibold, design: .default))
@@ -80,6 +100,11 @@ struct SingleImageReview: View {
                 }
             }
         }
+        .task {
+            Task {
+                await viewModel.preprocess()
+            }
+        }
     }
     
     var imagePreview: some View {
@@ -91,7 +116,7 @@ struct SingleImageReview: View {
                 .aspectRatio(contentMode: .fit)
                 .cornerRadius(10)
                 .scaledToFit()
-                .opacity(0.5)
+                .opacity(viewModel.includeSegmentedImage ? 0.5 : 0.9)
                 .frame(height: imageHeight)
                 .readSize { size in
                     viewModel.requestForProcessing(imageSize: size)
@@ -105,16 +130,6 @@ struct SingleImageReview: View {
                     .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
                     .aspectRatio(contentMode: .fit)
                     .frame(height: imageHeight)
-                
-                Button {
-                    viewModel.includeSegmentedImage.toggle()
-                    selectionFeedback.selectionChanged()
-                } label: {
-                    Rectangle()
-                        .frame(width: viewModel.tappableBounds?.width ?? 0, height: viewModel.tappableBounds?.height ?? 0)
-                        .offset(x: viewModel.tappableBounds?.minX ?? 0, y: viewModel.tappableBounds?.minY ?? 0)
-                }
-                .buttonStyle(.plain)
             }
             
             ForEach(viewModel.textBoundingBoxes) { box in

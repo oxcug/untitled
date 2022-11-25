@@ -16,9 +16,9 @@ final class ImageProcessor {
     
     var current: ImagePayload?
     
-    func process(image: UIImage) -> Future<SegmentedImage?, Never> {
-        Future<SegmentedImage?, Never> { promise in
-            promise(.success(self.personSegmenter.segment(image: image)))
-        }
-    }
+//    func process(image: UIImage) -> Future<SegmentedImage?, Never> {
+//        Future<SegmentedImage?, Never> { promise in
+//            promise(.success(self.personSegmenter.segment(image: image)))
+//        }
+//    }
 }

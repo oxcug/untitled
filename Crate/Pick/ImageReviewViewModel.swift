@@ -68,10 +68,11 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     @Published var name: String = ""
     @Published var folder: Folder?
    
+    @Published var allTextBoundingBoxes: [BoundingBox] = []
     @Published var textBoundingBoxes: [BoundingBox] = []
     @Published var titleBox: BoundingBox?
     
-    @Published var includeSegmentedImage = true
+    @Published var includeSegmentedImage = false
     @Published var segmentedImage: SegmentedImage?
     @Published var imageSize: CGSize = .zero
     @Published var colors: [MMCQ.Color]?
@@ -82,7 +83,8 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     let paletteQueue = DispatchQueue(label: "com.crate.color_palette", qos: .background)
     let textProcessor = TextProcessor()
     let personSegmenter = PersonSegmenter()
-    var cancellable: AnyCancellable?
+    var textRecognitionStream: AnyCancellable?
+    var imageSegmentationStream: AnyCancellable?
 
     // MARK: -
     
@@ -102,50 +104,68 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         self.image = ImageStorage.shared.loadImage(named: entry.original) ?? UIImage()
     }
     
-    func didTapFolder(_ folder: PictureFolder) {
+    func didTapFolder(_ folder: PictureFolder) async {
         self.folder = Folder(coreDataObject: folder)
     }
-   
+    
+    @MainActor
+    func preprocess() async {
+        Task(priority: .userInitiated) {
+            async let boxes = await textProcessor.performRecognition(image: image)
+            async let segmented = await personSegmenter.segment(image: image)
+        
+            self.segmentedImage = await segmented
+            self.allTextBoundingBoxes = await boxes
+        }
+    }
+  
+    @MainActor
     func requestForProcessing(imageSize: CGSize) {
+        if self.imageSize != .zero {
+            return
+        }
+        
         self.imageSize = imageSize
-        let fixedImage = image.fixOrientation()
-        
-        cancellable?.cancel()
-        textProcessor.reset()
-        textProcessor.performRecognition(image: fixedImage)
-        cancellable = textProcessor.$boundingRects.map { (rects: [BoundingBox]) -> [BoundingBox] in
-            rects.map { box in
-                let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
-                let rect = box.box.applying(bottomToTopTransform)
-                return BoundingBox(id: UUID(), confidence: box.confidence, box: VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height)), string: box.string)
+       
+        textRecognitionStream?.cancel()
+        textRecognitionStream = $allTextBoundingBoxes
+            .receive(on: RunLoop.main)
+            .map { (rects: [BoundingBox]) -> [BoundingBox] in
+                rects.map { box in
+                    let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
+                    let rect = box.box.applying(bottomToTopTransform)
+                    return BoundingBox(id: UUID(), confidence: box.confidence, box: VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height)), string: box.string)
+                }
             }
-        }
-        .sink { [weak self] (boxes: [BoundingBox]) in
-            guard let self = self else { return }
-            
-            self.textBoundingBoxes = boxes
-            let suggestion = boxes.filter { $0.semiConfident }.max(by: { lft, rht in
-                lft.area < rht.area
-            })
-            
-            if let suggested = suggestion {
-                self.name = suggested.string
-                self.titleBox = suggested
+            .sink { [weak self] (boxes: [BoundingBox]) in
+                guard let self = self else { return }
+                
+                self.allTextBoundingBoxes = boxes.filter { $0.semiConfident }
+                let suggested = self.allTextBoundingBoxes.max(by: { lft, rht in
+                    lft.area < rht.area
+                })
+                
+                if let suggested = suggested {
+                    self.name = suggested.string
+                    self.titleBox = suggested
+                }
             }
-        }
-        
-        segmentedImage = personSegmenter.segment(image: fixedImage)
-        tappableBounds = segmentedImage?.original.imageResized(to: imageSize).cropRect()
-        
-        paletteQueue.async {
-            guard let segmented = self.segmentedImage else {
-                return
+      
+        imageSegmentationStream?.cancel()
+        imageSegmentationStream = $segmentedImage
+            .compactMap { $0 }
+            .first()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] image in
+                guard let self = self else { return }
+                print("RPCESSINGALKSDJFALSKDJF")
+                
+                Task(priority: .userInitiated) {
+                    self.tappableBounds = await image.original.imageResized(to: imageSize).cropRect()
+                }
+                
+                self.colors = ColorThief.getPalette(from: image.original, colorCount: 5)
             }
-           
-            DispatchQueue.main.async {
-                self.colors = ColorThief.getPalette(from: segmented.original, colorCount: 5)
-            }
-        }
     }
     
     func didTapBoundingBox(_ box: BoundingBox) {
@@ -172,7 +192,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         entry.date = Date()
         
         entry.original = ImageStorage.shared.write(image, entryID: entryID, isOriginal: true)
-        entry.modified = ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entryID, isOriginal: false)
+        entry.modified = await ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entryID, isOriginal: false)
         entry.boxes = NSArray()
         entry.folder = folder.coreDataObject
         entry.colors = (colors ?? []).map { $0.id }
