@@ -223,6 +223,8 @@ struct ImageReview: View {
     @State var selectedPage: Int = 0
     @State var isKeyboardVisible = false
     @State var errorMessage = ""
+    @State var isSaving = false
+    
     @StateObject var viewModelManager = ImageReviewManager()
     
     @Environment(\.dismiss) private var dismiss
@@ -280,13 +282,20 @@ struct ImageReview: View {
                 Button {
                     save(isLastOne)
                 } label: {
-                    Text(isLastOne ? "Finish" : "Next")
-                        .font(.system(size: 14, weight: .semibold, design: .default))
-                        .foregroundColor(Color(uiColor: .secondarySystemBackground))
-                        .frame(width: 50)
-                        .padding(8)
-                        .background(Capsule(style: .circular).foregroundColor(.bodyText))
+                    if isSaving {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .tint(Color(uiColor: .secondarySystemBackground))
+                    } else {
+                        Text(isLastOne ? "Finish" : "Next")
+                            .font(.system(size: 14, weight: .semibold, design: .default))
+                            .foregroundColor(Color(uiColor: .secondarySystemBackground))
+                    }
                 }
+                .frame(width: 50)
+                .padding(8)
+                .background(Capsule(style: .circular).foregroundColor(.bodyText))
+
             }
             .padding(.top, 15)
             .padding(.horizontal, 15)
@@ -307,6 +316,8 @@ struct ImageReview: View {
         }
         
         if isLastOne {
+            isSaving = true
+            
             Task {
                 await viewModelManager.save(viewContext: viewContext)
                 dismiss()

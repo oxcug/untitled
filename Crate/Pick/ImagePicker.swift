@@ -60,7 +60,9 @@ struct ImagePicker: UIViewControllerRepresentable {
             
             imageFetchCancellable?.cancel()
             imageFetchCancellable = Publishers.MergeMany(imageLoadFutures).collect().sink { [parent] images in
-                parent.imagesPayload = ImagesPayload(id: UUID(), images: images.compactMap { $0 })
+                if images.count > 0 {
+                    parent.imagesPayload = ImagesPayload(id: UUID(), images: images.compactMap { $0 })
+                }
             }
         }
     }

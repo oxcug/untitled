@@ -92,7 +92,7 @@ struct HomeView: View {
                         .font(.system(size: 28, weight: .semibold, design: .default))
                         .foregroundColor(Color.white)
                         .padding()
-                        .background(Circle().foregroundColor(.blue))
+                        .background(Circle().foregroundColor(activeIcon.color))
                 }
                 .padding()
             }

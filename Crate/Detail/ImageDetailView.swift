@@ -163,6 +163,7 @@ struct ImageDetailView: View {
                         Image(uiImage: viewModel.images[entry.id] ?? UIImage())
                             .resizable()
                             .aspectRatio(contentMode: .fit)
+                            .contentShape(Rectangle())
                             .addPinchToZoom(isZooming: $isZooming, offset: $offset, scale: $scale, scalePosition: $scalePoisition)
                     }
             }
