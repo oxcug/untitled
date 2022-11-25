@@ -29,6 +29,7 @@ struct SingleImageReview: View {
     @State var showFolderSelection = false
     @State var keyboardHeight: CGFloat = 0
     @FocusState var isNameFocused: Bool
+    @FocusState var isDescriptionFocused: Bool
     
     @EnvironmentObject var viewModel: ImageReviewViewModel
     @Environment(\.dismiss) private var dismiss
@@ -42,10 +43,6 @@ struct SingleImageReview: View {
             List {
                 ZStack {
                     imagePreview
-                        .frame(maxWidth: .infinity, alignment: .center)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
-                        .id(0)
                         .overlay(
                             Rectangle()
                                 .frame(width: viewModel.tappableBounds?.width ?? 0, height: viewModel.tappableBounds?.height ?? 0)
@@ -65,25 +62,31 @@ struct SingleImageReview: View {
                             .controlSize(.large)
                     }
                 }
-                
+                .frame(maxWidth: .infinity, alignment: .center)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
+
                 TextField("Give it a name...", text: $viewModel.name)
                     .font(.system(size: 20, weight: .semibold, design: .default))
                     .foregroundColor(.bodyText)
                     .padding(.vertical, 8)
                     .multilineTextAlignment(.center)
+                    .focused($isNameFocused)
                     .id(1)
                 
                 categoryRow
-                    .id(2)
                 
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Description")
                         .modifier(SemiBoldBodyTextModifier())
+                    
+                    TextField("So descriptive...", text: $viewModel.description, axis: .vertical)
+                        .lineLimit(10)
                 }
+                .id(2)
                 
-                Spacer(minLength: 100 + keyboardHeight)
+                Spacer(minLength: 120 + keyboardHeight)
                     .listRowSeparator(.hidden)
-                    .id(3)
             }
             .listStyle(.plain)
             .scrollContentBackground(.hidden)
@@ -94,10 +97,13 @@ struct SingleImageReview: View {
                 }
             }
             .onReceive(Publishers.keyboardHeight) { height in
-                withAnimation(.easeInOut(duration: 0.15)) {
-                    self.keyboardHeight = height
-                    scrollViewProxy.scrollTo(1, anchor: .top)
+                if height > 0 {
+                    withAnimation(.easeInOut(duration: 0.15)) {
+                        scrollViewProxy.scrollTo(isNameFocused ? 1 : 2, anchor: .init(x: 0, y: UIScreen.main.bounds.size.height - keyboardHeight))
+                    }
                 }
+                
+                self.keyboardHeight = height
             }
         }
         .task {
@@ -286,8 +292,9 @@ struct ImageReview: View {
             .padding(.horizontal, 15)
             .padding(.bottom, isKeyboardVisible ? 15 : 0)
         }
+        .background(Color(uiColor: .secondarySystemBackground))
         .onReceive(Publishers.keyboardWillBeVisible) { isVisible in
-            withAnimation(.easeInOut(duration: 0.1)) {
+            withAnimation(.easeIn(duration: 0.1)) {
                 isKeyboardVisible = isVisible
             }
         }

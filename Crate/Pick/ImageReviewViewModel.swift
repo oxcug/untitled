@@ -66,6 +66,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     let pageNumber: Int
     
     @Published var name: String = ""
+    @Published var description: String = ""
     @Published var folder: Folder?
    
     @Published var allTextBoundingBoxes: [BoundingBox] = []
@@ -190,6 +191,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         entry.id = entryID
         entry.name = name
         entry.date = Date()
+        entry.detailText = description
         
         entry.original = ImageStorage.shared.write(image, entryID: entryID, isOriginal: true)
         entry.modified = await ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entryID, isOriginal: false)
