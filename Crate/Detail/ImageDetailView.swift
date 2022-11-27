@@ -106,7 +106,7 @@ struct ImageDetailView: View {
         }
         .fullScreenCover(isPresented: $showEditModal) {
             NavigationStack {
-                ImageReview(images: nil, detail: detailPayload) {
+                ImageReview(images: nil, entry: viewModel.cur) {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                         withAnimation {
                             viewModel.reload(entry: viewModel.cur)

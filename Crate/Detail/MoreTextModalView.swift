@@ -15,6 +15,7 @@ struct MoreTextModalView: View {
     
     var body: some View {
         Text(text)
+            .multilineTextAlignment(.leading)
             .navigationTitle(title)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

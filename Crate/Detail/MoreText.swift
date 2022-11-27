@@ -22,6 +22,11 @@ struct MoreText: View {
                 .multilineTextAlignment(.leading)
                 .lineLimit(lineLimit, reservesSpace: false)
                 .font(.system(size: 17, weight: .regular, design: .default))
+                .onTapGesture {
+                    if didOverflow {
+                        didTapMore?()
+                    }
+                }
             
             if didOverflow {
                 Button {

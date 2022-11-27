@@ -217,7 +217,7 @@ struct SingleImageReview: View {
 
 struct ImageReview: View {
     let images: [UIImage]?
-    let detail: DetailPayload?
+    let entry: EntryEntity?
     var didDismiss: (() -> ())?
     
     @State var title: String = ""
@@ -259,9 +259,9 @@ struct ImageReview: View {
             if let images = images {
                 title = "\(selectedPage + 1) of \(images.count)"
                 viewModelManager.createViewModels(images: images)
-            } else if let detail = detail {
+            } else if let entry = entry {
                 title = "Edit"
-                viewModelManager.setupEditMode(detail: detail)
+                viewModelManager.setupEditMode(entry: entry)
             }
         }
     }
@@ -345,11 +345,11 @@ struct ImageReview: View {
 
 struct ImageReview_Previews: PreviewProvider {
     static var previews: some View {
-        ImageReview(images: [UIImage(named: "represent.jpeg")!], detail: nil)
+        ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
             .preferredColorScheme(.light)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
         
-        ImageReview(images: [UIImage(named: "represent.jpeg")!], detail: nil)
+        ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
             .preferredColorScheme(.dark)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }

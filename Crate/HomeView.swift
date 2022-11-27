@@ -129,7 +129,7 @@ struct HomeView: View {
             ImagePicker(imagesPayload: $imagesPayload)
         }
         .fullScreenCover(item: $imagesPayload) { payload in
-            ImageReview(images: payload.images, detail: nil)
+            ImageReview(images: payload.images, entry: nil)
         }
         .presentFullScreenModal(item: $detailPayload) { payload in
             ImageDetailView(detailPayload: payload)

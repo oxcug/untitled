@@ -31,8 +31,8 @@ final class ImageReviewManager: ObservableObject {
         }
     }
     
-    func setupEditMode(detail: DetailPayload) {
-        guard let viewModel = ImageReviewViewModel(detail: detail) else {
+    func setupEditMode(entry: EntryEntity) {
+        guard let viewModel = ImageReviewViewModel(entry: entry) else {
             return
         }
         
@@ -99,13 +99,13 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         self.pageNumber = pageNumber
     }
     
-    init?(detail: DetailPayload) {
-        guard let entry = detail.detail, let folder = detail.folder else { return nil}
+    init?(entry: EntryEntity) {
+        guard let entry = entry.entry, let folder = entry.folder else { return nil}
         self.pageNumber = 0
-        self.folder = folder
+        self.folder = Folder(coreDataObject: folder)
         self.image = ImageStorage.shared.loadImage(named: entry.original)?.fixOrientation() ?? UIImage()
-        self.description = detail.detail?.detailText ?? ""
-        self.name = detail.detail?.name ?? ""
+        self.description = entry.detailText ?? ""
+        self.name = entry.name ?? ""
         
         existingEntry = entry
     }
