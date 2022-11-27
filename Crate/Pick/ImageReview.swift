@@ -218,6 +218,7 @@ struct SingleImageReview: View {
 struct ImageReview: View {
     let images: [UIImage]?
     let detail: DetailPayload?
+    var didDismiss: (() -> ())?
     
     @State var title: String = ""
     @State var selectedPage: Int = 0
@@ -321,6 +322,7 @@ struct ImageReview: View {
             Task {
                 await viewModelManager.save(viewContext: viewContext)
                 dismiss()
+                didDismiss?()
             }
         } else {
             selectedPage += 1

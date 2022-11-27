@@ -64,6 +64,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     let id = UUID()
     let image: UIImage
     let pageNumber: Int
+    var existingEntry: PictureEntry?
     
     @Published var name: String = ""
     @Published var description: String = ""
@@ -104,6 +105,9 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         self.folder = folder
         self.image = ImageStorage.shared.loadImage(named: entry.original)?.fixOrientation() ?? UIImage()
         self.description = detail.detail?.detailText ?? ""
+        self.name = detail.detail?.name ?? ""
+        
+        existingEntry = entry
     }
     
     func didTapFolder(_ folder: PictureFolder) async {
@@ -147,7 +151,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
                     lft.area < rht.area
                 })
                 
-                if let suggested = suggested {
+                if self.existingEntry == nil, let suggested = suggested {
                     self.name = suggested.string
                     self.titleBox = suggested
                 }
@@ -186,15 +190,22 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
             return false
         }
        
-        let entry = PictureEntry(context: viewContext)
-        let entryID = UUID()
-        entry.id = entryID
+        let entry: PictureEntry
+        
+        if let existingEntry = existingEntry {
+            entry = existingEntry
+        } else {
+            entry = PictureEntry(context: viewContext)
+            let entryID = UUID()
+            entry.id = entryID
+        }
+        
         entry.name = name
         entry.date = Date()
         entry.detailText = description
         
-        entry.original = ImageStorage.shared.write(image, entryID: entryID, isOriginal: true)
-        entry.modified = await ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entryID, isOriginal: false)
+        entry.original = ImageStorage.shared.write(image, entryID: entry.id!, isOriginal: true)
+        entry.modified = await ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entry.id!, isOriginal: false)
         entry.boxes = NSArray()
         entry.folder = folder.coreDataObject
         entry.colors = (colors ?? []).map { $0.id }
