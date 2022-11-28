@@ -41,21 +41,9 @@ struct SingleImageReview: View {
     var body: some View {
         ScrollViewReader { scrollViewProxy in
             List {
-                ZStack {
+                ZStack(alignment: .center) {
                     imagePreview
-                        .overlay(
-                            Rectangle()
-                                .frame(width: viewModel.tappableBounds?.width ?? 0, height: viewModel.tappableBounds?.height ?? 0)
-                                .offset(x: viewModel.tappableBounds?.minX ?? 0, y: viewModel.tappableBounds?.minY ?? 0)
-                                .foregroundColor(Color.black.opacity(0.0001))
-                                .onTapGesture {
-                                    withAnimation(.easeInOut(duration: 0.2)) {
-                                        viewModel.includeSegmentedImage.toggle()
-                                    }
-                                    selectionFeedback.selectionChanged()
-                                }
-                        )
-                    
+                                    
                     if viewModel.tappableBounds == nil {
                         ProgressView()
                             .progressViewStyle(.circular)
@@ -115,73 +103,85 @@ struct SingleImageReview: View {
     
     var imagePreview: some View {
         ZStack(alignment: .topLeading) {
-            let imageHeight = UIScreen.main.bounds.size.height * 0.65
+            let imageHeight = UIScreen.main.bounds.size.height * 0.6
             
-            Image(uiImage: viewModel.image)
+            Image(uiImage: viewModel.originalImage)
                 .resizable()
-                .aspectRatio(contentMode: .fit)
                 .cornerRadius(10)
                 .scaledToFit()
                 .opacity(viewModel.includeSegmentedImage ? 0.5 : 0.9)
                 .frame(height: imageHeight)
+                .frame(maxWidth: .infinity, alignment: .center)
                 .readSize { size in
                     viewModel.requestForProcessing(imageSize: size)
                 }
             
-            if let segmented = viewModel.segmentedImage {
-                Image(uiImage: viewModel.includeSegmentedImage ? segmented.active : segmented.inactive)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: imageHeight)
-                    .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
-                    .aspectRatio(contentMode: .fit)
-                    .frame(height: imageHeight)
-            }
+            Image(uiImage: viewModel.segmented ?? UIImage())
+                .resizable()
+                .scaledToFit()
+                .frame(height: imageHeight)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
             
-            ForEach(viewModel.textBoundingBoxes) { box in
-                let rect = box.box
-                let isTitle = (viewModel.titleBox == box)
-                
-                Button {
-                    viewModel.didTapBoundingBox(box)
-                    
-                    if viewModel.titleBox != nil {
-                        titleFeedback.impactOccurred()
-                    } else {
-                        selectionFeedback.selectionChanged()
+            textBoxes
+            
+            Rectangle()
+                .frame(width: viewModel.tappableBounds?.width ?? 0, height: viewModel.tappableBounds?.height ?? 0)
+                .offset(x: viewModel.tappableBounds?.minX ?? 0, y: viewModel.tappableBounds?.minY ?? 0)
+                .foregroundColor(Color.red.opacity(0.4))
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewModel.includeSegmentedImage.toggle()
                     }
-                } label: {
-                    RoundedRectangle(cornerRadius: 4)
-                        .foregroundColor(.white.opacity(isTitle ? 0.5 : 0.3))
-                        .background(
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .background(RoundedCorners(color: (isTitle ? Color.orange : Color.blue),
-                                                           tl: 4,
-                                                           tr: 4,
-                                                           bl: 4,
-                                                           br: isTitle ? 0 : 4))
-                                .opacity(isTitle ? 1 : 0)
-                        )
-                        .overlay(
-                            Text("TITLE")
-                                .font(.system(size: 9, weight: .bold, design: .default))
-                                .foregroundColor(.white)
-                                .padding(3)
-                                .background(FilledRoundedCorners(color: Color.orange,
-                                                                 tl: 0,
-                                                                 tr: 0,
-                                                                 bl: 4,
-                                                                 br: 4))
-                                .opacity(isTitle ? 1 : 0)
-                                .offset(x: (box.box.width - 31) / 2, y: box.box.height + 4)
-                        )
+                    selectionFeedback.selectionChanged()
                 }
-                .zIndex(isTitle ? 2 : 0)
-                .buttonStyle(.plain)
-                .position(x: rect.midX, y: rect.midY)
-                .frame(width: rect.width, height: rect.height + 4)
+        }
+    }
+    
+    var textBoxes: some View {
+        ForEach(viewModel.textBoundingBoxes) { box in
+            let rect = box.box
+            let isTitle = (viewModel.titleBox == box)
+            
+            Button {
+                viewModel.didTapBoundingBox(box)
+                
+                if viewModel.titleBox != nil {
+                    titleFeedback.impactOccurred()
+                } else {
+                    selectionFeedback.selectionChanged()
+                }
+            } label: {
+                RoundedRectangle(cornerRadius: 4)
+                    .foregroundColor(.white.opacity(isTitle ? 0.5 : 0.3))
+                    .background(
+                        Rectangle()
+                            .foregroundColor(.clear)
+                            .background(RoundedCorners(color: (isTitle ? Color.orange : Color.blue),
+                                                       tl: 4,
+                                                       tr: 4,
+                                                       bl: 4,
+                                                       br: isTitle ? 0 : 4))
+                            .opacity(isTitle ? 1 : 0)
+                    )
+                    .overlay(
+                        Text("TITLE")
+                            .font(.system(size: 9, weight: .bold, design: .default))
+                            .foregroundColor(.white)
+                            .padding(3)
+                            .background(FilledRoundedCorners(color: Color.orange,
+                                                             tl: 0,
+                                                             tr: 0,
+                                                             bl: 4,
+                                                             br: 4))
+                            .opacity(isTitle ? 1 : 0)
+                            .offset(x: (box.box.width - 31) / 2, y: box.box.height + 4)
+                    )
             }
+            .zIndex(isTitle ? 2 : 0)
+            .buttonStyle(.plain)
+            .position(x: rect.midX, y: rect.midY)
+            .frame(width: rect.width, height: rect.height + 4)
         }
     }
     
@@ -348,9 +348,11 @@ struct ImageReview_Previews: PreviewProvider {
         ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
             .preferredColorScheme(.light)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
         
         ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
             .preferredColorScheme(.dark)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
     }
 }

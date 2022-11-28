@@ -209,11 +209,10 @@ private struct _CGImageTransparencyTrimmer {
     }
     
     func cropRect() async -> CGRect? {
-        let reversed = pixelRowRange.reversed()
         async let topInset = firstOpaquePixelRow(in: pixelRowRange)
-        async let bottomOpaqueRow = firstOpaquePixelRow(in: reversed)
+        async let bottomOpaqueRow = firstOpaquePixelRow(in: pixelRowRange.reversed())
         async let leftInset = firstOpaquePixelColumn(in: pixelColumnRange)
-        async let rightOpaqueColumn = firstOpaquePixelColumn(in: reversed)
+        async let rightOpaqueColumn = firstOpaquePixelColumn(in: pixelColumnRange.reversed())
         
         guard let topInset = await topInset,
               let bottomOpaqueRow = await bottomOpaqueRow,

@@ -62,7 +62,7 @@ final class ImageReviewManager: ObservableObject {
 
 final class ImageReviewViewModel: ObservableObject, Identifiable {
     let id = UUID()
-    let image: UIImage
+    let originalImage: UIImage
     let pageNumber: Int
     var existingEntry: PictureEntry?
     
@@ -95,7 +95,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     static let dummy = ImageReviewViewModel(image: UIImage(), pageNumber: -1)
     
     init(image: UIImage, pageNumber: Int) {
-        self.image = image.fixOrientation()
+        self.originalImage = image.fixOrientation()
         self.pageNumber = pageNumber
     }
     
@@ -103,13 +103,17 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         guard let entry = entry.entry, let folder = entry.folder else { return nil}
         self.pageNumber = 0
         self.folder = Folder(coreDataObject: folder)
-        self.image = ImageStorage.shared.loadImage(named: entry.original)?.fixOrientation() ?? UIImage()
+        self.originalImage = ImageStorage.shared.loadImage(named: entry.original)?.fixOrientation() ?? UIImage()
         self.description = entry.detailText ?? ""
         self.name = entry.name ?? ""
         
         existingEntry = entry
     }
     
+    var segmented: UIImage? {
+        includeSegmentedImage ? segmentedImage?.active : segmentedImage?.inactive
+    }
+        
     func didTapFolder(_ folder: PictureFolder) async {
         self.folder = Folder(coreDataObject: folder)
     }
@@ -117,8 +121,8 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     @MainActor
     func preprocess() async {
         Task(priority: .userInitiated) {
-            async let boxes = await textProcessor.performRecognition(image: image)
-            async let segmented = await personSegmenter.segment(image: image)
+            async let boxes = await textProcessor.performRecognition(image: originalImage)
+            async let segmented = await personSegmenter.segment(image: originalImage)
         
             self.segmentedImage = await segmented
             self.allTextBoundingBoxes = await boxes
@@ -165,7 +169,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
             .sink { [weak self] image in
                 guard let self = self else { return }
                 
-                Task(priority: .userInitiated) {
+                Task(priority: .background) {
                     self.tappableBounds = await image.original.imageResized(to: imageSize).cropRect()
                 }
                 
@@ -204,7 +208,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         entry.date = Date()
         entry.detailText = description
         
-        entry.original = ImageStorage.shared.write(image, entryID: entry.id!, isOriginal: true)
+        entry.original = ImageStorage.shared.write(originalImage, entryID: entry.id!, isOriginal: true)
         entry.modified = await ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entry.id!, isOriginal: false)
         entry.boxes = NSArray()
         entry.folder = folder.coreDataObject
