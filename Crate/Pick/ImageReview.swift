@@ -8,23 +8,6 @@
 import Combine
 import SwiftUI
 
-struct SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {}
-}
-
-extension View {
-    func readSize(onChange: @escaping (CGSize) -> Void) -> some View {
-        background(
-            GeometryReader { geometryProxy in
-                Color.clear
-                    .preference(key: SizePreferenceKey.self, value: geometryProxy.size)
-            }
-        )
-        .onPreferenceChange(SizePreferenceKey.self, perform: onChange)
-    }
-}
-
 struct SingleImageReview: View {
     @State var showFolderSelection = false
     @State var keyboardHeight: CGFloat = 0
@@ -122,6 +105,7 @@ struct SingleImageReview: View {
                 .frame(height: imageHeight)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
+                .transition(.opacity)
             
             textBoxes
             

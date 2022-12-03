@@ -66,6 +66,7 @@ struct HomeView: View {
     @StateObject var viewModel = PictureEntryViewModel()
     @StateObject var panelDelegate = SettingsPanelDelegate()
     @StateObject var detailViewModel = PictureEntryDetailViewModel()
+    @StateObject var inboxViewModel = InboxViewModel()
     
     @AppStorage("active.icon") var activeIcon: AppIcon = .untitled
 
@@ -73,6 +74,10 @@ struct HomeView: View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 List {
+                    if inboxViewModel.images.count > 0 {
+                        inboxSection(images: inboxViewModel.images)
+                    }
+                    
                     ForEach(folders) { folder in
                         section(Folder(coreDataObject: folder))
                     }
@@ -136,6 +141,88 @@ struct HomeView: View {
                 .environment(\.managedObjectContext, DataController.shared.container.viewContext)
                 .environmentObject(detailViewModel)
         }
+        .task {
+            inboxViewModel.loadInbox()
+        }
+    }
+    
+    @ViewBuilder
+    func inboxSection(images: [IdentifiableImage]) -> some View {
+        VStack(alignment: .leading, spacing: 20) {
+            ZStack {
+                ScrollView(.horizontal) {
+                    LazyHStack {
+                        ForEach(Array(images.enumerated()), id: \.self.element) { (idx, image) in
+                            Image(uiImage: image.image)
+                                .resizable()
+                                .scaledToFit()
+                                .cornerRadius(8)
+                                .frame(height: 80)
+                                .padding(.leading, idx == 0 ? 20 : 0)
+                                .padding(.trailing, idx == images.count - 1 ? 20 : 0)
+                        }
+                    }
+                }
+                .scrollIndicators(.hidden)
+                
+                Rectangle()
+                    .fill(
+                        LinearGradient(gradient: Gradient(stops: [
+                            .init(color: Color(UIColor.systemBackground).opacity(0.01), location: 0),
+                            .init(color: Color(UIColor.systemBackground), location: 1)
+                        ]), startPoint: .trailing, endPoint: .leading)
+                    ).frame(width: 20)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .allowsHitTesting(false)  // << now works !!
+                
+                Rectangle()
+                    .fill(
+                        LinearGradient(gradient: Gradient(stops: [
+                            .init(color: Color(UIColor.systemBackground).opacity(0.01), location: 0),
+                            .init(color: Color(UIColor.systemBackground), location: 1)
+                        ]), startPoint: .leading, endPoint: .trailing)
+                    ).frame(width: 20)
+                    .frame(maxWidth: .infinity, alignment: .trailing)
+                    .allowsHitTesting(false)  // << now works !!
+            }
+
+            VStack(alignment: .leading) {
+                let singular = images.count <= 1
+                ZStack(alignment: .topLeading) {
+                    (
+                        Text(Image(systemName: "circle.fill")).foregroundColor(.red).font(.system(size: 12)).baselineOffset(3) +
+                        Text(" You've got \(images.count) picture\(singular ? "" : "s") in your inbox").font(.system(size: 23, weight: .bold, design: .default))
+                    )
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                
+                Button {
+                    imagesPayload = .init(id: UUID(), images: images.map(\.image))
+                } label: {
+                    Text("Review")
+                        .font(.system(size: 18, weight: .bold, design: .default))
+                        .foregroundColor(.white)
+                        .padding()
+                        .padding(.horizontal, 12)
+                        .background(activeIcon.color)
+                        .buttonBorderShape(.capsule)
+                        .clipShape(Capsule())
+                }
+            }
+            .padding(.horizontal, 20)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .listRowSeparator(.hidden)
+        .padding(.top, 5)
+        .listRowInsets(EdgeInsets(top: 5, leading: 0, bottom: 0, trailing: 0))
+        .buttonStyle(.plain)
+        
+        Rectangle()
+            .frame(height: 10)
+            .foregroundColor(Color(uiColor: .secondarySystemBackground))
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+            .background(.red)
     }
     
     @ViewBuilder
