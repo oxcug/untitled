@@ -26,6 +26,9 @@ struct CrateApp: App {
     @AppStorage("show.labels") var showLabels = true
     @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
     @AppStorage("theme") var theme: Theme = .lightsOff
+    @AppStorage("is.new.user") var isNewUser = true
+    
+    @State var presentTutorial = false
     
     @StateObject var inboxViewModel = InboxViewModel()
     @Environment(\.scenePhase) var scenePhase
@@ -53,6 +56,12 @@ struct CrateApp: App {
                         default:
                             ()
                     }
+                }
+                .onAppear {
+                    presentTutorial = isNewUser
+                }
+                .sheet(isPresented: $presentTutorial) {
+                    TutorialView()
                 }
         }
     }

@@ -28,16 +28,17 @@ struct EntryCell: View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 50 * zoomFactor)
+                    .cornerRadius(1.5 * zoomFactor)
                 
                 if showLabels {
                     VStack(alignment: .center, spacing: 4) {
                         Text(viewModel.name(for: entry))
-                            .font(.system(size: 16, weight: .semibold, design: .default))
-                            .foregroundColor(.white)
+                            .font(.system(size: 14, weight: .semibold, design: .default))
+                            .foregroundColor(Color(uiColor: .label))
                         
                         Text(viewModel.dateString(for: entry))
-                            .font(.system(size: 13, weight: .regular, design: .rounded))
-                            .foregroundColor(.white.opacity(0.7))
+                            .font(.system(size: 12, weight: .regular, design: .rounded))
+                            .foregroundColor(Color(uiColor: .label).opacity(0.5))
                     }
                 }
             }

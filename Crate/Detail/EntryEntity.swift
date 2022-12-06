@@ -11,6 +11,17 @@ import SwiftUI
 struct EntryEntity: Identifiable, Equatable, Hashable {
     let id: UUID
     let entry: PictureEntry?
+    let hasModifiedImage: Bool
+    
+    init(id: UUID, entry: PictureEntry?) {
+        self.id = id
+        self.entry = entry
+        self.hasModifiedImage = (entry?.modified != nil)
+    }
+    
+    var original: String? {
+        entry?.original
+    }
     
     var modified: String? {
         entry?.modified

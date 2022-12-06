@@ -14,6 +14,7 @@ struct HomeSettingsView: View {
     @Environment(\.dismiss) var dismiss
     @AppStorage("show.labels") var showLabels = true
     @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
+    @AppStorage("active.icon") var activeIcon: AppIcon = .untitled
     
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
@@ -30,8 +31,8 @@ struct HomeSettingsView: View {
                
                 Spacer()
                 
-                Slider(value: $zoomFactor, in: 1...10, step: 0.25)
-                    .tint(.bodyText)
+                Slider(value: $zoomFactor, in: 0.8...6.0, step: 0.1)
+                    .tint(activeIcon.color)
             }
             
             HStack(alignment: .center, spacing: 15) {
@@ -41,7 +42,7 @@ struct HomeSettingsView: View {
                 Spacer()
                 
                 Toggle(isOn: $showLabels) { }
-                    .tint(.white.opacity(0.4))
+                    .tint(activeIcon.color)
             }
             
             Spacer()

@@ -93,18 +93,18 @@ struct SingleImageReview: View {
                     .resizable()
                     .cornerRadius(10)
                     .scaledToFit()
-                    .opacity(viewModel.includeSegmentedImage ? 0.5 : 0.9)
+                    .opacity(viewModel.didSelectSegmentedImage ? 0.5 : 0.9)
                     .frame(height: imageHeight)
                     .readSize { size in
                         viewModel.requestForProcessing(imageSize: size)
                     }
                 
                 if let segmented = viewModel.segmentedImage {
-                    Image(uiImage: viewModel.includeSegmentedImage ? segmented.active : segmented.inactive )
+                    Image(uiImage: viewModel.didSelectSegmentedImage ? segmented.active : segmented.inactive )
                         .resizable()
                         .scaledToFit()
                         .frame(height: imageHeight)
-                        .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
+                        .opacity(viewModel.didSelectSegmentedImage ? 1 : 0.8)
                 }
             }
             .transition(.opacity)
@@ -117,7 +117,7 @@ struct SingleImageReview: View {
                 .foregroundColor(Color.black.opacity(0.00001))
                 .onTapGesture {
                     withAnimation(.easeInOut(duration: 0.2)) {
-                        viewModel.includeSegmentedImage.toggle()
+                        viewModel.didSelectSegmentedImage.toggle()
                     }
                     selectionFeedback.selectionChanged()
                 }

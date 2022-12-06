@@ -44,15 +44,11 @@ struct EmojiTextField: UIViewRepresentable {
         init(parent: EmojiTextField) {
             self.parent = parent
         }
+        
         func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
             textField.text = string
+            parent.text = string
             return false
-        }
-        
-        func textFieldDidChangeSelection(_ textField: UITextField) {
-            DispatchQueue.main.async { [weak self] in
-                self?.parent.text = textField.text ?? ""
-            }
         }
     }
 }

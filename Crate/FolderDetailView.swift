@@ -40,7 +40,9 @@ struct FolderDetailView: View {
         }
         .onChange(of: zoomFactor, perform: { newValue in
             switch newValue {
-                case let x where (0...3).contains(x):
+                case let x where (0...2).contains(x):
+                    columns = Array(repeating: .init(.flexible()), count: 4)
+                case let x where (2...3).contains(x):
                     columns = Array(repeating: .init(.flexible()), count: 3)
                 case let x where (3...5).contains(x):
                     columns = Array(repeating: .init(.flexible()), count: 2)

@@ -20,7 +20,8 @@ final class PictureEntryViewModel: ObservableObject {
     }
     
     func name(for entry: PictureEntry) -> String {
-        entry.name ?? "Untitled"
+        let name = entry.name ?? "Untitled"
+        return name.count == 0 ? "Untitled" : name
     }
     
     func dateString(for entry: PictureEntry) -> String {

@@ -129,7 +129,10 @@ struct SettingsView: View {
                     case .about:
                         AboutView()
                     default:
-                        Text("ASDF")
+                        VStack(spacing: 20) {
+                            Text("🔜")
+                            Text("tbd")
+                        }
                 }
             }
             .toolbar {

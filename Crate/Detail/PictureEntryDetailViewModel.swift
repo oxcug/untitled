@@ -79,7 +79,7 @@ final class PictureEntryDetailViewModel: ObservableObject {
         let existingEntries = folder.entries.map { EntryEntity(id: $0.id ?? UUID(), entry: $0) }
         entries = existingEntries.dropFirst(Int(currentIndexInFolder)) + existingEntries.dropLast(existingEntries.count - Int(currentIndexInFolder))
         images = Dictionary(uniqueKeysWithValues: entries.map {
-            ($0.id, ImageStorage.shared.loadImage(named: $0.modified) ?? UIImage())
+            ($0.id, ImageStorage.shared.loadImage(named: $0.modified ?? $0.original) ?? UIImage())
         })
         
         if let first = entries.first {

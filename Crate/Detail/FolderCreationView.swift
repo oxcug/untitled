@@ -14,7 +14,6 @@ struct FolderCreationView: View {
     @State var name = ""
     @State var emoji = "🔥"
     @State var actionText: String = ""
-    @State var keyboardHeight: CGFloat = .zero
     @FocusState var focusOnTextField: Bool
        
     var didUpdateName: ((String) -> ())?
@@ -23,40 +22,42 @@ struct FolderCreationView: View {
     @Environment(\.managedObjectContext) var viewContext
         
     var body: some View {
-        VStack(spacing: 30) {
-            EmojiTextField(text: $emoji)
-                .frame(height: 50)
-                .padding()
-                .background(Circle().foregroundColor(.white.opacity(0.08)))
-                .padding(.top, 10)
-            
-            TextField("folder name", text: $name)
-                .multilineTextAlignment(.center)
-                .padding()
-                .font(.system(size: 24, weight: .semibold, design: .default))
-                .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: UIColor.tertiarySystemFill)))
-                .foregroundColor(.white)
-                .focused($focusOnTextField)
-            
-            Spacer()
-            
-            Button {
-                if folder != nil {
-                    updateFolder()
-                } else {
-                    createFolder()
-                }
-                dismiss()
-            } label: {
-                Text(actionText.lowercased())
-                    .font(.system(size: 15, weight: .semibold, design: .default))
-                    .foregroundColor(Color(uiColor: .systemBackground))
-                    .frame(maxWidth: .infinity)
+        ScrollView {
+            VStack(spacing: 30) {
+                EmojiTextField(text: $emoji)
+                    .frame(height: 50)
                     .padding()
-                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: .label)))
+                    .background(Circle().foregroundColor(.white.opacity(0.08)))
+                    .padding(.top, 10)
+                
+                TextField("folder name", text: $name)
+                    .multilineTextAlignment(.center)
+                    .padding()
+                    .font(.system(size: 24, weight: .semibold, design: .default))
+                    .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: UIColor.tertiarySystemFill)))
+                    .foregroundColor(Color(uiColor: .label))
+                    .focused($focusOnTextField)
+                
+                Spacer()
+                
+                Button {
+                    if folder != nil {
+                        updateFolder()
+                    } else {
+                        createFolder()
+                    }
+                    dismiss()
+                } label: {
+                    Text(actionText.lowercased())
+                        .font(.system(size: 15, weight: .semibold, design: .default))
+                        .foregroundColor(Color(uiColor: .systemBackground))
+                        .frame(maxWidth: .infinity)
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 10).foregroundColor(Color(uiColor: .label)))
+                }
             }
+            .padding()
         }
-        .padding()
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .principal) {

@@ -74,7 +74,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     @Published var textBoundingBoxes: [BoundingBox] = []
     @Published var titleBox: BoundingBox?
     
-    @Published var includeSegmentedImage = false
+    @Published var didSelectSegmentedImage = false
     @Published var segmentedImage: SegmentedImage?
     @Published var imageSize: CGSize = .zero
     @Published var colors: [MMCQ.Color]?
@@ -206,7 +206,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         entry.detailText = description
         
         entry.original = ImageStorage.shared.write(originalImage, entryID: entry.id!, isOriginal: true)
-        entry.modified = await ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entry.id!, isOriginal: false)
+        entry.modified = (didSelectSegmentedImage) ? await ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entry.id!, isOriginal: false) : nil
         entry.boxes = NSArray()
         entry.folder = folder.coreDataObject
         entry.colors = (colors ?? []).map { $0.id }
