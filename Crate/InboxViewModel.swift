@@ -32,13 +32,17 @@ final class InboxViewModel: ObservableObject {
             return
         }
         
-        images = imageURLs?.compactMap { path -> InboxImage? in
+        let res = imageURLs?.compactMap { path -> InboxImage? in
             guard let imageData = try? Data(contentsOf: path), let image = UIImage(data: imageData) else {
                 return nil
             }
             
             return InboxImage(image: image, filePath: path)
-        } ?? []
+        }
+        
+        withAnimation {
+            images = res ?? []
+        }
         
         isLoading = false
     }

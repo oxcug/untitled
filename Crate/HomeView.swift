@@ -143,6 +143,9 @@ struct HomeView: View {
                 .environment(\.managedObjectContext, DataController.shared.container.viewContext)
                 .environmentObject(detailViewModel)
         }
+        .task {
+            inboxViewModel.loadInbox()
+        }
     }
     
     @ViewBuilder

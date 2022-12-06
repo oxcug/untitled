@@ -27,7 +27,7 @@ struct SingleImageReview: View {
                 ZStack(alignment: .center) {
                     imagePreview
                                     
-                    if viewModel.tappableBounds == nil {
+                    if !viewModel.isFinishedProcessing {
                         ProgressView()
                             .progressViewStyle(.circular)
                             .controlSize(.large)
@@ -87,32 +87,34 @@ struct SingleImageReview: View {
     var imagePreview: some View {
         ZStack(alignment: .topLeading) {
             let imageHeight = UIScreen.main.bounds.size.height * 0.6
-            
-            Image(uiImage: viewModel.originalImage)
-                .resizable()
-                .cornerRadius(10)
-                .scaledToFit()
-                .opacity(viewModel.includeSegmentedImage ? 0.5 : 0.9)
-                .frame(height: imageHeight)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .readSize { size in
-                    viewModel.requestForProcessing(imageSize: size)
+           
+            ZStack {
+                Image(uiImage: viewModel.originalImage)
+                    .resizable()
+                    .cornerRadius(10)
+                    .scaledToFit()
+                    .opacity(viewModel.includeSegmentedImage ? 0.5 : 0.9)
+                    .frame(height: imageHeight)
+                    .readSize { size in
+                        viewModel.requestForProcessing(imageSize: size)
+                    }
+                
+                if let segmented = viewModel.segmentedImage {
+                    Image(uiImage: viewModel.includeSegmentedImage ? segmented.active : segmented.inactive )
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: imageHeight)
+                        .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
                 }
-            
-            Image(uiImage: viewModel.segmented ?? UIImage())
-                .resizable()
-                .scaledToFit()
-                .frame(height: imageHeight)
-                .frame(maxWidth: .infinity, alignment: .center)
-                .opacity(viewModel.includeSegmentedImage ? 1 : 0.8)
-                .transition(.opacity)
+            }
+            .transition(.opacity)
             
             textBoxes
             
             Rectangle()
                 .frame(width: viewModel.tappableBounds?.width ?? 0, height: viewModel.tappableBounds?.height ?? 0)
                 .offset(x: viewModel.tappableBounds?.minX ?? 0, y: viewModel.tappableBounds?.minY ?? 0)
-                .foregroundColor(Color.red.opacity(0.4))
+                .foregroundColor(Color.black.opacity(0.00001))
                 .onTapGesture {
                     withAnimation(.easeInOut(duration: 0.2)) {
                         viewModel.includeSegmentedImage.toggle()
@@ -120,52 +122,55 @@ struct SingleImageReview: View {
                     selectionFeedback.selectionChanged()
                 }
         }
+        .transition(.opacity)
+        .frame(maxWidth: .infinity)
     }
     
     var textBoxes: some View {
-        ForEach(viewModel.textBoundingBoxes) { box in
-            let rect = box.box
-            let isTitle = (viewModel.titleBox == box)
-            
-            Button {
-                viewModel.didTapBoundingBox(box)
+        ZStack(alignment: .topLeading) {
+            ForEach(viewModel.textBoundingBoxes) { box in
+                let rect = box.box
+                let isTitle = (viewModel.titleBox == box)
                 
-                if viewModel.titleBox != nil {
-                    titleFeedback.impactOccurred()
-                } else {
-                    selectionFeedback.selectionChanged()
+                Button {
+                    viewModel.didTapBoundingBox(box)
+                    
+                    if viewModel.titleBox != nil {
+                        titleFeedback.impactOccurred()
+                    } else {
+                        selectionFeedback.selectionChanged()
+                    }
+                } label: {
+                    RoundedRectangle(cornerRadius: 4)
+                        .foregroundColor(.white.opacity(isTitle ? 0.6 : 0.3))
+                        .background(
+                            Rectangle()
+                                .foregroundColor(.clear)
+                                .background(RoundedCorners(color: (isTitle ? Color.orange : Color.blue.opacity(0.3)),
+                                                           tl: 4,
+                                                           tr: 4,
+                                                           bl: 4,
+                                                           br: isTitle ? 0 : 4))
+                        )
+                        .overlay(
+                            Text("TITLE")
+                                .font(.system(size: 9, weight: .bold, design: .default))
+                                .foregroundColor(.white)
+                                .padding(3)
+                                .background(FilledRoundedCorners(color: Color.orange,
+                                                                 tl: 0,
+                                                                 tr: 0,
+                                                                 bl: 4,
+                                                                 br: 4))
+                                .opacity(isTitle ? 1 : 0)
+                                .offset(x: (box.box.width - 31) / 2, y: box.box.height + 4)
+                        )
                 }
-            } label: {
-                RoundedRectangle(cornerRadius: 4)
-                    .foregroundColor(.white.opacity(isTitle ? 0.5 : 0.3))
-                    .background(
-                        Rectangle()
-                            .foregroundColor(.clear)
-                            .background(RoundedCorners(color: (isTitle ? Color.orange : Color.blue),
-                                                       tl: 4,
-                                                       tr: 4,
-                                                       bl: 4,
-                                                       br: isTitle ? 0 : 4))
-                            .opacity(isTitle ? 1 : 0)
-                    )
-                    .overlay(
-                        Text("TITLE")
-                            .font(.system(size: 9, weight: .bold, design: .default))
-                            .foregroundColor(.white)
-                            .padding(3)
-                            .background(FilledRoundedCorners(color: Color.orange,
-                                                             tl: 0,
-                                                             tr: 0,
-                                                             bl: 4,
-                                                             br: 4))
-                            .opacity(isTitle ? 1 : 0)
-                            .offset(x: (box.box.width - 31) / 2, y: box.box.height + 4)
-                    )
+                .zIndex(isTitle ? 2 : 0)
+                .buttonStyle(.plain)
+                .position(x: rect.midX, y: rect.midY)
+                .frame(width: rect.width, height: rect.height + 4)
             }
-            .zIndex(isTitle ? 2 : 0)
-            .buttonStyle(.plain)
-            .position(x: rect.midX, y: rect.midY)
-            .frame(width: rect.width, height: rect.height + 4)
         }
     }
     

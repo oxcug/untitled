@@ -70,7 +70,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     @Published var description: String = ""
     @Published var folder: Folder?
    
-    @Published var allTextBoundingBoxes: [BoundingBox] = []
+    @Published var _incomingTextBoxes: [BoundingBox] = []
     @Published var textBoundingBoxes: [BoundingBox] = []
     @Published var titleBox: BoundingBox?
     
@@ -79,6 +79,8 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     @Published var imageSize: CGSize = .zero
     @Published var colors: [MMCQ.Color]?
     @Published var tappableBounds: CGRect?
+    
+    @Published var isFinishedProcessing = false
     
     // MARK: -  processors
   
@@ -110,10 +112,6 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         existingEntry = entry
     }
     
-    var segmented: UIImage? {
-        includeSegmentedImage ? segmentedImage?.active : segmentedImage?.inactive
-    }
-        
     func didTapFolder(_ folder: PictureFolder) async {
         self.folder = Folder(coreDataObject: folder)
     }
@@ -124,8 +122,13 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
             async let boxes = await textProcessor.performRecognition(image: originalImage)
             async let segmented = await personSegmenter.segment(image: originalImage)
         
-            self.segmentedImage = await segmented
-            self.allTextBoundingBoxes = await boxes
+            let seg = await segmented
+            self._incomingTextBoxes = await boxes
+           
+            withAnimation {
+                self.segmentedImage = seg
+                self.isFinishedProcessing = true
+            }
         }
     }
   
@@ -138,7 +141,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         self.imageSize = imageSize
        
         textRecognitionStream?.cancel()
-        textRecognitionStream = $allTextBoundingBoxes
+        textRecognitionStream = $_incomingTextBoxes
             .receive(on: RunLoop.main)
             .map { (rects: [BoundingBox]) -> [BoundingBox] in
                 rects.map { box in
@@ -149,15 +152,9 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
             }
             .sink { [weak self] (boxes: [BoundingBox]) in
                 guard let self = self else { return }
-                
-                self.allTextBoundingBoxes = boxes.filter { $0.semiConfident }
-                let suggested = self.allTextBoundingBoxes.max(by: { lft, rht in
-                    lft.area < rht.area
-                })
-                
-                if self.existingEntry == nil, let suggested = suggested {
-                    self.name = suggested.string
-                    self.titleBox = suggested
+               
+                withAnimation {
+                    self.textBoundingBoxes = boxes.filter { $0.semiConfident }
                 }
             }
       

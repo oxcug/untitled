@@ -15,6 +15,10 @@ public class BoundingBox: NSObject, Identifiable, Codable, NSSecureCoding {
     
     public static var supportsSecureCoding: Bool = true
     
+    public static var filteredWords: Set<String> = [
+        "0 QV"
+    ]
+    
     init(id: UUID, confidence: Float?, box: CGRect, string: String) {
         self.id = id
         self.confidence = confidence
@@ -41,6 +45,6 @@ public class BoundingBox: NSObject, Identifiable, Codable, NSSecureCoding {
     }
     
     var semiConfident: Bool {
-        (confidence ?? 0) >= 0.5 && area > 800
+        (confidence ?? 0) >= 0.5 && area > 800 && !BoundingBox.filteredWords.contains(string) && string.count > 1
     }
 }
