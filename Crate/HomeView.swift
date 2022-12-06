@@ -66,7 +66,7 @@ struct HomeView: View {
     @StateObject var viewModel = PictureEntryViewModel()
     @StateObject var panelDelegate = SettingsPanelDelegate()
     @StateObject var detailViewModel = PictureEntryDetailViewModel()
-    @StateObject var inboxViewModel = InboxViewModel()
+    @EnvironmentObject var inboxViewModel: InboxViewModel
     
     @AppStorage("active.icon") var activeIcon: AppIcon = .untitled
 
@@ -95,7 +95,7 @@ struct HomeView: View {
                 } label: {
                     Image(systemName: "plus")
                         .font(.system(size: 28, weight: .semibold, design: .default))
-                        .foregroundColor(Color.white)
+                        .foregroundColor(Color(uiColor: .systemBackground))
                         .padding()
                         .background(Circle().foregroundColor(activeIcon.color))
                 }
@@ -134,20 +134,19 @@ struct HomeView: View {
             ImagePicker(imagesPayload: $imagesPayload)
         }
         .fullScreenCover(item: $imagesPayload) { payload in
-            ImageReview(images: payload.images, entry: nil)
+            ImageReview(images: payload.images, entry: nil) {
+                inboxViewModel.clearInbox()
+            }
         }
         .presentFullScreenModal(item: $detailPayload) { payload in
             ImageDetailView(detailPayload: payload)
                 .environment(\.managedObjectContext, DataController.shared.container.viewContext)
                 .environmentObject(detailViewModel)
         }
-        .task {
-            inboxViewModel.loadInbox()
-        }
     }
     
     @ViewBuilder
-    func inboxSection(images: [IdentifiableImage]) -> some View {
+    func inboxSection(images: [InboxImage]) -> some View {
         VStack(alignment: .leading, spacing: 20) {
             ZStack {
                 ScrollView(.horizontal) {
@@ -191,7 +190,7 @@ struct HomeView: View {
                 ZStack(alignment: .topLeading) {
                     (
                         Text(Image(systemName: "circle.fill")).foregroundColor(.red).font(.system(size: 12)).baselineOffset(3) +
-                        Text(" You've got \(images.count) picture\(singular ? "" : "s") in your inbox").font(.system(size: 23, weight: .bold, design: .default))
+                        Text(" You've got \(images.count) picture\(singular ? "" : "s") in your inbox").font(.system(size: 21, weight: .bold, design: .default))
                     )
                         .fixedSize(horizontal: false, vertical: true)
                 }
@@ -201,7 +200,7 @@ struct HomeView: View {
                 } label: {
                     Text("Review")
                         .font(.system(size: 18, weight: .bold, design: .default))
-                        .foregroundColor(.white)
+                        .foregroundColor(Color(uiColor: .systemBackground))
                         .padding()
                         .padding(.horizontal, 12)
                         .background(activeIcon.color)

@@ -27,6 +27,9 @@ struct CrateApp: App {
     @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
     @AppStorage("theme") var theme: Theme = .lightsOff
     
+    @StateObject var inboxViewModel = InboxViewModel()
+    @Environment(\.scenePhase) var scenePhase
+    
     init() {
         Instabug.start(withToken: "2b7de71991b983519f193a88b22ce9e1", invocationEvents: [.shake, .screenshot])
     }
@@ -34,6 +37,7 @@ struct CrateApp: App {
     var body: some Scene {
         WindowGroup {
             HomeView(showSettings: $showSettings, showVisualSettings: $showVisualSettings)
+                .environmentObject(inboxViewModel)
                 .preferredColorScheme(theme.colorScheme)
                 .environment(\.managedObjectContext, DataController.shared.container.viewContext)
                 .presentModal(isPresented: $showVisualSettings, height: 200) {
@@ -41,6 +45,14 @@ struct CrateApp: App {
                 }
                 .sheet(isPresented: $showSettings) {
                     SettingsView()
+                }
+                .onChange(of: scenePhase) { phase in
+                    switch phase {
+                        case .active:
+                            inboxViewModel.loadInbox()
+                        default:
+                            ()
+                    }
                 }
         }
     }
