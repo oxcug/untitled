@@ -1,134 +1,116 @@
 //
 //  TutorialView.swift
-//  Crate
+//  untitled
 //
 //  Created by Mike Choi on 12/6/22.
 //
 
+import Combine
 import SwiftUI
+import AVKit
 
-struct TutorialRow: Identifiable {
-    let id = UUID()
-    let title: String
-    let description: String
-    let imageName: String
-    let isComingSoon: Bool
+enum Method: Int, CaseIterable {
+    case share, add
     
-    static let all: [TutorialRow] = [
-        .init(title: "Person isolation", description: "Extract and isolate people in photos", imageName: "person.fill.viewfinder", isComingSoon: false),
-        .init(title: "Folders", description: "Finally organize your chaotic collection of screenshots", imageName: "folder.fill", isComingSoon: true),
-        .init(title: "Location detection", description: "Automatic location name detection in a photo", imageName: "fork.knife", isComingSoon: true)
-    ]
+    var description: String {
+        switch self {
+            case .share:
+                return "share from outside"
+            case .add:
+                return "in-app"
+        }
+    }
+    
+    var url: String {
+        switch self {
+            case .share:
+                return "https://s3.us-east-2.amazonaws.com/com.mjc.juice/untitled-videos/share-sheet.mov"
+            case .add:
+                return "https://s3.us-east-2.amazonaws.com/com.mjc.juice/untitled-videos/share-sheet.mov"
+        }
+    }
+}
+
+final class TutorialViewModel: NSObject, ObservableObject {
+    @Published var isVideoPlaying = false
+    var cancellable: AnyCancellable?
+    
+    func subscribeToState(of player: AVPlayer) {
+        player.addObserver(self, forKeyPath: "timeControlStatus", options: [.old, .new], context: nil)
+    }
+    
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        guard keyPath == "timeControlStatus",
+              let change = change,
+              let newValue = change[NSKeyValueChangeKey.newKey] as? Int else {
+            return
+        }
+        
+        let newStatus = AVPlayer.TimeControlStatus(rawValue: newValue)
+        
+        DispatchQueue.main.async { [weak self] in
+            if newStatus == .playing || newStatus == .paused {
+                self?.isVideoPlaying = true
+            } else {
+                self?.isVideoPlaying = false
+            }
+        }
+    }
 }
 
 struct TutorialView: View {
-    let feedback = UIImpactFeedbackGenerator(style: .heavy)
-    
-    @State var barWidth: CGFloat = .zero
-    @AppStorage("is.new.user") var isNewUser = true
-    @Environment(\.dismiss) var dismiss
+    @State var selectedIndex = 0
+    @State var player = AVPlayer(url: URL(string: "https://s3.us-east-2.amazonaws.com/com.mjc.juice/untitled-videos/share-sheet.mov")!)
+    @StateObject var viewModel = TutorialViewModel()
     
     var body: some View {
-        ZStack(alignment: .bottom) {
-            List {
-                ZStack(alignment: .bottomLeading) {
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("Welcome to")
-                            .font(.system(size: 26, weight: .bold, design: .default))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .foregroundColor(.secondary)
-
-                        Text("untitled.")
-                            .font(.system(size: 48, weight: .bold, design: .default))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                        
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    
-                    Rectangle()
-                        .frame(height: 7)
-                        .frame(maxWidth: barWidth)
-                        .foregroundColor(Color(uiColor: .label))
-                        .offset(y: 5)
-                        .animation(.linear(duration: 1.8).delay(0.5), value: barWidth)
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 50)
-                .listRowSeparator(.hidden)
-                .drawingGroup()
-                .onAppear {
-                    withAnimation {
-                        barWidth = .infinity
-                    }
-                }
+        ZStack(alignment: .top) {
+            VStack(spacing: 40) {
+                LineSegmentedView(color: .blue,
+                                  selectedIndex: $selectedIndex,
+                                  titles: Method.allCases.map { $0.description })
                 
-                ForEach(TutorialRow.all) { row in
-                    HStack(spacing: 18) {
-                        Image(systemName: row.imageName)
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 30, height: 30)
-                            .symbolRenderingMode(.hierarchical)
-                        
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text(row.title)
-                                .font(.system(size: 15, weight: .semibold, design: .default))
-                            
-                            Text(row.description)
-                                .font(.system(size: 15, weight: .regular, design: .default))
-                                .foregroundColor(.secondary)
+                ZStack(alignment: .center) {
+                    PlayerView(player: $player)
+                        .onAppear() {
+                            player.playImmediately(atRate: 0.6)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    if !viewModel.isVideoPlaying {
+                        ProgressView()
+                            .progressViewStyle(.circular)
                     }
                 }
-                .listRowSeparator(.hidden)
+                Spacer()
             }
-            .listStyle(.plain)
-            
-            footer
         }
-    }
-    
-    var footer: some View {
-        VStack(spacing: 0) {
-            VStack(spacing: 8) {
-                Image(systemName: "lock.iphone")
-                    .font(.system(size: 40, weight: .regular, design: .default))
-                    .foregroundStyle(Color(uiColor: .label))
-                    .symbolRenderingMode(.hierarchical)
-                
-                Text("Everything you save here is locally stored and never leaves your device. No personal and or device data is collected. Happy saving :)")
-                    .multilineTextAlignment(.center)
-                    .font(.system(size: 12, weight: .regular, design: .default))
-                    .foregroundColor(.secondary)
-                    .frame(maxWidth: .infinity)
-                    .fixedSize(horizontal: false, vertical: true)
+        .frame(maxWidth: .infinity, alignment: .center)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("how to...")
+                    .font(.system(size: 15, weight: .semibold, design: .default))
             }
-            .padding()
-            
-            Button {
-                feedback.impactOccurred()
-                dismiss()
-                isNewUser = false
-            } label: {
-                Text("Continue")
-                    .font(.system(size: 16, weight: .semibold, design: .default))
-                    .foregroundColor(Color(uiColor: .systemBackground))
-                    .padding()
-                    .frame(maxWidth: .infinity)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundColor(Color(uiColor: .label))
-                    )
-            }
-            .padding()
         }
-        .background(Color(uiColor: .secondarySystemBackground))
+        .task {
+            viewModel.subscribeToState(of: player)
+        }
+        .onChange(of: selectedIndex) { idx in
+            guard let method = Method(rawValue: idx) else {
+                return
+            }
+            
+            let item = AVPlayerItem(url: URL(string: method.url)!)
+            self.player.replaceCurrentItem(with: item)
+        }
     }
 }
 
+
 struct TutorialView_Previews: PreviewProvider {
     static var previews: some View {
-        TutorialView()
+        NavigationStack {
+            TutorialView()
+        }
     }
 }

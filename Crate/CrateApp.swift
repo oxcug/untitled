@@ -61,7 +61,7 @@ struct CrateApp: App {
                     presentTutorial = isNewUser
                 }
                 .sheet(isPresented: $presentTutorial) {
-                    TutorialView()
+                    OnboardingView()
                 }
         }
     }

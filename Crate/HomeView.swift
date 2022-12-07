@@ -55,6 +55,7 @@ struct HomeView: View {
     @State var imagesPayload: ImagesPayload?
     @State var showingImagePicker = false
     @State var showImageReviewModal = false
+    @State var showTutorial = false
     
     // MARK: - Core Data
     
@@ -75,12 +76,16 @@ struct HomeView: View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 List {
-                    if inboxViewModel.images.count > 0 {
+                    if !inboxViewModel.images.isEmpty {
                         inboxSection(images: inboxViewModel.images)
                     }
                     
-                    ForEach(folders) { folder in
-                        section(Folder(coreDataObject: folder))
+                    if folders.isEmpty {
+                        emptyView
+                    } else {
+                        ForEach(folders) { folder in
+                            section(Folder(coreDataObject: folder))
+                        }
                     }
                 }
                 .listStyle(.plain)
@@ -114,7 +119,7 @@ struct HomeView: View {
                     Button {
                         showVisualSettings.toggle()
                     } label: {
-                        Image(systemName: "eyes")
+                        Image(systemName: "magnifyingglass")
                             .foregroundColor(.bodyText)
                     }
                 }
@@ -134,6 +139,11 @@ struct HomeView: View {
         .sheet(isPresented: $showingImagePicker) {
             ImagePicker(imagesPayload: $imagesPayload)
         }
+        .sheet(isPresented: $showTutorial) {
+            NavigationStack {
+                TutorialView()
+            }
+        }
         .fullScreenCover(item: $imagesPayload) { payload in
             ImageReview(images: payload.images, entry: nil) {
                 inboxViewModel.clearInbox()
@@ -147,6 +157,31 @@ struct HomeView: View {
         .task {
             inboxViewModel.loadInbox()
         }
+    }
+    
+    var emptyView: some View {
+        VStack(spacing: 12) {
+            Text("emptiness.")
+                .font(.system(size: 14, weight: .semibold, design: .default))
+            
+            Text("this is where your hopes and inspirations go.")
+                .font(.system(size: 14, weight: .semibold, design: .default))
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+            
+            Button {
+                showTutorial = true
+            } label: {
+                Text("show me show")
+                    .underline()
+                    .font(.system(size: 14, weight: .semibold, design: .default))
+                    .foregroundColor(activeIcon.color)
+            }
+        }
+        .listRowSeparator(.hidden)
+        .buttonStyle(.plain)
+        .frame(height: UIScreen.main.bounds.height * 0.5)
+        .frame(maxWidth: .infinity, alignment: .center)
     }
     
     @ViewBuilder
@@ -251,9 +286,10 @@ struct HomeView: View {
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView(detailPayload: .dummy, showSettings: .constant(false), showVisualSettings: .constant(false))
+            .environmentObject(InboxViewModel())
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }
