@@ -24,14 +24,15 @@ final class ShareViewModel: ObservableObject {
 struct ShareView: View {
     let images: [UIImage]
     
-    @State var infoOpacity: CGFloat = 0
     @State var stackOffset: CGFloat = 0
+    @State var underlineLength: CGFloat = 0
     @StateObject var viewModel = ShareViewModel()
+    let feedback = UINotificationFeedbackGenerator()
     
     var openApp: (() -> ())?
     
     var body: some View {
-        VStack(spacing: 32) {
+        VStack(spacing: 28) {
             LazyHStack(spacing: 4) {
                 ForEach(Array(images.enumerated()), id: \.self.offset) { (offset, image) in
                     Image(uiImage: image)
@@ -44,50 +45,50 @@ struct ShareView: View {
                 }
             }
             .offset(x: -stackOffset)
-            .frame(height: 150)
+            .frame(height: 200)
             .readSize { size in
                 viewModel.size = size.width
             }
             .padding(.vertical)
-
-            VStack(spacing: 18) {
-                Image(systemName: "tray.fill")
-                    .foregroundColor(.white)
-                    .font(.system(size: 24, weight: .semibold, design: .default))
-                    .padding()
-                    .background(Circle()
-                        .foregroundColor(.green)
-                        .frame(width: 50, height: 50))
-                
-                VStack(spacing: 8) {
-                    Text("Added to Inbox")
+           
+            VStack(spacing: 15) {
+                ZStack(alignment: .bottomLeading) {
+                    Text("added to inbox.")
                         .font(.system(size: 18, weight: .semibold, design: .default))
                     
-                    Text("Review them later and happy collecting")
-                        .font(.system(size: 15, weight: .regular, design: .default))
+                    Rectangle()
+                        .frame(height: 4)
+                        .offset(y: 5)
+                        .frame(width: underlineLength)
                 }
                 
-                Button {
-                    openApp?()
-                } label: {
-                    Text("Go to app")
-                        .font(.system(size: 15, weight: .semibold, design: .default))
-                        .foregroundColor(Color(uiColor: .systemBackground))
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(
-                            RoundedRectangle(cornerRadius: 10)
-                                .foregroundColor(Color(uiColor: .label))
-                        )
-                }
-                .padding()
+                Text("review them later and happy collecting")
+                    .font(.system(size: 15, weight: .regular, design: .default))
+                    .foregroundColor(.secondary)
             }
-            .opacity(infoOpacity)
+            .frame(maxWidth: .infinity)
+            
+            Button {
+                openApp?()
+            } label: {
+                Text("go to app")
+                    .font(.system(size: 15, weight: .semibold, design: .default))
+                    .foregroundColor(Color(uiColor: .systemBackground))
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundColor(Color(uiColor: .label))
+                    )
+            }
+            .padding()
         }
         .onAppear {
-            withAnimation(.easeInOut(duration: 0.25)) {
-                infoOpacity = 1
+            withAnimation(.easeInOut(duration: 0.6).delay(0.15)) {
+                underlineLength = 130
             }
+            
+            feedback.notificationOccurred(.success)
         }
         .onReceive(viewModel.timer) { _  in
             guard let allowedOffset = viewModel.allowedOffset else {
