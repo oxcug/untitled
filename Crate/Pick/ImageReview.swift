@@ -234,7 +234,9 @@ struct ImageReview: View {
                 nextFooter
             }
             .toolbar {
-                ToolbarCancelButton()
+                ToolbarCancelButton {
+                    viewModelManager.abortProcessing()
+                }
                 
                 ToolbarItem(placement: .principal) {
                     Text(title)

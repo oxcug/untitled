@@ -31,6 +31,12 @@ final class ImageReviewManager: ObservableObject {
         }
     }
     
+    func abortProcessing() {
+        viewModels.forEach {
+            $0.cancelProcessing()
+        }
+    }
+    
     func setupEditMode(entry: EntryEntity) {
         guard let viewModel = ImageReviewViewModel(entry: entry) else {
             return
@@ -118,12 +124,15 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     
     @MainActor
     func preprocess() async {
-        Task(priority: .userInitiated) {
+       Task(priority: .userInitiated) { [weak self] in
             async let boxes = await textProcessor.performRecognition(image: originalImage)
             async let segmented = await personSegmenter.segment(image: originalImage)
-        
+       
             let seg = await segmented
-            self._incomingTextBoxes = await boxes
+            let foundBoxes = await boxes
+            
+            guard let self = self else { return }
+            self._incomingTextBoxes = foundBoxes
            
             withAnimation {
                 self.segmentedImage = seg
@@ -172,6 +181,13 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
                 
                 self.colors = ColorThief.getPalette(from: image.original, colorCount: 5)
             }
+    }
+    
+    func cancelProcessing() {
+        DispatchQueue.main.async {
+            self.imageSegmentationStream?.cancel()
+            self.textRecognitionStream?.cancel()
+        }
     }
     
     func didTapBoundingBox(_ box: BoundingBox) {

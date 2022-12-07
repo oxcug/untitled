@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ToolbarCancelButton: ToolbarContent {
     @Environment(\.dismiss) private var dismiss
+    var willDismiss: (() -> ())?
     
     var body: some ToolbarContent {
         ToolbarItem(placement: .cancellationAction) {
             Button(role: .cancel) {
+                willDismiss?()
                 dismiss()
             } label: {
                 Text("cancel")

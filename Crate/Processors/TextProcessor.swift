@@ -17,8 +17,13 @@ final class TextProcessor: ObservableObject {
         let requestHandler = VNImageRequestHandler(cgImage: cgImage)
 
         // Create a new request to recognize text.
-        return await withCheckedContinuation { continuation in
+        return await withCheckedContinuation { [weak self] continuation in
             let request = VNRecognizeTextRequest(completionHandler: { request, error in
+                guard let self = self else {
+                    continuation.resume(returning: [])
+                    return
+                }
+                
                 let res = self.recognizeTextHandler(request: request, error: error)
                 continuation.resume(returning: res)
             })
@@ -45,7 +50,6 @@ final class TextProcessor: ObservableObject {
         let theBest = observations.compactMap { $0.topCandidates(1).first }
 
         return theBest.map { cand in
-            print(cand.string, cand.confidence)
             // Find the bounding-box observation for the string range.
             let stringRange = cand.string.startIndex..<cand.string.endIndex
             let boxObservation = try? cand.boundingBox(for: stringRange)

@@ -260,17 +260,13 @@ private struct _CGImageTransparencyTrimmer {
 
     @inlinable
     func firstOpaquePixelRow<T: Sequence>(in rowRange: T) async -> Int? where T.Element == Int {
-        print("FIRST OPAQUE ROW")
         return rowRange.first(where: { !isPixelRowTransparent($0) })
     }
 
     @inlinable
     func firstOpaquePixelColumn<T: Sequence>(in columnRange: T) async -> Int? where T.Element == Int {
-            print("FIRST OPAQUE COLOUMN")
-
         return columnRange.first(where: { column in
             pixelRowRange.contains(where: { isPixelOpaque(column: column, row: $0) })
         })
     }
-
 }
