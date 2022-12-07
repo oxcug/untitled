@@ -21,7 +21,7 @@ class ShareViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         setupNavBar()
-       
+        
         Task {
             let images = await self.loadSharedFiles().compactMap { $0 }
             let controller = UIHostingController(rootView: ShareView(images: images, openApp: {
@@ -66,10 +66,9 @@ class ShareViewController: UIViewController {
     private func loadSharedFiles() async -> [UIImage?] {
         return await withCheckedContinuation { continuation in
             let attachments = (self.extensionContext?.inputItems.first as? NSExtensionItem)?.attachments ?? []
-            let contentType = UTType.data.identifier
             
             let futures = attachments.map { attachment in
-                loadItem(from: attachment, contentType: contentType)
+                loadItem(from: attachment)
             }
             
             Publishers.MergeMany(futures).compactMap { $0 }
@@ -80,15 +79,18 @@ class ShareViewController: UIViewController {
                 .store(in: &streams)
         }
     }
-    
-    private func loadItem(from itemProvider: NSItemProvider, contentType: String) -> Future<UIImage?, Never> {
+}
+
+extension ShareViewController {
+    private func loadItem(from itemProvider: NSItemProvider) -> Future<UIImage?, Never> {
         Future<UIImage?, Never> { promise in
-            guard itemProvider.hasItemConformingToTypeIdentifier(contentType) else {
+            guard let registeredTypeId = itemProvider.registeredTypeIdentifiers.first,
+                    itemProvider.hasItemConformingToTypeIdentifier(registeredTypeId) else {
                 promise(.success(nil))
                 return
             }
             
-            itemProvider.loadItem(forTypeIdentifier: contentType, options: nil) { (data, error) in
+            itemProvider.loadItem(forTypeIdentifier: registeredTypeId, options: nil) { (data, error) in
                 guard error == nil else {
                     promise(.success(nil))
                     return
@@ -96,6 +98,8 @@ class ShareViewController: UIViewController {
                 
                 if let url = data as? URL, let imageData = try? Data(contentsOf: url) {
                     promise(.success(UIImage(data: imageData)))
+                } else if let image = data as? UIImage {
+                    promise(.success(image))
                 } else {
                     promise(.success(nil))
                 }

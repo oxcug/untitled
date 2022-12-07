@@ -49,11 +49,6 @@ class PlayerUIView: UIView {
         player.actionAtItemEnd = .none
         layer.addSublayer(playerLayer)
         playerLayer.backgroundColor = UIColor.systemBackground.cgColor
-        
-        NotificationCenter.default.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: player.currentItem, queue: .main) { _ in
-            player.seek(to: CMTime.zero)
-            player.play()
-        }
     }
 }
 

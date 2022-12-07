@@ -17,7 +17,7 @@ struct AlertPayload: Identifiable, Equatable {
 enum SettingRow: Int, Identifiable, CaseIterable {
     case appIcon, theme
     
-    case about, feedback, bugReport, contact, invite, rate
+    case about, feedback, bugReport, contact, invite, rate, tutorial
     
     var id: String {
         description
@@ -41,6 +41,8 @@ enum SettingRow: Int, Identifiable, CaseIterable {
                 return "Bug report"
             case .rate:
                 return "Rate untitled."
+            case .tutorial:
+                return "Tutorial"
         }
     }
     
@@ -62,6 +64,8 @@ enum SettingRow: Int, Identifiable, CaseIterable {
                 return "ant.fill"
             case .rate:
                 return "heart.fill"
+            case .tutorial:
+                return "eyeglasses"
         }
     }
 }
@@ -111,7 +115,7 @@ struct SettingsView: View {
                 }
                 
                 Section {
-                    ForEach([SettingRow.about,SettingRow.invite, SettingRow.rate]) { row in
+                    ForEach([SettingRow.tutorial, SettingRow.about,SettingRow.invite, SettingRow.rate]) { row in
                         NavigationLink(value: row) {
                             SettingsCell(row: row)
                         }
@@ -128,6 +132,8 @@ struct SettingsView: View {
                         ThemeSelectorView()
                     case .about:
                         AboutView()
+                    case .tutorial:
+                        TutorialView()
                     default:
                         VStack(spacing: 20) {
                             Text("🔜")

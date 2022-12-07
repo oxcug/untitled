@@ -16,7 +16,8 @@ public class BoundingBox: NSObject, Identifiable, Codable, NSSecureCoding {
     public static var supportsSecureCoding: Bool = true
     
     public static var filteredWords: Set<String> = [
-        "0 QV"
+        "0 QV",
+        "@ # ®"
     ]
     
     init(id: UUID, confidence: Float?, box: CGRect, string: String) {

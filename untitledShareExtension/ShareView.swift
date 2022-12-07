@@ -37,7 +37,7 @@ struct ShareView: View {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFit()
-                        .frame(height: 150)
+                        .frame(height: 200)
                         .cornerRadius(10)
                         .padding(.leading, offset == 0 ? 15 : 0)
                         .padding(.trailing, offset == images.count - 1 ? 15 : 0)
@@ -48,6 +48,7 @@ struct ShareView: View {
             .readSize { size in
                 viewModel.size = size.width
             }
+            .padding(.vertical)
 
             VStack(spacing: 18) {
                 Image(systemName: "tray.fill")
@@ -65,14 +66,23 @@ struct ShareView: View {
                     Text("Review them later and happy collecting")
                         .font(.system(size: 15, weight: .regular, design: .default))
                 }
+                
+                Button {
+                    openApp?()
+                } label: {
+                    Text("Go to app")
+                        .font(.system(size: 15, weight: .semibold, design: .default))
+                        .foregroundColor(Color(uiColor: .systemBackground))
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .foregroundColor(Color(uiColor: .label))
+                        )
+                }
+                .padding()
             }
             .opacity(infoOpacity)
-            
-            Button {
-                openApp?()
-            } label: {
-                Text("Go to app")
-            }
         }
         .onAppear {
             withAnimation(.easeInOut(duration: 0.25)) {
