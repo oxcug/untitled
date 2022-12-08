@@ -46,6 +46,9 @@ public class BoundingBox: NSObject, Identifiable, Codable, NSSecureCoding {
     }
     
     var semiConfident: Bool {
-        (confidence ?? 0) >= 0.5 && !BoundingBox.filteredWords.contains(string) && string.count > 1
+        (confidence ?? 0) >= 0.5 &&
+        string.count > 1 &&
+        box.width > 7 &&
+        !BoundingBox.filteredWords.contains(string)
     }
 }

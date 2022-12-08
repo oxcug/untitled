@@ -9,13 +9,19 @@ import Combine
 import PhotosUI
 import SwiftUI
 
-struct ImagesPayload: Identifiable {
+struct PickedAssetPackage: Identifiable {
     let id: UUID
-    let images: [UIImage]
+    
+    struct Path {
+        let url: URL
+        let itemProvider: NSItemProvider
+    }
+    
+    let sources: [DataRetrievable]
 }
 
 struct ImagePicker: UIViewControllerRepresentable {
-    @Binding var imagesPayload: ImagesPayload?
+    @Binding var assetPackage: PickedAssetPackage?
 
     func makeUIViewController(context: Context) -> PHPickerViewController {
         var config = PHPickerConfiguration()
@@ -46,22 +52,24 @@ struct ImagePicker: UIViewControllerRepresentable {
         func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
             picker.dismiss(animated: true)
             
-            let imageLoadFutures = results.map {
+            let urlFutures = results.map {
                 $0.itemProvider
-            }.filter {
-                $0.canLoadObject(ofClass: UIImage.self)
             }.map { (provider: NSItemProvider) in
-                Future<UIImage?, Never> { promise in
-                    provider.loadObject(ofClass: UIImage.self) { image, err in
-                        promise(.success(image as? UIImage))
+                Future<PickedAssetPackage.Path?, Never> { promise in
+                    provider.loadFileRepresentation(forTypeIdentifier: provider.registeredTypeIdentifiers.first ?? "") { url, err in
+                        if let url = url {
+                            promise(.success(PickedAssetPackage.Path(url: url, itemProvider: provider)))
+                        } else {
+                            promise(.success(nil))
+                        }
                     }
                 }
             }
             
             imageFetchCancellable?.cancel()
-            imageFetchCancellable = Publishers.MergeMany(imageLoadFutures).collect().sink { [parent] images in
-                if images.count > 0 {
-                    parent.imagesPayload = ImagesPayload(id: UUID(), images: images.compactMap { $0 })
+            imageFetchCancellable = Publishers.MergeMany(urlFutures).collect().sink { [parent] paths in
+                if paths.count > 0 {
+                    parent.assetPackage = PickedAssetPackage(id: UUID(), sources: paths.compactMap { $0 })
                 }
             }
         }

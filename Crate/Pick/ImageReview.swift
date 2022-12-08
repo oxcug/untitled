@@ -7,6 +7,7 @@
 
 import Combine
 import SwiftUI
+import Kingfisher
 
 struct SingleImageReview: View {
     @State var showFolderSelection = false
@@ -79,6 +80,7 @@ struct SingleImageReview: View {
         }
         .task {
             Task {
+                await viewModel.loadImage()
                 await viewModel.preprocess()
             }
         }
@@ -89,7 +91,7 @@ struct SingleImageReview: View {
             let imageHeight = UIScreen.main.bounds.size.height * 0.6
            
             ZStack {
-                Image(uiImage: viewModel.originalImage)
+                Image(uiImage: viewModel.originalImage ?? UIImage())
                     .resizable()
                     .cornerRadius(10)
                     .scaledToFit()
@@ -205,7 +207,7 @@ struct SingleImageReview: View {
 }
 
 struct ImageReview: View {
-    let images: [UIImage]?
+    let sources: [DataRetrievable]
     let entry: EntryEntity?
     var didDismiss: (() -> ())?
     
@@ -247,12 +249,12 @@ struct ImageReview: View {
             .navigationBarTitleDisplayMode(.inline)
         }
         .task {
-            if let images = images {
-                title = "\(selectedPage + 1) of \(images.count)"
-                viewModelManager.createViewModels(images: images)
-            } else if let entry = entry {
-                title = "Edit"
+            if let entry = entry {
+                title = "edit"
                 viewModelManager.setupEditMode(entry: entry)
+            } else {
+                title = "\(selectedPage + 1) of \(sources.count)"
+                viewModelManager.createViewModels(sources: sources)
             }
         }
     }
@@ -269,7 +271,7 @@ struct ImageReview: View {
                 
                 Spacer()
                 
-                let isLastOne = (selectedPage == (images?.count ?? 1) - 1)
+                let isLastOne = (selectedPage == (sources.count) - 1)
                 
                 Button {
                     save(isLastOne)
@@ -334,16 +336,16 @@ struct ImageReview: View {
     }
 }
 
-struct ImageReview_Previews: PreviewProvider {
-    static var previews: some View {
-        ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
-            .preferredColorScheme(.light)
-            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
-            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
-        
-        ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
-            .preferredColorScheme(.dark)
-            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
-            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
-    }
-}
+//struct ImageReview_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
+//            .preferredColorScheme(.light)
+//            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+//            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
+//
+//        ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
+//            .preferredColorScheme(.dark)
+//            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+//            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
+//    }
+//}

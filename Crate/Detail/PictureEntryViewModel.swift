@@ -8,13 +8,14 @@
 import UIKit
 
 final class PictureEntryViewModel: ObservableObject {
+    
     lazy var relativeDateFormatter: DateFormatter = {
         let df = DateFormatter()
         df.dateStyle = .short
         df.doesRelativeDateFormatting = true
         return df
     }()
-    
+        
     func image(for entry: PictureEntry) -> UIImage {
         ImageStorage.shared.loadImage(named: entry.modified ?? entry.original) ?? UIImage()
     }

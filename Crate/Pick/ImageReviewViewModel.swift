@@ -10,6 +10,28 @@ import Combine
 import SwiftUI
 import Vision
 
+protocol DataRetrievable {
+    func data() async -> Data?
+}
+
+extension URL: DataRetrievable {
+    func data() async -> Data? {
+        try? Data(contentsOf: self)
+    }
+}
+
+extension PickedAssetPackage.Path: DataRetrievable {
+    func data() async -> Data? {
+        await withCheckedContinuation { continuation in
+            _ = itemProvider.loadDataRepresentation(for: .image) { data, err in
+                continuation.resume(returning: data)
+            }
+        }
+    }
+}
+
+// MARK: -
+
 struct SegmentedImage {
     let original: UIImage
     let active: UIImage
@@ -46,12 +68,12 @@ final class ImageReviewManager: ObservableObject {
         current = viewModel
     }
     
-    func createViewModels(images: [UIImage]) {
+    func createViewModels(sources: [DataRetrievable]) {
         if !viewModels.isEmpty {
             return
         }
         
-        viewModels = images.enumerated().map { ImageReviewViewModel(image: $0.element, pageNumber: $0.offset) }
+        viewModels = sources.enumerated().map { ImageReviewViewModel(dataProvider: $0.element, pageNumber: $0.offset) }
         if let first = viewModels.first {
             current = first
         }
@@ -68,10 +90,10 @@ final class ImageReviewManager: ObservableObject {
 
 final class ImageReviewViewModel: ObservableObject, Identifiable {
     let id = UUID()
-    let originalImage: UIImage
     let pageNumber: Int
     var existingEntry: PictureEntry?
     
+    @Published var originalImage: UIImage?
     @Published var name: String = ""
     @Published var description: String = ""
     @Published var folder: Folder?
@@ -98,24 +120,35 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
 
     // MARK: -
     
+    let dataProvider: DataRetrievable
     let encoder = JSONEncoder()
     
-    static let dummy = ImageReviewViewModel(image: UIImage(), pageNumber: -1)
+    static let dummy = ImageReviewViewModel(dataProvider: URL(filePath: ""), pageNumber: -1)
     
-    init(image: UIImage, pageNumber: Int) {
-        self.originalImage = image.fixOrientation()
+    init(dataProvider: DataRetrievable, pageNumber: Int) {
         self.pageNumber = pageNumber
+        self.dataProvider = dataProvider
     }
     
     init?(entry: EntryEntity) {
-        guard let entry = entry.entry, let folder = entry.folder else { return nil}
+        guard let entry = entry.entry, let folder = entry.folder else { return nil }
         self.pageNumber = 0
         self.folder = Folder(coreDataObject: folder)
-        self.originalImage = ImageStorage.shared.loadImage(named: entry.original)?.fixOrientation() ?? UIImage()
+        self.dataProvider = ImageStorage.shared.original(for: entry)
         self.description = entry.detailText ?? ""
         self.name = entry.name ?? ""
         
         existingEntry = entry
+    }
+    
+    func loadImage() async {
+        guard let data = await dataProvider.data() else {
+            return
+        }
+       
+        DispatchQueue.main.async {
+            self.originalImage = UIImage(data: data)
+        }
     }
     
     func didTapFolder(_ folder: PictureFolder) async {
@@ -125,15 +158,20 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     @MainActor
     func preprocess() async {
        Task(priority: .userInitiated) { [weak self] in
+            guard let data = await dataProvider.data(),
+                  let originalImage = UIImage(data: data) else {
+                return
+            }
+           
             async let boxes = await textProcessor.performRecognition(image: originalImage)
             async let segmented = await personSegmenter.segment(image: originalImage)
-       
+
             let seg = await segmented
             let foundBoxes = await boxes
-            
+
             guard let self = self else { return }
             self._incomingTextBoxes = foundBoxes
-           
+
             withAnimation {
                 self.segmentedImage = seg
                 self.isFinishedProcessing = true
@@ -221,7 +259,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         entry.date = Date()
         entry.detailText = description
         
-        entry.original = ImageStorage.shared.write(originalImage, entryID: entry.id!, isOriginal: true)
+//        entry.original = ImageStorage.shared.write(originalImage, entryID: entry.id!, isOriginal: true)
         entry.modified = (didSelectSegmentedImage) ? await ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entry.id!, isOriginal: false) : nil
         entry.boxes = NSArray()
         entry.folder = folder.coreDataObject

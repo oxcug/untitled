@@ -8,6 +8,7 @@
 import Combine
 import SwiftUI
 import FloatingPanel
+import Kingfisher
 
 struct EntryCell: View {
     let folder: Folder
@@ -24,7 +25,8 @@ struct EntryCell: View {
             didTap()
         } label: {
             VStack(alignment: .center, spacing: 6) {
-                Image(uiImage: viewModel.image(for: entry))
+                KFImage(ImageStorage.shared.url(for: entry))
+                    .fade(duration: 0.15)
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(height: 50 * zoomFactor)
@@ -43,6 +45,7 @@ struct EntryCell: View {
                 }
             }
             .padding(.horizontal, showLabels ? 20 : 10)
+            .frame(height: 50 * zoomFactor)
         }
     }
 }
@@ -52,7 +55,7 @@ struct HomeView: View {
     @Binding var showSettings: Bool
     @Binding var showVisualSettings: Bool
     
-    @State var imagesPayload: ImagesPayload?
+    @State var assetPackage: PickedAssetPackage?
     @State var showingImagePicker = false
     @State var showImageReviewModal = false
     @State var showTutorial = false
@@ -137,15 +140,15 @@ struct HomeView: View {
         }
         .tint(.bodyText)
         .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(imagesPayload: $imagesPayload)
+            ImagePicker(assetPackage: $assetPackage)
         }
         .sheet(isPresented: $showTutorial) {
             NavigationStack {
                 TutorialView()
             }
         }
-        .fullScreenCover(item: $imagesPayload) { payload in
-            ImageReview(images: payload.images, entry: nil) {
+        .fullScreenCover(item: $assetPackage) { package in
+            ImageReview(sources: package.sources, entry: nil) {
                 inboxViewModel.clearInbox()
             }
         }
@@ -249,7 +252,7 @@ struct HomeView: View {
                 }
                 
                 Button {
-                    imagesPayload = .init(id: UUID(), images: images.map(\.image))
+                    assetPackage = .init(id: .init(), sources: inboxViewModel.imageURLs)
                 } label: {
                     Text("Review")
                         .font(.system(size: 18, weight: .bold, design: .default))

@@ -57,6 +57,7 @@
 		27D28FD229350A070050D9FF /* untitledShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 27D28FC829350A070050D9FF /* untitledShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		27D28FE0293519F50050D9FF /* EntryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D28FDE293519ED0050D9FF /* EntryEntity.swift */; };
 		27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D604CA28FDF25F00B4B3F2 /* CancelToolbarButton.swift */; };
+		27D99D992942875A00ECD31F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 27D99D982942875A00ECD31F /* Kingfisher */; };
 		27DBE9E828F8655E00B27850 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9E728F8655E00B27850 /* Folder.swift */; };
 		27DBE9EB28F8658400B27850 /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9EA28F8658400B27850 /* Separator.swift */; };
 		27DBE9EE28F8669400B27850 /* ImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9ED28F8669400B27850 /* ImageStorage.swift */; };
@@ -230,6 +231,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				27D99D992942875A00ECD31F /* Kingfisher in Frameworks */,
 				2727683F291EFBFA00A779E2 /* Instabug in Frameworks */,
 				27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */,
 				2752035C291876360076C4B5 /* PanModal in Frameworks */,
@@ -504,6 +506,7 @@
 				27DBEA0928FAEBB600B27850 /* FloatingPanel */,
 				2752035B291876360076C4B5 /* PanModal */,
 				2727683E291EFBFA00A779E2 /* Instabug */,
+				27D99D982942875A00ECD31F /* Kingfisher */,
 			);
 			productName = Crate;
 			productReference = 27020DE028F6C49C00C94312 /* untitled.app */;
@@ -601,6 +604,7 @@
 				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
 				2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */,
 				2727683D291EFBFA00A779E2 /* XCRemoteSwiftPackageReference "Instabug-SP" */,
+				27D99D972942875A00ECD31F /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 27020DE128F6C49C00C94312 /* Products */;
 			projectDirPath = "";
@@ -1174,6 +1178,14 @@
 				kind = branch;
 			};
 		};
+		27D99D972942875A00ECD31F /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.0.0;
+			};
+		};
 		27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scenee/FloatingPanel#swift-package-manager";
@@ -1194,6 +1206,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */;
 			productName = PanModal;
+		};
+		27D99D982942875A00ECD31F /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27D99D972942875A00ECD31F /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		27DBEA0928FAEBB600B27850 /* FloatingPanel */ = {
 			isa = XCSwiftPackageProductDependency;

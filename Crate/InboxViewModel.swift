@@ -30,7 +30,7 @@ final class InboxViewModel: ObservableObject {
     }()
     
     func loadInboxThumbnails() {
-        if isLoading {
+        if isLoading || imageURLs.isEmpty || !thumbnails.isEmpty {
             return
         }
       

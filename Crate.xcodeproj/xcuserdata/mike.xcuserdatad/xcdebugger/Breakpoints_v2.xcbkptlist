@@ -20,5 +20,116 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "0A7618DD-4AF0-4AB5-9AB1-6D7BFEE40CF8"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Crate/Pick/ImageReviewViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "263"
+            endingLineNumber = "263"
+            landmarkName = "save(viewContext:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "0A7618DD-4AF0-4AB5-9AB1-6D7BFEE40CF8 - 19067e04f7924fa6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for untitled.ImageReviewViewModel.save(viewContext: __C.NSManagedObjectContext) async -&gt; Swift.Bool"
+                  moduleName = "untitled"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mike/src/Crate/Crate/Pick/ImageReviewViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "263"
+                  endingLineNumber = "263"
+                  offsetFromSymbolStart = "1108">
+               </Location>
+               <Location
+                  uuid = "0A7618DD-4AF0-4AB5-9AB1-6D7BFEE40CF8 - 4e623c0ef6709ff1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for untitled.ImageReviewViewModel.save(viewContext: __C.NSManagedObjectContext) async -&gt; Swift.Bool"
+                  moduleName = "untitled"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mike/src/Crate/Crate/Pick/ImageReviewViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "263"
+                  endingLineNumber = "263"
+                  offsetFromSymbolStart = "44">
+               </Location>
+               <Location
+                  uuid = "0A7618DD-4AF0-4AB5-9AB1-6D7BFEE40CF8 - a63970d445ef0aa4"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for untitled.ImageReviewViewModel.save(viewContext: __C.NSManagedObjectContext) async -&gt; Swift.Bool"
+                  moduleName = "untitled"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mike/src/Crate/Crate/Pick/ImageReviewViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "263"
+                  endingLineNumber = "263"
+                  offsetFromSymbolStart = "152">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "12D904EB-C751-49E0-BFDD-88ED3C238931"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Crate/Pick/ImageReviewViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
+            landmarkName = "save(viewContext:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "12D904EB-C751-49E0-BFDD-88ED3C238931 - 19067e04f7924915"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for untitled.ImageReviewViewModel.save(viewContext: __C.NSManagedObjectContext) async -&gt; Swift.Bool"
+                  moduleName = "untitled"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mike/src/Crate/Crate/Pick/ImageReviewViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "244"
+                  endingLineNumber = "244"
+                  offsetFromSymbolStart = "248">
+               </Location>
+               <Location
+                  uuid = "12D904EB-C751-49E0-BFDD-88ED3C238931 - 19067e04f7924915"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for untitled.ImageReviewViewModel.save(viewContext: __C.NSManagedObjectContext) async -&gt; Swift.Bool"
+                  moduleName = "untitled"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/mike/src/Crate/Crate/Pick/ImageReviewViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "244"
+                  endingLineNumber = "244"
+                  offsetFromSymbolStart = "340">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
    </Breakpoints>
 </Bucket>
