@@ -80,7 +80,7 @@ struct HomeView: View {
             ZStack(alignment: .bottomTrailing) {
                 List {
                     if !inboxViewModel.imageURLs.isEmpty {
-                        inboxSection(images: inboxViewModel.thumbnails)
+                        inboxSection(urls: inboxViewModel.thumbnails)
                     }
                     
                     if folders.isEmpty {
@@ -188,30 +188,28 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func inboxThumbnailCarousel(images: [InboxImage]) -> some View {
+    func inboxThumbnailCarousel(urls: [URL]) -> some View {
         ZStack {
-            if inboxViewModel.isLoading {
-                ProgressView()
-                    .progressViewStyle(.circular)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal)
-                    .frame(height: 80)
-            } else {
-                ScrollView(.horizontal) {
-                    LazyHStack {
-                        ForEach(Array(images.enumerated()), id: \.self.element) { (idx, image) in
-                            Image(uiImage: image.image)
-                                .resizable()
-                                .scaledToFit()
-                                .cornerRadius(8)
-                                .frame(height: 80)
-                                .padding(.leading, idx == 0 ? 20 : 0)
-                                .padding(.trailing, idx == images.count - 1 ? 20 : 0)
-                        }
+            ScrollView(.horizontal) {
+                LazyHStack {
+                    ForEach(Array(urls.enumerated()), id: \.self.element) { (idx, url) in
+                        KFImage(url)
+                            .placeholder { _ in
+                                RoundedRectangle(cornerRadius: 8)
+                                    .foregroundColor(.gray.opacity(0.3))
+                            }
+                            .downsampling(size: .init(width: 0, height: 80))
+                            .fade(duration: 0.2)
+                            .resizable()
+                            .scaledToFit()
+                            .cornerRadius(8)
+                            .frame(height: 80)
+                            .padding(.leading, idx == 0 ? 20 : 0)
+                            .padding(.trailing, idx == urls.count - 1 ? 20 : 0)
                     }
                 }
-                .scrollIndicators(.hidden)
             }
+            .scrollIndicators(.hidden)
             
             Rectangle()
                 .fill(
@@ -236,9 +234,9 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func inboxSection(images: [InboxImage]) -> some View {
+    func inboxSection(urls: [URL]) -> some View {
         VStack(alignment: .leading, spacing: 20) {
-            inboxThumbnailCarousel(images: images)
+            inboxThumbnailCarousel(urls: urls)
 
             VStack(alignment: .leading) {
                 let actualCount = inboxViewModel.imageURLs.count

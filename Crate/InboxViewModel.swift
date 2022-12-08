@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import QuickLook
 
 struct InboxImage: Identifiable, Hashable {
     let id = UUID()
@@ -15,8 +16,7 @@ struct InboxImage: Identifiable, Hashable {
 }
 
 final class InboxViewModel: ObservableObject {
-    @Published var thumbnails: [InboxImage] = []
-    @Published var isLoading = false
+    @Published var thumbnails: [URL] = []
     
     let imageLoadQueue = DispatchQueue(label: "com.mjc.crate.image.load")
 
@@ -30,27 +30,7 @@ final class InboxViewModel: ObservableObject {
     }()
     
     func loadInboxThumbnails() {
-        if isLoading || imageURLs.isEmpty || !thumbnails.isEmpty {
-            return
-        }
-      
-        isLoading = true
-        
-        imageLoadQueue.async {
-            let res = self.imageURLs.prefix(15).compactMap { path -> InboxImage? in
-                guard let scaled = self.resize(url: path, maxPixelSize: 200) else {
-                    return nil
-                }
-                return InboxImage(image: UIImage(cgImage: scaled), filePath: path)
-            }
-           
-            DispatchQueue.main.async {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    self.isLoading = false
-                    self.thumbnails = res
-                }
-            }
-        }
+        thumbnails = imageURLs
     }
     
     func clearInbox() {
