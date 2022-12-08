@@ -76,8 +76,8 @@ struct HomeView: View {
         NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 List {
-                    if !inboxViewModel.images.isEmpty {
-                        inboxSection(images: inboxViewModel.images)
+                    if !inboxViewModel.imageURLs.isEmpty {
+                        inboxSection(images: inboxViewModel.thumbnails)
                     }
                     
                     if folders.isEmpty {
@@ -155,7 +155,7 @@ struct HomeView: View {
                 .environmentObject(detailViewModel)
         }
         .task {
-            inboxViewModel.loadInbox()
+            inboxViewModel.loadInboxThumbnails()
         }
     }
     
@@ -185,9 +185,15 @@ struct HomeView: View {
     }
     
     @ViewBuilder
-    func inboxSection(images: [InboxImage]) -> some View {
-        VStack(alignment: .leading, spacing: 20) {
-            ZStack {
+    func inboxThumbnailCarousel(images: [InboxImage]) -> some View {
+        ZStack {
+            if inboxViewModel.isLoading {
+                ProgressView()
+                    .progressViewStyle(.circular)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal)
+                    .frame(height: 80)
+            } else {
                 ScrollView(.horizontal) {
                     LazyHStack {
                         ForEach(Array(images.enumerated()), id: \.self.element) { (idx, image) in
@@ -202,36 +208,44 @@ struct HomeView: View {
                     }
                 }
                 .scrollIndicators(.hidden)
-                
-                Rectangle()
-                    .fill(
-                        LinearGradient(gradient: Gradient(stops: [
-                            .init(color: Color(UIColor.systemBackground).opacity(0.01), location: 0),
-                            .init(color: Color(UIColor.systemBackground), location: 1)
-                        ]), startPoint: .trailing, endPoint: .leading)
-                    ).frame(width: 20)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .allowsHitTesting(false)  // << now works !!
-                
-                Rectangle()
-                    .fill(
-                        LinearGradient(gradient: Gradient(stops: [
-                            .init(color: Color(UIColor.systemBackground).opacity(0.01), location: 0),
-                            .init(color: Color(UIColor.systemBackground), location: 1)
-                        ]), startPoint: .leading, endPoint: .trailing)
-                    ).frame(width: 20)
-                    .frame(maxWidth: .infinity, alignment: .trailing)
-                    .allowsHitTesting(false)  // << now works !!
             }
+            
+            Rectangle()
+                .fill(
+                    LinearGradient(gradient: Gradient(stops: [
+                        .init(color: Color(UIColor.systemBackground).opacity(0.01), location: 0),
+                        .init(color: Color(UIColor.systemBackground), location: 1)
+                    ]), startPoint: .trailing, endPoint: .leading)
+                ).frame(width: 20)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .allowsHitTesting(false)
+            
+            Rectangle()
+                .fill(
+                    LinearGradient(gradient: Gradient(stops: [
+                        .init(color: Color(UIColor.systemBackground).opacity(0.01), location: 0),
+                        .init(color: Color(UIColor.systemBackground), location: 1)
+                    ]), startPoint: .leading, endPoint: .trailing)
+                ).frame(width: 20)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .allowsHitTesting(false)
+        }
+    }
+    
+    @ViewBuilder
+    func inboxSection(images: [InboxImage]) -> some View {
+        VStack(alignment: .leading, spacing: 20) {
+            inboxThumbnailCarousel(images: images)
 
             VStack(alignment: .leading) {
-                let singular = images.count <= 1
+                let actualCount = inboxViewModel.imageURLs.count
+                let singular = (actualCount <= 1)
                 ZStack(alignment: .topLeading) {
                     (
                         Text(Image(systemName: "circle.fill")).foregroundColor(.red).font(.system(size: 12)).baselineOffset(3) +
-                        Text(" You've got \(images.count) picture\(singular ? "" : "s") in your inbox").font(.system(size: 21, weight: .bold, design: .default))
+                        Text(" You've got \(actualCount) picture\(singular ? "" : "s") in your inbox").font(.system(size: 21, weight: .bold, design: .default))
                     )
-                        .fixedSize(horizontal: false, vertical: true)
+                    .fixedSize(horizontal: false, vertical: true)
                 }
                 
                 Button {

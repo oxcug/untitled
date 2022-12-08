@@ -5,11 +5,13 @@
 //  Created by Mike Choi on 11/29/22.
 //
 
-import Foundation
+import Combine
 import SwiftUI
 
 final class ShareViewModel: ObservableObject {
     let timer = Timer.publish(every: 0.1, on: .main, in: .common).autoconnect()
+    var imagesStream: AnyCancellable?
+    
     @Published var size: CGFloat?
     
     var allowedOffset: CGFloat? {
@@ -22,8 +24,9 @@ final class ShareViewModel: ObservableObject {
 }
 
 struct ShareView: View {
-    let images: [UIImage]
-    
+    let imagesStream: CurrentValueSubject<[UIImage], Never>
+   
+    @State var images: [UIImage] = []
     @State var stackOffset: CGFloat = 0
     @State var underlineLength: CGFloat = 0
     @StateObject var viewModel = ShareViewModel()
@@ -38,7 +41,7 @@ struct ShareView: View {
                     Image(uiImage: image)
                         .resizable()
                         .scaledToFit()
-                        .frame(height: 200)
+                        .frame(height: 120)
                         .cornerRadius(10)
                         .padding(.leading, offset == 0 ? 15 : 0)
                         .padding(.trailing, offset == images.count - 1 ? 15 : 0)
@@ -91,7 +94,8 @@ struct ShareView: View {
             feedback.notificationOccurred(.success)
         }
         .onReceive(viewModel.timer) { _  in
-            guard let allowedOffset = viewModel.allowedOffset else {
+            guard let allowedOffset = viewModel.allowedOffset,
+                  allowedOffset > 0 else {
                 return
             }
             
@@ -104,12 +108,17 @@ struct ShareView: View {
                 stackOffset += 0.7
             }
         }
+        .task {
+            viewModel.imagesStream = imagesStream
+                .receive(on: RunLoop.main)
+                .assign(to: \.images, on: self)
+        }
     }
 }
 
 struct ShareView_Previews: PreviewProvider {
     static var previews: some View {
-        ShareView(images: [.init(named: "outfit.jpeg")!, .init(named: "IMG_2923.PNG")!, .init(named: "represent.jpeg")!, .init(named: "IMG_2923.PNG")!, .init(named: "IMG_2923.PNG")!, .init(named: "IMG_2923.PNG")!])
+        ShareView(imagesStream: .init([.init(named: "outfit.jpeg")!, .init(named: "IMG_2923.PNG")!, .init(named: "represent.jpeg")!, .init(named: "IMG_2923.PNG")!, .init(named: "IMG_2923.PNG")!, .init(named: "IMG_2923.PNG")!]))
 //        ShareView(images: [.init(named: "outfit.jpeg")!, .init(named: "IMG_2923.PNG")!])
     }
 }

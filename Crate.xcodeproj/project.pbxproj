@@ -90,6 +90,7 @@
 		27F1CD54293FF119004FE9E4 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1CD53293FF119004FE9E4 /* TutorialView.swift */; };
 		27F1CD56293FF294004FE9E4 /* LineSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1CD55293FF294004FE9E4 /* LineSegmentedControl.swift */; };
 		27F1CD58293FFA5E004FE9E4 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1CD57293FFA5E004FE9E4 /* PlayerView.swift */; };
+		27F1CD5A2940E91A004FE9E4 /* UIImage+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1CD592940E91A004FE9E4 /* UIImage+Orientation.swift */; };
 		27F7DF8029311FF500F2DEAB /* MoreText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7DF7F29311FF500F2DEAB /* MoreText.swift */; };
 		27F7DF8229312CC500F2DEAB /* PictureEntryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7DF8129312CC500F2DEAB /* PictureEntryDetailViewModel.swift */; };
 		27F7DF8429312D3900F2DEAB /* MoreTextModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7DF8329312D3900F2DEAB /* MoreTextModalView.swift */; };
@@ -218,6 +219,7 @@
 		27F1CD53293FF119004FE9E4 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		27F1CD55293FF294004FE9E4 /* LineSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSegmentedControl.swift; sourceTree = "<group>"; };
 		27F1CD57293FFA5E004FE9E4 /* PlayerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
+		27F1CD592940E91A004FE9E4 /* UIImage+Orientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Orientation.swift"; sourceTree = "<group>"; };
 		27F7DF7F29311FF500F2DEAB /* MoreText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreText.swift; sourceTree = "<group>"; };
 		27F7DF8129312CC500F2DEAB /* PictureEntryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEntryDetailViewModel.swift; sourceTree = "<group>"; };
 		27F7DF8329312D3900F2DEAB /* MoreTextModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreTextModalView.swift; sourceTree = "<group>"; };
@@ -351,6 +353,7 @@
 			isa = PBXGroup;
 			children = (
 				27020E2028F762F800C94312 /* UIImage+Extensions.swift */,
+				27F1CD592940E91A004FE9E4 /* UIImage+Orientation.swift */,
 				27DBE9EF28F8A70D00B27850 /* Color+Codable.swift */,
 				270953F8291A9D4100645133 /* UIColor+Hex.swift */,
 				27020E2328F7680600C94312 /* Notification+Extensions.swift */,
@@ -657,6 +660,7 @@
 			files = (
 				27DED9922906E77700CE9095 /* Sequence+Extensions.swift in Sources */,
 				27AB590F291A770600F4DB62 /* FolderDetailView.swift in Sources */,
+				27F1CD5A2940E91A004FE9E4 /* UIImage+Orientation.swift in Sources */,
 				27DBEA0628F95E2200B27850 /* MMCQ.swift in Sources */,
 				27DBE9F628F8BB9100B27850 /* ImageDetailView.swift in Sources */,
 				270953FD291BC68700645133 /* ImageShareOptions.swift in Sources */,
@@ -925,12 +929,15 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjc.Crate;
 				PRODUCT_NAME = untitled;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -960,12 +967,15 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.mjc.Crate;
 				PRODUCT_NAME = untitled;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

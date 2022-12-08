@@ -7,34 +7,9 @@
 
 import UIKit
 
-extension UIImage {
-    func fixOrientation() -> UIImage {
-        if (imageOrientation == .up) {
-            return self
-        }
-
-        UIGraphicsBeginImageContextWithOptions(self.size, false, self.scale)
-        let rect = CGRect(x: 0, y: 0, width: self.size.width, height: self.size.height)
-        self.draw(in: rect)
-
-        let normalizedImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-
-        return normalizedImage
-    }
-}
-
 extension UIColor: Identifiable {
     public var id: String {
         self.description
-    }
-}
-
-extension UIImage {
-    func imageResized(to size: CGSize) -> UIImage {
-        return UIGraphicsImageRenderer(size: size).image { _ in
-            draw(in: CGRect(origin: .zero, size: size))
-        }
     }
 }
 
@@ -268,5 +243,17 @@ private struct _CGImageTransparencyTrimmer {
         return columnRange.first(where: { column in
             pixelRowRange.contains(where: { isPixelOpaque(column: column, row: $0) })
         })
+    }
+}
+
+import SwiftUI
+
+extension View {
+    @ViewBuilder func isHidden(_ isHidden: Bool) -> some View {
+        if isHidden {
+            self.hidden()
+        } else {
+            self
+        }
     }
 }

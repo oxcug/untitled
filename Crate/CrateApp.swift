@@ -52,7 +52,7 @@ struct CrateApp: App {
                 .onChange(of: scenePhase) { phase in
                     switch phase {
                         case .active:
-                            inboxViewModel.loadInbox()
+                            inboxViewModel.loadInboxThumbnails()
                         default:
                             ()
                     }
