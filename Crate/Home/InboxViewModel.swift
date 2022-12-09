@@ -16,29 +16,28 @@ struct InboxImage: Identifiable, Hashable {
 }
 
 final class InboxViewModel: ObservableObject {
-    @Published var thumbnails: [URL] = []
+    @Published var imageURLs: [URL] = []
     
     let imageLoadQueue = DispatchQueue(label: "com.mjc.crate.image.load")
-
-    lazy var imageURLs: [URL] = {
-        let fileManager = FileManager.default
-        guard let documentsDirectory = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.com.mjc.untitled") else {
-            return []
-        }
-       
-        return (try? fileManager.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)) ?? []
-    }()
+    let allowedPathExtensions: Set<String> = ["jpg", "jpeg", "png"]
     
     func loadInboxThumbnails() {
-        thumbnails = imageURLs
+        let fileManager = FileManager.default
+        guard let documentsDirectory = fileManager.containerURL(forSecurityApplicationGroupIdentifier: "group.com.mjc.untitled") else {
+            imageURLs = []
+            return
+        }
+       
+        let contents = (try? fileManager.contentsOfDirectory(at: documentsDirectory, includingPropertiesForKeys: nil)) ?? []
+        imageURLs = contents.filter { allowedPathExtensions.contains($0.pathExtension) }
     }
     
     func clearInbox() {
-        thumbnails = []
-        
         imageURLs.forEach { url in
             try? FileManager.default.removeItem(at: url)
         }
+        
+        imageURLs = []
     }
 }
 

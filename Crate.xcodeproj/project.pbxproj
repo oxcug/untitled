@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -57,7 +57,6 @@
 		27D28FD229350A070050D9FF /* untitledShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 27D28FC829350A070050D9FF /* untitledShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		27D28FE0293519F50050D9FF /* EntryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D28FDE293519ED0050D9FF /* EntryEntity.swift */; };
 		27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D604CA28FDF25F00B4B3F2 /* CancelToolbarButton.swift */; };
-		27D99D992942875A00ECD31F /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 27D99D982942875A00ECD31F /* Kingfisher */; };
 		27DBE9E828F8655E00B27850 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9E728F8655E00B27850 /* Folder.swift */; };
 		27DBE9EB28F8658400B27850 /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9EA28F8658400B27850 /* Separator.swift */; };
 		27DBE9EE28F8669400B27850 /* ImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9ED28F8669400B27850 /* ImageStorage.swift */; };
@@ -86,7 +85,7 @@
 		27DED9522906C3FD00CE9095 /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9512906C3FD00CE9095 /* DataController.swift */; };
 		27DED9902906D5A800CE9095 /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED98F2906D5A800CE9095 /* BoundingBox.swift */; };
 		27DED9922906E77700CE9095 /* Sequence+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9912906E77700CE9095 /* Sequence+Extensions.swift */; };
-		27DED9962907483400CE9095 /* PictureEntryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9952907483400CE9095 /* PictureEntryViewModel.swift */; };
+		27DED9962907483400CE9095 /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED9952907483400CE9095 /* HomeViewModel.swift */; };
 		27DED99A290749E100CE9095 /* SettingsPanelDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DED999290749E100CE9095 /* SettingsPanelDelegate.swift */; };
 		27F1CD54293FF119004FE9E4 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1CD53293FF119004FE9E4 /* TutorialView.swift */; };
 		27F1CD56293FF294004FE9E4 /* LineSegmentedControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F1CD55293FF294004FE9E4 /* LineSegmentedControl.swift */; };
@@ -95,6 +94,7 @@
 		27F7DF8029311FF500F2DEAB /* MoreText.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7DF7F29311FF500F2DEAB /* MoreText.swift */; };
 		27F7DF8229312CC500F2DEAB /* PictureEntryDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7DF8129312CC500F2DEAB /* PictureEntryDetailViewModel.swift */; };
 		27F7DF8429312D3900F2DEAB /* MoreTextModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7DF8329312D3900F2DEAB /* MoreTextModalView.swift */; };
+		FC3A44D630372F817E4F663D /* Pods_untitled.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECB256EFCE1DCBAC057FC4B2 /* Pods_untitled.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +136,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0E017012CFC0350DBF584E3B /* Pods-untitled.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-untitled.release.xcconfig"; path = "Target Support Files/Pods-untitled/Pods-untitled.release.xcconfig"; sourceTree = "<group>"; };
 		27020DE028F6C49C00C94312 /* untitled.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = untitled.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		27020DE328F6C49C00C94312 /* CrateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CrateApp.swift; sourceTree = "<group>"; };
 		27020DE528F6C49C00C94312 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
@@ -215,7 +216,7 @@
 		27DED9512906C3FD00CE9095 /* DataController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		27DED98F2906D5A800CE9095 /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		27DED9912906E77700CE9095 /* Sequence+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Sequence+Extensions.swift"; sourceTree = "<group>"; };
-		27DED9952907483400CE9095 /* PictureEntryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEntryViewModel.swift; sourceTree = "<group>"; };
+		27DED9952907483400CE9095 /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		27DED999290749E100CE9095 /* SettingsPanelDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsPanelDelegate.swift; sourceTree = "<group>"; };
 		27F1CD53293FF119004FE9E4 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		27F1CD55293FF294004FE9E4 /* LineSegmentedControl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineSegmentedControl.swift; sourceTree = "<group>"; };
@@ -224,6 +225,8 @@
 		27F7DF7F29311FF500F2DEAB /* MoreText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreText.swift; sourceTree = "<group>"; };
 		27F7DF8129312CC500F2DEAB /* PictureEntryDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PictureEntryDetailViewModel.swift; sourceTree = "<group>"; };
 		27F7DF8329312D3900F2DEAB /* MoreTextModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreTextModalView.swift; sourceTree = "<group>"; };
+		D50F7A38D944CDBEDECE7893 /* Pods-untitled.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-untitled.debug.xcconfig"; path = "Target Support Files/Pods-untitled/Pods-untitled.debug.xcconfig"; sourceTree = "<group>"; };
+		ECB256EFCE1DCBAC057FC4B2 /* Pods_untitled.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_untitled.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -231,10 +234,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				27D99D992942875A00ECD31F /* Kingfisher in Frameworks */,
 				2727683F291EFBFA00A779E2 /* Instabug in Frameworks */,
 				27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */,
 				2752035C291876360076C4B5 /* PanModal in Frameworks */,
+				FC3A44D630372F817E4F663D /* Pods_untitled.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,6 +275,8 @@
 				27020E0328F6C49C00C94312 /* CrateUITests */,
 				27D28FC929350A070050D9FF /* untitledShareExtension */,
 				27020DE128F6C49C00C94312 /* Products */,
+				592310C691196E849D4E4058 /* Pods */,
+				8460D2494CB689131E27128B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -290,11 +295,10 @@
 			isa = PBXGroup;
 			children = (
 				27DE079C291DB6D30006AC87 /* App Settings */,
+				27D99D9A294356A500ECD31F /* Home */,
 				27020DE328F6C49C00C94312 /* CrateApp.swift */,
 				2725BE27293FB4CF00910406 /* OnboardingView.swift */,
 				27F1CD53293FF119004FE9E4 /* TutorialView.swift */,
-				2773BF1B293B976100AB4912 /* InboxViewModel.swift */,
-				27020DE528F6C49C00C94312 /* HomeView.swift */,
 				27AB590E291A770600F4DB62 /* FolderDetailView.swift */,
 				27DED9512906C3FD00CE9095 /* DataController.swift */,
 				275203512917D5FA0076C4B5 /* Settings */,
@@ -403,6 +407,16 @@
 			path = untitledShareExtension;
 			sourceTree = "<group>";
 		};
+		27D99D9A294356A500ECD31F /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				27020DE528F6C49C00C94312 /* HomeView.swift */,
+				27DED9952907483400CE9095 /* HomeViewModel.swift */,
+				2773BF1B293B976100AB4912 /* InboxViewModel.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
 		27DBE9E928F8656500B27850 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -463,7 +477,6 @@
 			children = (
 				27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */,
 				27A8EEA828FCAF7C004DDCE9 /* FolderCreationView.swift */,
-				27DED9952907483400CE9095 /* PictureEntryViewModel.swift */,
 				27F7DF8129312CC500F2DEAB /* PictureEntryDetailViewModel.swift */,
 				27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */,
 				27D28FDE293519ED0050D9FF /* EntryEntity.swift */,
@@ -484,6 +497,24 @@
 			path = Pick;
 			sourceTree = "<group>";
 		};
+		592310C691196E849D4E4058 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D50F7A38D944CDBEDECE7893 /* Pods-untitled.debug.xcconfig */,
+				0E017012CFC0350DBF584E3B /* Pods-untitled.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		8460D2494CB689131E27128B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ECB256EFCE1DCBAC057FC4B2 /* Pods_untitled.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -491,10 +522,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 27020E0A28F6C49C00C94312 /* Build configuration list for PBXNativeTarget "untitled" */;
 			buildPhases = (
+				88F5DECA99347E12C99FB305 /* [CP] Check Pods Manifest.lock */,
 				27020DDC28F6C49C00C94312 /* Sources */,
 				27020DDD28F6C49C00C94312 /* Frameworks */,
 				27020DDE28F6C49C00C94312 /* Resources */,
 				27D28FD329350A070050D9FF /* Embed Foundation Extensions */,
+				0156B266072B008D0817A404 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -506,7 +539,6 @@
 				27DBEA0928FAEBB600B27850 /* FloatingPanel */,
 				2752035B291876360076C4B5 /* PanModal */,
 				2727683E291EFBFA00A779E2 /* Instabug */,
-				27D99D982942875A00ECD31F /* Kingfisher */,
 			);
 			productName = Crate;
 			productReference = 27020DE028F6C49C00C94312 /* untitled.app */;
@@ -592,7 +624,7 @@
 				};
 			};
 			buildConfigurationList = 27020DDB28F6C49C00C94312 /* Build configuration list for PBXProject "Crate" */;
-			compatibilityVersion = "Xcode 14.0";
+			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -601,10 +633,9 @@
 			);
 			mainGroup = 27020DD728F6C49C00C94312;
 			packageReferences = (
-				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
-				2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */,
+				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel#swift-package-manager" */,
+				2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal.git" */,
 				2727683D291EFBFA00A779E2 /* XCRemoteSwiftPackageReference "Instabug-SP" */,
-				27D99D972942875A00ECD31F /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 27020DE128F6C49C00C94312 /* Products */;
 			projectDirPath = "";
@@ -656,6 +687,48 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		0156B266072B008D0817A404 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-untitled/Pods-untitled-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-untitled/Pods-untitled-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-untitled/Pods-untitled-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		88F5DECA99347E12C99FB305 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-untitled-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		27020DDC28F6C49C00C94312 /* Sources */ = {
@@ -716,7 +789,7 @@
 				27A8EEA528FC3B98004DDCE9 /* ImageReviewViewModel.swift in Sources */,
 				27020DE428F6C49C00C94312 /* CrateApp.swift in Sources */,
 				2727683C291EC04A00A779E2 /* HelpView.swift in Sources */,
-				27DED9962907483400CE9095 /* PictureEntryViewModel.swift in Sources */,
+				27DED9962907483400CE9095 /* HomeViewModel.swift in Sources */,
 				2725BE28293FB52000910406 /* OnboardingView.swift in Sources */,
 				27F1CD58293FFA5E004FE9E4 /* PlayerView.swift in Sources */,
 				27F7DF8229312CC500F2DEAB /* PictureEntryDetailViewModel.swift in Sources */,
@@ -909,6 +982,7 @@
 		};
 		27020E0B28F6C49C00C94312 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D50F7A38D944CDBEDECE7893 /* Pods-untitled.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "pablo_blue forest_green international_orange";
@@ -947,6 +1021,7 @@
 		};
 		27020E0C28F6C49C00C94312 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0E017012CFC0350DBF584E3B /* Pods-untitled.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "pablo_blue forest_green international_orange";
@@ -1170,7 +1245,7 @@
 				minimumVersion = 11.0.0;
 			};
 		};
-		2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */ = {
+		2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/slackhq/PanModal.git";
 			requirement = {
@@ -1178,15 +1253,7 @@
 				kind = branch;
 			};
 		};
-		27D99D972942875A00ECD31F /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.0.0;
-			};
-		};
-		27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
+		27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel#swift-package-manager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scenee/FloatingPanel#swift-package-manager";
 			requirement = {
@@ -1204,17 +1271,12 @@
 		};
 		2752035B291876360076C4B5 /* PanModal */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */;
+			package = 2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal.git" */;
 			productName = PanModal;
-		};
-		27D99D982942875A00ECD31F /* Kingfisher */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27D99D972942875A00ECD31F /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = Kingfisher;
 		};
 		27DBEA0928FAEBB600B27850 /* FloatingPanel */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */;
+			package = 27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel#swift-package-manager" */;
 			productName = FloatingPanel;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -33,7 +33,7 @@ enum Theme: String, CaseIterable, Identifiable {
 }
 
 struct ThemeSelectorView: View {
-    @AppStorage("theme") var currentTheme: Theme = .lightsOff
+    @AppStorage("theme") var currentTheme: Theme = .system
     
     var body: some View {
         List {

@@ -18,7 +18,7 @@ struct EntryCell: View {
     
     @AppStorage("show.labels") var showLabels = true
     @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
-    @EnvironmentObject var viewModel: PictureEntryViewModel
+    @EnvironmentObject var viewModel: HomeViewModel
     
     var body: some View {
         Button {
@@ -55,6 +55,7 @@ struct HomeView: View {
     @Binding var showSettings: Bool
     @Binding var showVisualSettings: Bool
     
+    @State var pickerPayload: PHPickerPayload = .init(id: .init(), results: [])
     @State var assetPackage: PickedAssetPackage?
     @State var showingImagePicker = false
     @State var showImageReviewModal = false
@@ -68,7 +69,7 @@ struct HomeView: View {
     
     // MARK: -
     
-    @StateObject var viewModel = PictureEntryViewModel()
+    @StateObject var viewModel = HomeViewModel()
     @StateObject var panelDelegate = SettingsPanelDelegate()
     @StateObject var detailViewModel = PictureEntryDetailViewModel()
     @EnvironmentObject var inboxViewModel: InboxViewModel
@@ -80,7 +81,7 @@ struct HomeView: View {
             ZStack(alignment: .bottomTrailing) {
                 List {
                     if !inboxViewModel.imageURLs.isEmpty {
-                        inboxSection(urls: inboxViewModel.thumbnails)
+                        inboxSection(urls: inboxViewModel.imageURLs)
                     }
                     
                     if folders.isEmpty {
@@ -95,7 +96,6 @@ struct HomeView: View {
                 .scrollContentBackground(.hidden)
                 .navigationDestination(for: Folder.self) { folder in
                     FolderDetailView(folder: folder)
-                        .environmentObject(viewModel)
                         .environmentObject(detailViewModel)
                 }
                 
@@ -140,7 +140,7 @@ struct HomeView: View {
         }
         .tint(.bodyText)
         .sheet(isPresented: $showingImagePicker) {
-            ImagePicker(assetPackage: $assetPackage)
+            ImagePicker(pickerPayload: $pickerPayload)
         }
         .sheet(isPresented: $showTutorial) {
             NavigationStack {
@@ -160,6 +160,21 @@ struct HomeView: View {
         .task {
             inboxViewModel.loadInboxThumbnails()
         }
+        .onChange(of: pickerPayload) { payload in
+            if !payload.results.isEmpty {
+                viewModel.loadAssetDetails(pickerPayload: pickerPayload) {
+                    self.assetPackage = $0
+                }
+            }
+        }
+        .overlay(
+            ProgressView()
+                .progressViewStyle(.circular)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .background(.ultraThinMaterial.opacity(0.8), in: Rectangle())
+                .edgesIgnoringSafeArea([.top, .bottom])
+                .opacity(viewModel.fetchingAssets ? 1 : 0)
+        )
     }
     
     var emptyView: some View {
@@ -167,7 +182,7 @@ struct HomeView: View {
             Text("emptiness.")
                 .font(.system(size: 14, weight: .semibold, design: .default))
             
-            Text("this is where your hopes and inspirations go.")
+            Text("now go fill it with your hopes and inspirations.")
                 .font(.system(size: 14, weight: .semibold, design: .default))
                 .foregroundColor(.secondary)
                 .multilineTextAlignment(.center)
@@ -302,9 +317,11 @@ struct HomeView: View {
 }
 
 struct HomeView_Previews: PreviewProvider {
+    @StateObject static var inboxViewModel = InboxViewModel()
+    
     static var previews: some View {
         HomeView(detailPayload: .dummy, showSettings: .constant(false), showVisualSettings: .constant(false))
-            .environmentObject(InboxViewModel())
+            .environmentObject(inboxViewModel)
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
     }
 }

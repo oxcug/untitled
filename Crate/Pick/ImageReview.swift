@@ -81,7 +81,7 @@ struct SingleImageReview: View {
         .task {
             Task {
                 await viewModel.loadImage()
-                await viewModel.preprocess()
+                await viewModel.preprocess(newHeight: UIScreen.main.bounds.size.height * 0.6)
             }
         }
     }
@@ -97,10 +97,7 @@ struct SingleImageReview: View {
                     .scaledToFit()
                     .opacity(viewModel.didSelectSegmentedImage ? 0.5 : 0.9)
                     .frame(height: imageHeight)
-                    .readSize { size in
-                        viewModel.requestForProcessing(imageSize: size)
-                    }
-                
+
                 if let segmented = viewModel.segmentedImage {
                     Image(uiImage: viewModel.didSelectSegmentedImage ? segmented.active : segmented.inactive )
                         .resizable()
@@ -110,9 +107,7 @@ struct SingleImageReview: View {
                 }
             }
             .transition(.opacity)
-            
-            textBoxes
-            
+             
             Rectangle()
                 .frame(width: viewModel.tappableBounds?.width ?? 0, height: viewModel.tappableBounds?.height ?? 0)
                 .offset(x: viewModel.tappableBounds?.minX ?? 0, y: viewModel.tappableBounds?.minY ?? 0)
@@ -123,6 +118,8 @@ struct SingleImageReview: View {
                     }
                     selectionFeedback.selectionChanged()
                 }
+            
+            textBoxes
         }
         .transition(.opacity)
         .frame(maxWidth: .infinity)
@@ -168,7 +165,7 @@ struct SingleImageReview: View {
                                 .offset(x: (box.box.width - 31) / 2, y: box.box.height + 4)
                         )
                 }
-                .zIndex(isTitle ? 2 : 0)
+                .zIndex(isTitle ? 50 : 40)
                 .buttonStyle(.plain)
                 .position(x: rect.midX, y: rect.midY)
                 .frame(width: rect.width, height: rect.height + 4)
@@ -336,16 +333,16 @@ struct ImageReview: View {
     }
 }
 
-//struct ImageReview_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
-//            .preferredColorScheme(.light)
-//            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
-//            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
-//
+struct ImageReview_Previews: PreviewProvider {
+    static var previews: some View {
+        ImageReview(sources: [Bundle.main.url(forResource: "represent", withExtension: "jpeg")!], entry: nil)
+            .preferredColorScheme(.light)
+            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
+
 //        ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
 //            .preferredColorScheme(.dark)
 //            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
 //            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
-//    }
-//}
+    }
+}

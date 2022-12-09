@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "floatingpanel#swift-package-manager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scenee/FloatingPanel#swift-package-manager",
+      "state" : {
+        "branch" : "master",
+        "revision" : "05813253f95a800caf0a57b5236180e6dfb3fc0c"
+      }
+    },
+    {
+      "identity" : "instabug-sp",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Instabug/Instabug-SP",
+      "state" : {
+        "revision" : "9f6299bed7aaa6a3114a045e4dafa43a87277475",
+        "version" : "11.5.0"
+      }
+    },
+    {
+      "identity" : "panmodal",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/slackhq/PanModal.git",
+      "state" : {
+        "branch" : "master",
+        "revision" : "b2f5bd7d169cba564d5c5b7203864f79be3fe826"
+      }
+    }
+  ],
+  "version" : 2
+}

@@ -19,7 +19,6 @@ struct FolderDetailView: View {
     @State var detailPayload: DetailPayload = .dummy
 
     @AppStorage("zoom.factor") var zoomFactor: Double = 2.0
-    @EnvironmentObject var viewModel: PictureEntryViewModel
     @EnvironmentObject var detailViewModel: PictureEntryDetailViewModel
     
     @Environment(\.managedObjectContext) var viewContext

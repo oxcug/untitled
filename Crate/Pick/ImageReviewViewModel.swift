@@ -147,7 +147,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         }
        
         DispatchQueue.main.async {
-            self.originalImage = UIImage(data: data)
+            self.originalImage = UIImage(data: data)?.fixOrientation()
         }
     }
     
@@ -156,35 +156,33 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     }
     
     @MainActor
-    func preprocess() async {
-       Task(priority: .userInitiated) { [weak self] in
-            guard let data = await dataProvider.data(),
-                  let originalImage = UIImage(data: data) else {
+    func preprocess(newHeight: CGFloat) async {
+        Task(priority: .userInitiated) { [weak self] in
+            guard let image = self?.originalImage else {
                 return
             }
-           
-            async let boxes = await textProcessor.performRecognition(image: originalImage)
-            async let segmented = await personSegmenter.segment(image: originalImage)
-
+            
+            async let boxes = await textProcessor.performRecognition(image: image)
+            async let segmented = await personSegmenter.segment(image: image)
+            
             let seg = await segmented
             let foundBoxes = await boxes
-
+            
             guard let self = self else { return }
             self._incomingTextBoxes = foundBoxes
-
+            
+            let newSize = image.aspectFittedSize(newHeight)
+            self.requestForProcessing(imageSize: newSize)
+            
             withAnimation {
                 self.segmentedImage = seg
                 self.isFinishedProcessing = true
             }
         }
     }
-  
+    
     @MainActor
     func requestForProcessing(imageSize: CGSize) {
-        if self.imageSize != .zero {
-            return
-        }
-        
         self.imageSize = imageSize
        
         textRecognitionStream?.cancel()

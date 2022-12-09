@@ -30,4 +30,10 @@ extension UIImage {
             draw(in: CGRect(origin: .zero, size: size))
         }
     }
+    
+    func aspectFittedSize(_ newHeight: CGFloat) -> CGSize {
+          let scale = newHeight / self.size.height
+          let newWidth = self.size.width * scale
+          return CGSize(width: newWidth, height: newHeight)
+      }
 }
