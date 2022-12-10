@@ -53,12 +53,6 @@ final class ImageReviewManager: ObservableObject {
         }
     }
     
-    func abortProcessing() {
-        viewModels.forEach {
-            $0.cancelProcessing()
-        }
-    }
-    
     func setupEditMode(entry: EntryEntity) {
         guard let viewModel = ImageReviewViewModel(entry: entry) else {
             return
@@ -94,17 +88,16 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     var existingEntry: PictureEntry?
     
     @Published var originalImage: UIImage?
+    @Published var imageSize: CGSize = .zero
     @Published var name: String = ""
     @Published var description: String = ""
     @Published var folder: Folder?
    
-    @Published var _incomingTextBoxes: [BoundingBox] = []
     @Published var textBoundingBoxes: [BoundingBox] = []
     @Published var titleBox: BoundingBox?
     
     @Published var didSelectSegmentedImage = false
     @Published var segmentedImage: SegmentedImage?
-    @Published var imageSize: CGSize = .zero
     @Published var colors: [MMCQ.Color]?
     @Published var tappableBounds: CGRect?
     
@@ -112,11 +105,8 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     
     // MARK: -  processors
   
-    let paletteQueue = DispatchQueue(label: "com.crate.color_palette", qos: .background)
     let textProcessor = TextProcessor()
     let personSegmenter = PersonSegmenter()
-    var textRecognitionStream: AnyCancellable?
-    var imageSegmentationStream: AnyCancellable?
 
     // MARK: -
     
@@ -141,13 +131,17 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         existingEntry = entry
     }
     
-    func loadImage() async {
+    func loadImage(maxSize: CGSize) async {
         guard let data = await dataProvider.data() else {
             return
         }
        
         DispatchQueue.main.async {
-            self.originalImage = UIImage(data: data)?.fixOrientation()
+            if let image = UIImage(data: data)?.fixOrientation() {
+                let newSize = image.aspectFittedSize(maxSize)
+                self.imageSize = newSize
+                self.originalImage = image
+            }
         }
     }
     
@@ -156,76 +150,43 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     }
     
     @MainActor
-    func preprocess(newHeight: CGFloat) async {
+    func preprocess() async {
         Task(priority: .userInitiated) { [weak self] in
-            guard let image = self?.originalImage else {
+            guard let self = self,
+                  let image = self.originalImage else {
                 return
             }
             
             async let boxes = await textProcessor.performRecognition(image: image)
             async let segmented = await personSegmenter.segment(image: image)
-            
-            let seg = await segmented
-            let foundBoxes = await boxes
-            
-            guard let self = self else { return }
-            self._incomingTextBoxes = foundBoxes
-            
-            let newSize = image.aspectFittedSize(newHeight)
-            self.requestForProcessing(imageSize: newSize)
+            await self.requestForProcessing(imageSize: self.imageSize, textBoxes: boxes, segmentedImage: segmented)
             
             withAnimation {
-                self.segmentedImage = seg
                 self.isFinishedProcessing = true
             }
         }
     }
     
     @MainActor
-    func requestForProcessing(imageSize: CGSize) {
-        self.imageSize = imageSize
-       
-        textRecognitionStream?.cancel()
-        textRecognitionStream = $_incomingTextBoxes
-            .receive(on: RunLoop.main)
-            .map { (rects: [BoundingBox]) -> [BoundingBox] in
-                rects.map { box in
-                    let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
-                    let rect = box.box.applying(bottomToTopTransform)
-                    return BoundingBox(id: UUID(), confidence: box.confidence, box: VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height)), string: box.string)
-                }
-            }
-            .sink { [weak self] (boxes: [BoundingBox]) in
-                guard let self = self else { return }
-               
-                withAnimation {
-                    self.textBoundingBoxes = boxes.filter { $0.semiConfident }
-                }
-            }
+    func requestForProcessing(imageSize: CGSize, textBoxes: [BoundingBox], segmentedImage: SegmentedImage?) async {
+        textBoundingBoxes = textBoxes.map { box in
+            let bottomToTopTransform = CGAffineTransform(scaleX: 1, y: -1).translatedBy(x: 0, y: -1)
+            let rect = box.box.applying(bottomToTopTransform)
+            return BoundingBox(id: UUID(), confidence: box.confidence, box: VNImageRectForNormalizedRect(rect, Int(imageSize.width), Int(imageSize.height)), string: box.string)
+        }.filter {
+            $0.semiConfident
+        }
       
-        imageSegmentationStream?.cancel()
-        imageSegmentationStream = $segmentedImage
-            .compactMap { $0 }
-            .first()
-            .receive(on: RunLoop.main)
-            .sink { [weak self] image in
-                guard let self = self else { return }
-                
-                Task(priority: .background) {
-                    self.tappableBounds = await image.original.imageResized(to: imageSize).cropRect()
-                }
-                
-                self.colors = ColorThief.getPalette(from: image.original, colorCount: 5)
+        if let segmentedImage = segmentedImage {
+            tappableBounds = await segmentedImage.original.imageResized(to: imageSize).cropRect()
+            colors = ColorThief.getPalette(from: segmentedImage.original, colorCount: 5)
+            
+            withAnimation {
+                self.segmentedImage = segmentedImage
             }
-    }
-    
-    func cancelProcessing() {
-        DispatchQueue.main.async {
-            self.imageSegmentationStream?.cancel()
-            self.textRecognitionStream?.cancel()
         }
     }
-    
+
     func didTapBoundingBox(_ box: BoundingBox) {
         DispatchQueue.main.async {
             if box == self.titleBox {
@@ -257,9 +218,8 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
         entry.date = Date()
         entry.detailText = description
         
-//        entry.original = ImageStorage.shared.write(originalImage, entryID: entry.id!, isOriginal: true)
+        entry.original = ImageStorage.shared.write(originalImage, entryID: entry.id!, isOriginal: true)
         entry.modified = (didSelectSegmentedImage) ? await ImageStorage.shared.write(segmentedImage?.original.trimmingTransparentPixels(), entryID: entry.id!, isOriginal: false) : nil
-        entry.boxes = NSArray()
         entry.folder = folder.coreDataObject
         entry.colors = (colors ?? []).map { $0.id }
 

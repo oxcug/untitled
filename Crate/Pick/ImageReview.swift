@@ -80,29 +80,27 @@ struct SingleImageReview: View {
         }
         .task {
             Task {
-                await viewModel.loadImage()
-                await viewModel.preprocess(newHeight: UIScreen.main.bounds.size.height * 0.6)
+                await viewModel.loadImage(maxSize: .init(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.size.height * 0.6))
+                await viewModel.preprocess()
             }
         }
     }
     
     var imagePreview: some View {
         ZStack(alignment: .topLeading) {
-            let imageHeight = UIScreen.main.bounds.size.height * 0.6
-           
             ZStack {
                 Image(uiImage: viewModel.originalImage ?? UIImage())
                     .resizable()
                     .cornerRadius(10)
                     .scaledToFit()
                     .opacity(viewModel.didSelectSegmentedImage ? 0.5 : 0.9)
-                    .frame(height: imageHeight)
+                    .frame(height: viewModel.imageSize.height)
 
                 if let segmented = viewModel.segmentedImage {
                     Image(uiImage: viewModel.didSelectSegmentedImage ? segmented.active : segmented.inactive )
                         .resizable()
                         .scaledToFit()
-                        .frame(height: imageHeight)
+                        .frame(height: viewModel.imageSize.height)
                         .opacity(viewModel.didSelectSegmentedImage ? 1 : 0.8)
                 }
             }
@@ -122,7 +120,7 @@ struct SingleImageReview: View {
             textBoxes
         }
         .transition(.opacity)
-        .frame(maxWidth: .infinity)
+        .frame(height: viewModel.imageSize.height < viewModel.imageSize.width ? viewModel.imageSize.height : UIScreen.main.bounds.height * 0.6)
     }
     
     var textBoxes: some View {
@@ -162,7 +160,7 @@ struct SingleImageReview: View {
                                                                  bl: 4,
                                                                  br: 4))
                                 .opacity(isTitle ? 1 : 0)
-                                .offset(x: (box.box.width - 31) / 2, y: box.box.height + 4)
+                                .position(x: (box.box.width - 31) / 2, y: box.box.height + 4)
                         )
                 }
                 .zIndex(isTitle ? 50 : 40)
@@ -234,11 +232,10 @@ struct ImageReview: View {
             }
             .toolbar {
                 ToolbarCancelButton {
-                    viewModelManager.abortProcessing()
                 }
                 
                 ToolbarItem(placement: .principal) {
-                    Text(title)
+                    Text((entry == nil) ? "\(selectedPage + 1) of \(sources.count)" : "edit")
                         .font(.system(size: 15, weight: .semibold, design: .default))
                         .foregroundColor(.bodyText)
                 }
@@ -247,10 +244,8 @@ struct ImageReview: View {
         }
         .task {
             if let entry = entry {
-                title = "edit"
                 viewModelManager.setupEditMode(entry: entry)
             } else {
-                title = "\(selectedPage + 1) of \(sources.count)"
                 viewModelManager.createViewModels(sources: sources)
             }
         }
@@ -278,7 +273,7 @@ struct ImageReview: View {
                             .progressViewStyle(.circular)
                             .tint(Color(uiColor: .secondarySystemBackground))
                     } else {
-                        Text(isLastOne ? "Finish" : "Next")
+                        Text(isLastOne ? "finish" : "next")
                             .font(.system(size: 14, weight: .semibold, design: .default))
                             .foregroundColor(Color(uiColor: .secondarySystemBackground))
                     }
@@ -340,9 +335,9 @@ struct ImageReview_Previews: PreviewProvider {
             .environment(\.managedObjectContext, DataController.preview.container.viewContext)
             .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
 
-//        ImageReview(images: [UIImage(named: "represent.jpeg")!], entry: nil)
-//            .preferredColorScheme(.dark)
-//            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
-//            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
+        ImageReview(sources: [Bundle.main.url(forResource: "landscape", withExtension: "jpeg")!], entry: nil)
+            .preferredColorScheme(.light)
+            .environment(\.managedObjectContext, DataController.preview.container.viewContext)
+            .previewDevice(PreviewDevice(rawValue: "iPhone 13 Mini"))
     }
 }

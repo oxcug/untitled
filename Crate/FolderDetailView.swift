@@ -20,6 +20,7 @@ struct FolderDetailView: View {
 
     @AppStorage("zoom.factor") var zoomFactor: Double = 2.0
     @EnvironmentObject var detailViewModel: PictureEntryDetailViewModel
+    @EnvironmentObject var homeViewModel: HomeViewModel
     
     @Environment(\.managedObjectContext) var viewContext
     @Environment(\.dismiss) var dismiss
@@ -31,6 +32,7 @@ struct FolderDetailView: View {
                     EntryCell(folder: folder, entry: entry) {
                         detailPayload = DetailPayload(id: UUID(), folder: folder, detail: entry)
                     }
+                    .environmentObject(homeViewModel)
                 }
             }
         }

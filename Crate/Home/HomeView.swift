@@ -45,7 +45,6 @@ struct EntryCell: View {
                 }
             }
             .padding(.horizontal, showLabels ? 20 : 10)
-            .frame(height: 50 * zoomFactor)
         }
     }
 }
@@ -96,6 +95,7 @@ struct HomeView: View {
                 .scrollContentBackground(.hidden)
                 .navigationDestination(for: Folder.self) { folder in
                     FolderDetailView(folder: folder)
+                        .environmentObject(viewModel)
                         .environmentObject(detailViewModel)
                 }
                 

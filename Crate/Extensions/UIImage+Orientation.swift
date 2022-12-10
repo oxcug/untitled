@@ -31,9 +31,15 @@ extension UIImage {
         }
     }
     
-    func aspectFittedSize(_ newHeight: CGFloat) -> CGSize {
-          let scale = newHeight / self.size.height
-          let newWidth = self.size.width * scale
-          return CGSize(width: newWidth, height: newHeight)
-      }
+    func aspectFittedSize(_ maxSize: CGSize) -> CGSize {
+        if size.height > size.width {
+            let scale = maxSize.height / self.size.height
+            let newWidth = self.size.width * scale
+            return CGSize(width: newWidth, height: maxSize.height)
+        } else {
+            let scale = maxSize.width / self.size.width
+            let newHeight = self.size.height * scale
+            return CGSize(width: maxSize.width, height: newHeight)
+        }
+    }
 }

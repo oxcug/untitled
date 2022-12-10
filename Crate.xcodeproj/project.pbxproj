@@ -57,6 +57,7 @@
 		27D28FD229350A070050D9FF /* untitledShareExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 27D28FC829350A070050D9FF /* untitledShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		27D28FE0293519F50050D9FF /* EntryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D28FDE293519ED0050D9FF /* EntryEntity.swift */; };
 		27D604CB28FDF25F00B4B3F2 /* CancelToolbarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D604CA28FDF25F00B4B3F2 /* CancelToolbarButton.swift */; };
+		27D99DDB2943E4E900ECD31F /* landscape.jpeg in Resources */ = {isa = PBXBuildFile; fileRef = 27D99DDA2943E4E900ECD31F /* landscape.jpeg */; };
 		27DBE9E828F8655E00B27850 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9E728F8655E00B27850 /* Folder.swift */; };
 		27DBE9EB28F8658400B27850 /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9EA28F8658400B27850 /* Separator.swift */; };
 		27DBE9EE28F8669400B27850 /* ImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9ED28F8669400B27850 /* ImageStorage.swift */; };
@@ -189,6 +190,7 @@
 		27D28FCF29350A070050D9FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		27D28FDE293519ED0050D9FF /* EntryEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntryEntity.swift; sourceTree = "<group>"; };
 		27D604CA28FDF25F00B4B3F2 /* CancelToolbarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelToolbarButton.swift; sourceTree = "<group>"; };
+		27D99DDA2943E4E900ECD31F /* landscape.jpeg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = landscape.jpeg; sourceTree = "<group>"; };
 		27DBE9E728F8655E00B27850 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		27DBE9EA28F8658400B27850 /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
 		27DBE9ED28F8669400B27850 /* ImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorage.swift; sourceTree = "<group>"; };
@@ -313,6 +315,7 @@
 				27020E1828F6D8C800C94312 /* represent.jpeg */,
 				27020DE728F6C49C00C94312 /* Assets.xcassets */,
 				27DBE9FF28F9575D00B27850 /* modified_4.png */,
+				27D99DDA2943E4E900ECD31F /* landscape.jpeg */,
 				27A8EEA028FC1252004DDCE9 /* IMG_2923.PNG */,
 				27020DF128F6C49C00C94312 /* Info.plist */,
 				27020DE928F6C49C00C94312 /* Preview Content */,
@@ -503,7 +506,6 @@
 				D50F7A38D944CDBEDECE7893 /* Pods-untitled.debug.xcconfig */,
 				0E017012CFC0350DBF584E3B /* Pods-untitled.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -633,8 +635,8 @@
 			);
 			mainGroup = 27020DD728F6C49C00C94312;
 			packageReferences = (
-				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel#swift-package-manager" */,
-				2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal.git" */,
+				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
+				2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */,
 				2727683D291EFBFA00A779E2 /* XCRemoteSwiftPackageReference "Instabug-SP" */,
 			);
 			productRefGroup = 27020DE128F6C49C00C94312 /* Products */;
@@ -659,6 +661,7 @@
 				27A8EEA128FC1252004DDCE9 /* IMG_2923.PNG in Resources */,
 				27DBEA0028F9575D00B27850 /* modified_4.png in Resources */,
 				27020DE828F6C49C00C94312 /* Assets.xcassets in Resources */,
+				27D99DDB2943E4E900ECD31F /* landscape.jpeg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1245,7 +1248,7 @@
 				minimumVersion = 11.0.0;
 			};
 		};
-		2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal.git" */ = {
+		2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/slackhq/PanModal.git";
 			requirement = {
@@ -1253,7 +1256,7 @@
 				kind = branch;
 			};
 		};
-		27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel#swift-package-manager" */ = {
+		27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/scenee/FloatingPanel#swift-package-manager";
 			requirement = {
@@ -1271,12 +1274,12 @@
 		};
 		2752035B291876360076C4B5 /* PanModal */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal.git" */;
+			package = 2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */;
 			productName = PanModal;
 		};
 		27DBEA0928FAEBB600B27850 /* FloatingPanel */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel#swift-package-manager" */;
+			package = 27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */;
 			productName = FloatingPanel;
 		};
 /* End XCSwiftPackageProductDependency section */
