@@ -25,7 +25,7 @@ struct CrateApp: App {
     
     @AppStorage("show.labels") var showLabels = true
     @AppStorage("zoom.factor") var zoomFactor: Double = 4.0
-    @AppStorage("theme") var theme: Theme = .lightsOff
+    @AppStorage("theme") var theme: Theme = .system
     @AppStorage("is.new.user") var isNewUser = true
     
     @State var presentTutorial = false

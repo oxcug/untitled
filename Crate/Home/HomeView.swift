@@ -37,6 +37,9 @@ struct EntryCell: View {
                         Text(viewModel.name(for: entry))
                             .font(.system(size: 14, weight: .semibold, design: .default))
                             .foregroundColor(Color(uiColor: .label))
+                            .multilineTextAlignment(.center)
+                            .frame(width: 122)
+                            .lineLimit(2)
                         
                         Text(viewModel.dateString(for: entry))
                             .font(.system(size: 12, weight: .regular, design: .rounded))

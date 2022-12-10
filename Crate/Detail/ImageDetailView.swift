@@ -24,7 +24,7 @@ struct ImageDetailView: View {
     @EnvironmentObject var viewModel: PictureEntryDetailViewModel
     @Environment(\.dismiss) var dismiss
     @Environment(\.managedObjectContext) var viewContext
-    @AppStorage("theme") var theme: Theme = .lightsOff
+    @AppStorage("theme") var theme: Theme = .system
     
     let heightRatio = 0.58
     

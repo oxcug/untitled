@@ -17,7 +17,7 @@ final class DataController: ObservableObject {
         
         let entry = PictureEntry(context: viewContext)
         entry.id = UUID()
-        entry.name = "sweater"
+        entry.name = "sweater or something really long dont' adfads askdlfjalsdjkfasdfasdf"
         entry.date = Date()
         entry.modified = ImageStorage.shared.write(UIImage(named: "modified_4.png"), entryID: entry.id!, isOriginal: false)
         entry.original = ImageStorage.shared.write(UIImage(named: "represent.jpeg"), entryID: entry.id!, isOriginal: true)

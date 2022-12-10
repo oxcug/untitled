@@ -47,9 +47,16 @@ final class PersonSegmenter {
             
             // Update photoOutput
             if let res = renderAsUIImage(output) {
+                // Apply morphology maximum to "erode" image in all direction into transparent area.
+                let filter = CIFilter.morphologyMaximum()
+                filter.inputImage = output
+                filter.radius = Float(max(output.extent.size.width, output.extent.size.height) * 0.005)
+                
+                let eroded = filter.outputImage!
+                
                 return SegmentedImage(original: res,
-                                      active: outlineBorder(image: output, color: CIImage(color: CIColor(color: .systemBlue))) ?? UIImage(),
-                                      inactive: outlineBorder(image: output, color: CIImage(color: CIColor(color: .systemGray.withAlphaComponent(0.8)))) ?? UIImage())
+                                      active: outlineBorder(original: output, erodedImage: eroded, color: CIImage(color: CIColor(color: .systemBlue))) ?? UIImage(),
+                                      inactive: outlineBorder(original: output, erodedImage: eroded, color: CIImage(color: CIColor(color: .systemBlue.withAlphaComponent(0.3)))) ?? UIImage())
             }
         } catch {
             print("Error processing person segmentation request")
@@ -71,19 +78,12 @@ final class PersonSegmenter {
         return blendFilter.outputImage
     }
     
-    private func outlineBorder(image: CIImage, color: CIImage) -> UIImage? {
-        // Apply morphology maximum to "erode" image in all direction into transparent area.
-        let filter = CIFilter.morphologyMaximum()
-        filter.inputImage = image
-        filter.radius = Float(max(image.extent.size.width, image.extent.size.height) * 0.005)
-        
-        let eroded = filter.outputImage!
-        
+    private func outlineBorder(original: CIImage, erodedImage: CIImage, color: CIImage) -> UIImage? {
         // Turn all pixels of eroded image into desired border color.
-        let colorized = CIBlendKernel.sourceAtop.apply(foreground: color, background: eroded)!.cropped(to: eroded.extent)
+        let colorized = CIBlendKernel.sourceAtop.apply(foreground: color, background: erodedImage)!.cropped(to: erodedImage.extent)
         
         // Blend original image over eroded, colorized image.
-        return renderAsUIImage(image.composited(over: colorized))
+        return renderAsUIImage(original.composited(over: colorized))
     }
     
     private func renderAsUIImage(_ image: CIImage) -> UIImage? {

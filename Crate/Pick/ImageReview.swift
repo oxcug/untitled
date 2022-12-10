@@ -38,7 +38,7 @@ struct SingleImageReview: View {
                 .listRowSeparator(.hidden)
                 .listRowInsets(EdgeInsets(top: 10, leading: 0, bottom: 0, trailing: 0))
 
-                TextField("Give it a name...", text: $viewModel.name)
+                TextField("untitled.", text: $viewModel.name)
                     .font(.system(size: 20, weight: .semibold, design: .default))
                     .foregroundColor(.bodyText)
                     .padding(.vertical, 8)
@@ -93,7 +93,7 @@ struct SingleImageReview: View {
                     .resizable()
                     .cornerRadius(10)
                     .scaledToFit()
-                    .opacity(viewModel.didSelectSegmentedImage ? 0.5 : 0.9)
+                    .opacity(viewModel.didSelectSegmentedImage ? 0.55 : 0.9)
                     .frame(height: viewModel.imageSize.height)
 
                 if let segmented = viewModel.segmentedImage {
@@ -101,7 +101,6 @@ struct SingleImageReview: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: viewModel.imageSize.height)
-                        .opacity(viewModel.didSelectSegmentedImage ? 1 : 0.8)
                 }
             }
             .transition(.opacity)
