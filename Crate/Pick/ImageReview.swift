@@ -210,12 +210,14 @@ struct ImageReview: View {
     @State var selectedPage: Int = 0
     @State var isKeyboardVisible = false
     @State var errorMessage = ""
-    @State var isSaving = false
+    @State var isFinalizingSave = false
     
     @StateObject var viewModelManager = ImageReviewManager()
     
     @Environment(\.dismiss) private var dismiss
     @Environment(\.managedObjectContext) var viewContext
+    
+    let nextFeedback = UIImpactFeedbackGenerator(style: .rigid)
     
     var body: some View {
         NavigationStack {
@@ -266,9 +268,10 @@ struct ImageReview: View {
                 let isLastOne = (selectedPage == (sources.count) - 1)
                 
                 Button {
-                    save(isLastOne)
+                    nextFeedback.impactOccurred()
+                    queueSave(isLastOne)
                 } label: {
-                    if isSaving {
+                    if viewModelManager.hasPendingSaveOperations {
                         ProgressView()
                             .progressViewStyle(.circular)
                             .tint(Color(uiColor: .secondarySystemBackground))
@@ -293,23 +296,23 @@ struct ImageReview: View {
                 isKeyboardVisible = isVisible
             }
         }
+        .onChange(of: viewModelManager.hasPendingSaveOperations) { hasPendingSaveOperations in
+            if !hasPendingSaveOperations {
+                dismiss()
+                didDismiss?()
+            }
+        }
     }
     
-    func save(_ isLastOne: Bool) {
+    func queueSave(_ isLastOne: Bool) {
         if viewModelManager.current.folder == nil {
             showErrorMessage()
             return
         }
         
-        if isLastOne {
-            isSaving = true
-            
-            Task {
-                await viewModelManager.save(viewContext: viewContext)
-                dismiss()
-                didDismiss?()
-            }
-        } else {
+        viewModelManager.queueSave(idx: selectedPage, viewContext: viewContext)
+        
+        if !isLastOne {
             selectedPage += 1
             viewModelManager.selectViewModel(idx: selectedPage)
         }

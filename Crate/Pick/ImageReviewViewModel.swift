@@ -39,15 +39,29 @@ struct SegmentedImage {
 }
 
 final class ImageReviewManager: ObservableObject {
-    var current: ImageReviewViewModel = .dummy
     @Published var viewModels: [ImageReviewViewModel] = []
+    @Published var hasPendingSaveOperations = false
     
-    func save(viewContext: NSManagedObjectContext) async {
-        await withTaskGroup(of: Bool.self) { taskGroup in
-            for vm in viewModels {
-                taskGroup.addTask {
-                    let ok = await vm.save(viewContext: viewContext)
-                    return ok
+    var current: ImageReviewViewModel = .dummy
+    
+    let queue = OperationQueue()
+   
+    func queueSave(idx: Int, viewContext: NSManagedObjectContext) {
+        let vm = viewModels[idx]
+        let lastEntry = (idx == viewModels.count - 1)
+        
+        if lastEntry {
+            hasPendingSaveOperations = true
+        }
+        
+        queue.addOperation {
+            Task(priority: lastEntry ? .userInitiated : .background) {
+                _ = await vm.save(viewContext: viewContext)
+                
+                Task { @MainActor in
+                    if lastEntry {
+                        self.hasPendingSaveOperations = false
+                    }
                 }
             }
         }
