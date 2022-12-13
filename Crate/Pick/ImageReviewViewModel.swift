@@ -108,7 +108,7 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     @Published var folder: Folder?
    
     @Published var textBoundingBoxes: [BoundingBox] = []
-    @Published var titleBox: BoundingBox?
+    @Published var selectedBox: BoundingBox?
     
     @Published var didSelectSegmentedImage = false
     @Published var segmentedImage: SegmentedImage?
@@ -125,7 +125,8 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     // MARK: -
     
     let dataProvider: DataRetrievable
-    let encoder = JSONEncoder()
+    let titleFeedback = UIImpactFeedbackGenerator(style: .heavy)
+    let selectionFeedback = UISelectionFeedbackGenerator()
     
     static let dummy = ImageReviewViewModel(dataProvider: URL(filePath: ""), pageNumber: -1)
     
@@ -202,12 +203,18 @@ final class ImageReviewViewModel: ObservableObject, Identifiable {
     }
 
     func didTapBoundingBox(_ box: BoundingBox) {
+        if selectedBox != nil {
+            titleFeedback.impactOccurred()
+        } else {
+            selectionFeedback.selectionChanged()
+        }
+        
         DispatchQueue.main.async {
-            if box == self.titleBox {
-                self.titleBox = nil
+            if box == self.selectedBox {
+                self.selectedBox = nil
                 self.name = ""
             } else {
-                self.titleBox = box
+                self.selectedBox = box
                 self.name = box.string
             }
         }

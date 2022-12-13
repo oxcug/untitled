@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "bottomsheet",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lucaszischka/BottomSheet",
+      "state" : {
+        "revision" : "4c9ef84552712e0117c37d4893270fdc28fb9288",
+        "version" : "3.1.0"
+      }
+    },
+    {
       "identity" : "floatingpanel#swift-package-manager",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/scenee/FloatingPanel#swift-package-manager",
@@ -25,6 +34,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "b2f5bd7d169cba564d5c5b7203864f79be3fe826"
+      }
+    },
+    {
+      "identity" : "swiftui-introspect",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/siteline/SwiftUI-Introspect",
+      "state" : {
+        "branch" : "master",
+        "revision" : "d3cbf32788250741d397cfb5bcd532c37aa1096d"
       }
     }
   ],

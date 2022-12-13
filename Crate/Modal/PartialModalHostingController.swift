@@ -9,7 +9,6 @@ import PanModal
 import SwiftUI
 
 final class PartialModalHostingController<Content>: UIHostingController<Content> where Content : View {
-    var height: CGFloat = 200
 }
 
 extension PartialModalHostingController: PanModalPresentable {
@@ -22,7 +21,7 @@ extension PartialModalHostingController: PanModalPresentable {
     }
     
     var longFormHeight: PanModalHeight {
-        .contentHeight(height)
+        .contentHeight(200)
     }
 
     var springDamping: CGFloat {

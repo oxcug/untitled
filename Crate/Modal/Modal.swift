@@ -29,7 +29,7 @@ extension View {
             DispatchQueue.main.async {
                 let rootView = content()
                 let host = PartialModalHostingController(rootView: rootView)
-                host.height = height
+//                host.height = height
                 topMostController.presentPanModal(host)
             }
         }

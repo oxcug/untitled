@@ -12,6 +12,8 @@ import Kingfisher
 struct SingleImageReview: View {
     @State var showFolderSelection = false
     @State var keyboardHeight: CGFloat = 0
+    @State var locationQuery: String?
+    
     @FocusState var isNameFocused: Bool
     @FocusState var isDescriptionFocused: Bool
     
@@ -126,48 +128,62 @@ struct SingleImageReview: View {
         ZStack(alignment: .topLeading) {
             ForEach(viewModel.textBoundingBoxes) { box in
                 let rect = box.box
-                let isTitle = (viewModel.titleBox == box)
+                let isSelected = (viewModel.selectedBox == box)
                 
-                Button {
-                    viewModel.didTapBoundingBox(box)
+                Menu {
+                    Button {
+                        viewModel.didTapBoundingBox(box)
+                    } label: {
+                        Label("set title", systemImage: "textformat.size")
+                    }
                     
-                    if viewModel.titleBox != nil {
-                        titleFeedback.impactOccurred()
-                    } else {
-                        selectionFeedback.selectionChanged()
+                    Button {
+                        locationQuery = box.string
+                    } label: {
+                        Label("search location", systemImage: "mappin")
                     }
                 } label: {
-                    RoundedRectangle(cornerRadius: 4)
-                        .foregroundColor(.white.opacity(isTitle ? 0.6 : 0.3))
-                        .background(
-                            Rectangle()
-                                .foregroundColor(.clear)
-                                .background(RoundedCorners(color: (isTitle ? Color.orange : Color.blue.opacity(0.3)),
-                                                           tl: 4,
-                                                           tr: 4,
-                                                           bl: 4,
-                                                           br: isTitle ? 0 : 4))
-                        )
-                        .overlay(
-                            Text("TITLE")
-                                .font(.system(size: 9, weight: .bold, design: .default))
-                                .foregroundColor(.white)
-                                .padding(3)
-                                .background(FilledRoundedCorners(color: Color.orange,
-                                                                 tl: 0,
-                                                                 tr: 0,
-                                                                 bl: 4,
-                                                                 br: 4))
-                                .opacity(isTitle ? 1 : 0)
-                                .position(x: (box.box.width - 31) / 2, y: box.box.height + 4)
-                        )
+                    buttonOvelayBox(text: "TITLE", isSelected: isSelected, box: box)
                 }
-                .zIndex(isTitle ? 50 : 40)
+                .zIndex(isSelected ? 50 : 40)
                 .buttonStyle(.plain)
                 .position(x: rect.midX, y: rect.midY)
                 .frame(width: rect.width, height: rect.height + 4)
             }
         }
+        .sheet(item: $locationQuery) { query in
+            NavigationStack {
+                MapSearchView(query: query)
+            }
+        }
+    }
+   
+    @ViewBuilder
+    func buttonOvelayBox(text: String, isSelected: Bool, box: BoundingBox) -> some View {
+        RoundedRectangle(cornerRadius: 4)
+            .foregroundColor(.white.opacity(isSelected ? 0.6 : 0.3))
+            .background(
+                Rectangle()
+                    .foregroundColor(.clear)
+                    .background(RoundedCorners(color: (isSelected ? Color.orange : Color.blue.opacity(0.3)),
+                                               tl: 4,
+                                               tr: 4,
+                                               bl: 4,
+                                               br: isSelected ? 0 : 4))
+            )
+            .overlay(
+                Text(text)
+                    .font(.system(size: 9, weight: .bold, design: .default))
+                    .foregroundColor(.white)
+                    .padding(3)
+                    .background(FilledRoundedCorners(color: Color.orange,
+                                                     tl: 0,
+                                                     tr: 0,
+                                                     bl: 4,
+                                                     br: 4))
+                    .opacity(isSelected ? 1 : 0)
+                    .offset(x: (box.box.width - 31) / 2, y: box.box.height + 5.5)
+            )
     }
     
     var categoryRow: some View {
@@ -210,6 +226,7 @@ struct ImageReview: View {
     @State var isKeyboardVisible = false
     @State var errorMessage = ""
     @State var isFinalizingSave = false
+    @State var isToggleOn = false
     
     @StateObject var viewModelManager = ImageReviewManager()
     
