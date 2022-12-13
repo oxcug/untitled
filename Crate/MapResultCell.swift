@@ -20,8 +20,8 @@ final class MapResultCellViewModel: ObservableObject {
             .joined(separator: ", ") // e.g. "MyStreet 1" + ", " + "1030 City"
     }
     
-    func titleSegments(_ title: String, query: String) -> [(text: String, bold: Bool)] {
-        guard let range = title.lowercased().range(of: query.lowercased()) else {
+    func titleSegments(_ title: String?, query: String) -> [(text: String, bold: Bool)] {
+        guard let title = title, let range = title.lowercased().range(of: query.lowercased()) else {
             return []
         }
         
@@ -99,8 +99,9 @@ extension MKPointOfInterestCategory {
 
 struct MapResultCell: View {
     let place: MKMapItem
-    @EnvironmentObject var viewModel: MapSearchViewModel
-    @EnvironmentObject var cellViewModel: MapResultCellViewModel
+    let address: String?
+    let distanceFromUser: String?
+    let titleSegments: [(text: String, bold: Bool)]?
     
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -109,14 +110,14 @@ struct MapResultCell: View {
                     Image(systemName: place.pointOfInterestCategory?.systemIconName ?? "mappin")
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth: 15, maxHeight: 15)
+                        .frame(maxWidth: 16, maxHeight: 16)
                         .foregroundColor(place.pointOfInterestCategory?.color ?? .gray)
                     Circle()
                         .foregroundColor((place.pointOfInterestCategory?.color ?? .gray).opacity(0.3))
-                        .frame(width: 25, height: 25)
+                        .frame(width: 26, height: 26)
                 }
                
-                if let distance = viewModel.distanceFromUser(point: place) {
+                if let distance = distanceFromUser {
                     Text(distance)
                         .font(.system(size: 11, weight: .regular, design: .default))
                         .foregroundColor(.secondary)
@@ -124,53 +125,45 @@ struct MapResultCell: View {
             }
             
             VStack(alignment: .leading, spacing: 3) {
-                if let name = place.name {
-                    titleLabel(name: name)
-                } else {
-                    Text("untitled.")
+                if let segments = titleSegments, !segments.isEmpty {
+                    Text(segments[0].text)
+                        .font(.system(size: 15, weight: .regular, design: .default))
+                        .foregroundColor(.secondary) +
+                    Text(segments[1].text)
+                        .font(.system(size: 15, weight: .regular, design: .default))
+                        .foregroundColor(.primary) +
+                    Text(segments[2].text)
                         .font(.system(size: 15, weight: .regular, design: .default))
                         .foregroundColor(.secondary)
+                } else {
+                    if let placeName = place.name {
+                        Text(placeName)
+                            .font(.system(size: 15, weight: .regular, design: .default))
+                            .foregroundColor(.primary)
+                    } else {
+                        Text("untitled.")
+                            .font(.system(size: 15, weight: .regular, design: .default))
+                            .foregroundColor(.secondary)
+                    }
                 }
-               
-                if let addr = cellViewModel.address(for: place.placemark), !addr.isEmpty {
+
+                if let addr = address, !addr.isEmpty {
                     Text(addr)
                         .font(.system(size: 12, weight: .regular, design: .default))
                         .foregroundColor(.secondary)
                 }
             }
+            
+            Spacer()
         }
-        .padding(.vertical, 2)
-    }
-    
-    @ViewBuilder
-    func titleLabel(name: String) -> some View {
-        let segments = cellViewModel.titleSegments(name, query: viewModel.query)
-        if segments.isEmpty {
-            Text(name)
-                .font(.system(size: 15, weight: .regular, design: .default))
-                .foregroundColor(.primary)
-        } else {
-            Text(segments[0].text)
-                .font(.system(size: 15, weight: .regular, design: .default))
-                .foregroundColor(.primary) +
-            Text(segments[1].text)
-                .font(.system(size: 15, weight: .regular, design: .default))
-                .foregroundColor(.secondary) +
-            Text(segments[2].text)
-                .font(.system(size: 15, weight: .regular, design: .default))
-                .foregroundColor(.primary)
-        }
+        .padding(.vertical, 8)
     }
 }
 
-
-struct MapResultCellView_Previews: PreviewProvider {
-    @StateObject static var viewModel = MapSearchViewModel()
-    @StateObject static var cellViewModel = MapResultCellViewModel()
-    
+struct MapResultCell_Previews: PreviewProvider {
     static var previews: some View {
-        MapResultCell(place: .init(placemark: .init(coordinate: .init(latitude: 5, longitude: 5))))
-            .environmentObject(viewModel)
-            .environmentObject(cellViewModel)
+        NavigationStack {
+            MapSearchView(query: "soho house")
+        }
     }
 }

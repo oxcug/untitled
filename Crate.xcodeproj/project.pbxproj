@@ -58,6 +58,8 @@
 		27D99DE52946A86600ECD31F /* MapResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D99DE42946A86600ECD31F /* MapResultCell.swift */; };
 		27D99DE82947885100ECD31F /* Introspect in Frameworks */ = {isa = PBXBuildFile; productRef = 27D99DE72947885100ECD31F /* Introspect */; };
 		27D99DFC2947F70600ECD31F /* BottomSheet in Frameworks */ = {isa = PBXBuildFile; productRef = 27D99DFB2947F70600ECD31F /* BottomSheet */; };
+		27D99DFE2948934400ECD31F /* ModalMapResultList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D99DFD2948934400ECD31F /* ModalMapResultList.swift */; };
+		27D99E00294894AC00ECD31F /* HostingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D99DFF294894AC00ECD31F /* HostingCell.swift */; };
 		27DBE9E828F8655E00B27850 /* Folder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9E728F8655E00B27850 /* Folder.swift */; };
 		27DBE9EB28F8658400B27850 /* Separator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9EA28F8658400B27850 /* Separator.swift */; };
 		27DBE9EE28F8669400B27850 /* ImageStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9ED28F8669400B27850 /* ImageStorage.swift */; };
@@ -190,6 +192,8 @@
 		27D99DDE2944CBEF00ECD31F /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		27D99DE229468A2400ECD31F /* MapSearchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSearchView.swift; sourceTree = "<group>"; };
 		27D99DE42946A86600ECD31F /* MapResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapResultCell.swift; sourceTree = "<group>"; };
+		27D99DFD2948934400ECD31F /* ModalMapResultList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalMapResultList.swift; sourceTree = "<group>"; };
+		27D99DFF294894AC00ECD31F /* HostingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostingCell.swift; sourceTree = "<group>"; };
 		27DBE9E728F8655E00B27850 /* Folder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Folder.swift; sourceTree = "<group>"; };
 		27DBE9EA28F8658400B27850 /* Separator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Separator.swift; sourceTree = "<group>"; };
 		27DBE9ED28F8669400B27850 /* ImageStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageStorage.swift; sourceTree = "<group>"; };
@@ -304,6 +308,8 @@
 				27AB590E291A770600F4DB62 /* FolderDetailView.swift */,
 				27DED9512906C3FD00CE9095 /* DataController.swift */,
 				27D99DE229468A2400ECD31F /* MapSearchView.swift */,
+				27D99DFD2948934400ECD31F /* ModalMapResultList.swift */,
+				27D99DFF294894AC00ECD31F /* HostingCell.swift */,
 				27D99DE42946A86600ECD31F /* MapResultCell.swift */,
 				27D99DDE2944CBEF00ECD31F /* LaunchScreen.storyboard */,
 				275203512917D5FA0076C4B5 /* Settings */,
@@ -769,6 +775,7 @@
 				27DE079E291DB6E10006AC87 /* AppIconSelectorView.swift in Sources */,
 				27020DE628F6C49C00C94312 /* HomeView.swift in Sources */,
 				27AB5916291A98DA00F4DB62 /* PartialModalHostingController.swift in Sources */,
+				27D99DFE2948934400ECD31F /* ModalMapResultList.swift in Sources */,
 				27020E2428F7680600C94312 /* Notification+Extensions.swift in Sources */,
 				2752035E2918766E0076C4B5 /* FullScreenHostingController.swift in Sources */,
 				27DED99A290749E100CE9095 /* SettingsPanelDelegate.swift in Sources */,
@@ -776,6 +783,7 @@
 				27020E2128F762F800C94312 /* UIImage+Extensions.swift in Sources */,
 				2727683A291EB83B00A779E2 /* Repo.swift in Sources */,
 				27DBEA1728FAECB800B27850 /* UIHostingController+ignoreKeyboard.swift in Sources */,
+				27D99E00294894AC00ECD31F /* HostingCell.swift in Sources */,
 				27A8EEA728FC9CE3004DDCE9 /* FolderSelectionView.swift in Sources */,
 				27276843291EFF0700A779E2 /* AlertViewController.swift in Sources */,
 				27A8EEA328FC1267004DDCE9 /* TextProcessor.swift in Sources */,

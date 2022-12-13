@@ -8,9 +8,62 @@
 import Combine
 import SwiftUI
 import MapKit
-import BottomSheet
+import FloatingPanel
 
 extension MKMapItem: Identifiable { }
+
+final class MapResultFloatingPanelLayout: FloatingPanelLayout {
+    let position: FloatingPanel.FloatingPanelPosition = .bottom
+    
+    let initialState: FloatingPanel.FloatingPanelState = .full
+    
+    var anchors: [FloatingPanelState : FloatingPanelLayoutAnchoring] {
+        [
+            .half: FloatingPanelLayoutAnchor(fractionalInset: 0.5, edge: .bottom, referenceGuide: .safeArea),
+            .full: FloatingPanelLayoutAnchor(absoluteInset: 50, edge: .top, referenceGuide: .safeArea),
+            .hidden: FloatingPanelLayoutAnchor(absoluteInset: 0, edge: .bottom, referenceGuide: .superview)
+        ]
+    }
+    
+    func backdropAlpha(for state: FloatingPanelState) -> CGFloat {
+        state == .full ? 1 : 0
+    }
+}
+
+final class MapModalDelegate: FloatingPanelControllerDelegate, ObservableObject {
+    
+    @Published var state: FloatingPanelState = .full {
+        didSet {
+            vc?.surfaceView.grabberHandle.isHidden = (state == .full)
+        }
+    }
+    
+    var vc: FloatingPanelController? {
+        didSet {
+            self.vc?.backdropView.backgroundColor = .systemBackground
+        }
+    }
+    
+    func move(to state: FloatingPanelState) {
+        vc?.move(to: state, animated: true)
+        self.state = state
+    }
+    
+    func floatingPanelWillBeginDragging(_ vc: FloatingPanelController) {
+        if vc.state == .full {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
+    }
+    
+    func floatingPanelDidChangeState(_ fpc: FloatingPanelController) {
+        state = fpc.state
+    }
+    
+    func floatingPanel(_ fpc: FloatingPanelController, layoutFor newCollection: UITraitCollection) -> FloatingPanelLayout {
+        self.vc = fpc
+        return MapResultFloatingPanelLayout()
+    }
+}
 
 final class MapSearchViewModel: NSObject, ObservableObject {
     
@@ -33,6 +86,7 @@ final class MapSearchViewModel: NSObject, ObservableObject {
         mf.unitStyle = .medium
         return mf
     }()
+    
     let searchQueue = DispatchQueue(label: "com.mjc.crate.map.search")
     var search: MKLocalSearch?
     var cancellable: AnyCancellable?
@@ -71,13 +125,13 @@ final class MapSearchViewModel: NSObject, ObservableObject {
                 withAnimation {
                     self?.isFetching = false
                     self?.results = res?.mapItems ?? []
-                    self?.setZoom(coordinates: self?.results.map(\.placemark.coordinate) ?? [], isUserLocation: false)
+                    self?.setZoom(coordinates: self?.results.map(\.placemark.coordinate) ?? [])
                 }
             }
         }
     }
     
-    func setZoom(coordinates: [CLLocationCoordinate2D?], isUserLocation: Bool) {
+    func setZoom(coordinates: [CLLocationCoordinate2D?]) {
         if coordinates.isEmpty {
             return
         }
@@ -91,7 +145,7 @@ final class MapSearchViewModel: NSObject, ObservableObject {
         var newRegion = MKCoordinateRegion(union)
         
         if coordinates.count == 1 {
-            let delta = isUserLocation ? 0.4 : 0.007
+            let delta = 0.007
             newRegion.span = .init(latitudeDelta: delta, longitudeDelta: delta)
         } else {
             newRegion.span.latitudeDelta *= 1.4
@@ -121,6 +175,7 @@ extension MapSearchViewModel: CLLocationManagerDelegate {
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
+        print(error)
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
@@ -142,10 +197,11 @@ struct MapResultList: View {
                 Button {
                     didTapPlace(place)
                 } label: {
-                    MapResultCell(place: place)
-                        .environmentObject(viewModel)
-                        .environmentObject(resultViewModel)
-                        .padding(.vertical, 4)
+                    MapResultCell(place: place,
+                                  address: resultViewModel.address(for: place.placemark),
+                                  distanceFromUser: viewModel.distanceFromUser(point: place),
+                                  titleSegments: resultViewModel.titleSegments(place.name, query: viewModel.query))
+                    .padding(.vertical, 4)
                 }
             }
         }
@@ -155,93 +211,92 @@ struct MapResultList: View {
 
 // MARK: -
 
-struct MapSearchView: View {
+struct MapContentView: View {
     let query: String
     
-    @State var userHitSearch = false
-    @StateObject var viewModel = MapSearchViewModel()
-    @StateObject var resultViewModel = MapResultCellViewModel()
     @FocusState var searchFocused: Bool
-    
-    @State var bottomSheetPosition: BottomSheetPosition = .relative(0.4)
+    @EnvironmentObject var viewModel: MapSearchViewModel
+    @EnvironmentObject var resultViewModel: MapResultCellViewModel
+    @EnvironmentObject var panelDelegate: MapModalDelegate
     
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                ZStack(alignment: .top) {
-                    if !searchFocused {
-                        Map(coordinateRegion: $viewModel.mapFrame, showsUserLocation: true, annotationItems: viewModel.results) { annotation in
-                            MapMarker(coordinate: annotation.placemark.coordinate, tint: annotation.pointOfInterestCategory?.color ?? .red)
-                        }
-                    }
-                    
-                    VStack {
-                        searchBar
-                        
-                        if !searchFocused {
-                            Spacer()
-                            
-                            Button {
-                                bottomSheetPosition = .relative(0.4)
-                            } label: {
-                                Text("show results")
-                                    .font(.system(size: 15, weight: .semibold, design: .default))
-                            }
-                            .frame(maxWidth: .infinity, alignment: .trailing)
-                            .padding()
-                            .background(Color(uiColor: .systemBackground))
-                        }
-                    }
+        VStack(spacing: 0) {
+            ZStack(alignment: .bottom) {
+                Map(coordinateRegion: $viewModel.mapFrame, showsUserLocation: true, annotationItems: viewModel.results) { annotation in
+                    MapMarker(coordinate: annotation.placemark.coordinate, tint: annotation.pointOfInterestCategory?.color ?? .red)
                 }
+                .edgesIgnoringSafeArea(.top)
                 
-                if searchFocused {
-                    MapResultList { mapItem in
-                        searchFocused = false
-                    }
-                    .environmentObject(viewModel)
-                    .environmentObject(resultViewModel)
+                    
+                Button {
+                    panelDelegate.move(to: .half)
+                } label: {
+                    Text("show results")
+                        .font(.system(size: 15, weight: .semibold, design: .default))
                 }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+                .padding()
+                .background(Color(uiColor: .systemBackground))
+                .opacity(panelDelegate.state == .hidden ? 1 : 0)
+            }
+            
+            if searchFocused {
+                MapResultList { mapItem in
+                    searchFocused = false
+                }
+                .environmentObject(viewModel)
+                .environmentObject(resultViewModel)
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
-        .task {
-            viewModel.query = query
-        }
-        .bottomSheet(bottomSheetPosition: $bottomSheetPosition, switchablePositions: [
-            .relative(0.5),
-            .hidden
-        ], content: {
-            MapResultList { place in
-                searchFocused = false
-                userHitSearch = true
+    }
+}
+
+struct MapSearchView: View {
+    let query: String
+    @FocusState var searchFocused: Bool
+    
+    @StateObject var panelDelegate = MapModalDelegate()
+    @StateObject var viewModel = MapSearchViewModel()
+    @StateObject var resultViewModel = MapResultCellViewModel()
+    
+    var body: some View {
+        MapContentView(query: query, searchFocused: _searchFocused)
+            .floatingPanel(delegate: panelDelegate) { proxy in
+                ModalMapResultList(proxy: proxy, didTapPlace: { place in
+                })
+                .environmentObject(viewModel)
+                .environmentObject(resultViewModel)
             }
             .environmentObject(viewModel)
             .environmentObject(resultViewModel)
-        })
-        .customBackground(Color(uiColor: .systemBackground).cornerRadius(22))
-        .customAnimation(.spring(
-            response: 0.4,
-            dampingFraction: 0.9,
-            blendDuration: 1
-        ))
-        .enableSwipeToDismiss()
-        .onChange(of: bottomSheetPosition) { bottomSheetPosition in
-            print(bottomSheetPosition)
-        }
-        .onChange(of: searchFocused) { searchFocused in
-            bottomSheetPosition = searchFocused ? .hidden : .relative(0.5)
-        }
+            .environmentObject(panelDelegate)
+            .floatingPanelSurfaceAppearance(.phone)
+            .floatingPanelContentMode(.fitToBounds)
+            .floatingPanelContentInsetAdjustmentBehavior(.never)
+            .onReceive(Publishers.keyboardWillBeVisible) { visible in
+                panelDelegate.vc?.move(to: visible ? .full : .half, animated: true)
+            }
+            .overlay(
+                searchBar
+                    .frame(maxHeight: .infinity, alignment: .top)
+            )
+            .onAppear {
+                searchFocused = true
+            }
+            .task {
+                viewModel.query = query
+            }
     }
     
     var searchBar: some View {
-        HStack(alignment: .center, spacing: 8) {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.secondary)
+        HStack(alignment: .center, spacing: 12) {
+            Image(systemName: "arrow.left")
+                .font(.system(size: 19, weight: .semibold, design: .default))
+                .foregroundColor(.primary)
             
             TextField("search here", text: $viewModel.query)
                 .focused($searchFocused)
                 .onSubmit {
-                    userHitSearch = true
                     searchFocused = false
                 }
             
@@ -259,7 +314,7 @@ struct MapSearchView: View {
                 .stroke(Color(uiColor: .secondarySystemFill), lineWidth: 1)
                 .background(Capsule().foregroundColor(Color(uiColor: .tertiarySystemBackground)))
         )
-        .shadow(color: .black.opacity(searchFocused ? 0 : 0.2), radius: 10, x: 5, y: 5)
+        .shadow(color: .black.opacity(panelDelegate.state == .full ? 0 : 0.2), radius: 10, x: 5, y: 5)
         .padding(.horizontal)
         .padding(.vertical, 8)
         .padding(.top, 2)
@@ -268,8 +323,7 @@ struct MapSearchView: View {
 
 struct MapSearchView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationStack {
-            MapSearchView(query: "soho house")
-        }
+        MapSearchView(query: "soho house")
+            .previewDevice(PreviewDevice(rawValue: "iPhone 14 Pro Max"))
     }
 }

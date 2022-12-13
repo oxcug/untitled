@@ -137,6 +137,7 @@ extension FloatingPanel.SurfaceAppearance {
         let appearance = SurfaceAppearance()
         appearance.cornerCurve = .continuous
         appearance.cornerRadius = 8.0
+        appearance.shadows = []
         return appearance
     }
 }

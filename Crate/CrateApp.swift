@@ -39,30 +39,37 @@ struct CrateApp: App {
     
     var body: some Scene {
         WindowGroup {
-            HomeView(showSettings: $showSettings, showVisualSettings: $showVisualSettings)
-                .environmentObject(inboxViewModel)
-                .preferredColorScheme(theme.colorScheme)
-                .environment(\.managedObjectContext, DataController.shared.container.viewContext)
-                .presentModal(isPresented: $showVisualSettings, height: 200) {
-                    HomeSettingsView(showSettings: $showSettings)
-                }
-                .sheet(isPresented: $showSettings) {
-                    SettingsView()
-                }
-                .onChange(of: scenePhase) { phase in
-                    switch phase {
-                        case .active:
-                            inboxViewModel.loadInboxThumbnails()
-                        default:
-                            ()
-                    }
+            Text("ASDF")
+                .fullScreenCover(isPresented: $presentTutorial) {
+                    MapSearchView(query: "soho house")
                 }
                 .onAppear {
-                    presentTutorial = isNewUser
+                    presentTutorial = true
                 }
-                .sheet(isPresented: $presentTutorial) {
-                    OnboardingView()
-                }
+//            HomeView(showSettings: $showSettings, showVisualSettings: $showVisualSettings)
+//                .environmentObject(inboxViewModel)
+//                .preferredColorScheme(theme.colorScheme)
+//                .environment(\.managedObjectContext, DataController.shared.container.viewContext)
+//                .presentModal(isPresented: $showVisualSettings, height: 200) {
+//                    HomeSettingsView(showSettings: $showSettings)
+//                }
+//                .sheet(isPresented: $showSettings) {
+//                    SettingsView()
+//                }
+//                .onChange(of: scenePhase) { phase in
+//                    switch phase {
+//                        case .active:
+//                            inboxViewModel.loadInboxThumbnails()
+//                        default:
+//                            ()
+//                    }
+//                }
+//                .onAppear {
+//                    presentTutorial = isNewUser
+//                }
+//                .sheet(isPresented: $presentTutorial) {
+//                    OnboardingView()
+//                }
         }
     }
 }
