@@ -39,6 +39,7 @@
 		2773BF1D293B991B00AB4912 /* InboxViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2773BF1B293B976100AB4912 /* InboxViewModel.swift */; };
 		27748E3628FCB87C00013857 /* EmojiTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27748E3528FCB87C00013857 /* EmojiTextField.swift */; };
 		278F956928FD82920052D319 /* CGRect+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 278F956828FD82920052D319 /* CGRect+Extensions.swift */; };
+		27995AE52992FD24009FF325 /* FloatingPanel in Frameworks */ = {isa = PBXBuildFile; productRef = 27995AE42992FD24009FF325 /* FloatingPanel */; };
 		27A8EEA328FC1267004DDCE9 /* TextProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8EEA228FC1267004DDCE9 /* TextProcessor.swift */; };
 		27A8EEA528FC3B98004DDCE9 /* ImageReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8EEA428FC3B98004DDCE9 /* ImageReviewViewModel.swift */; };
 		27A8EEA728FC9CE3004DDCE9 /* FolderSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27A8EEA628FC9CE3004DDCE9 /* FolderSelectionView.swift */; };
@@ -68,7 +69,6 @@
 		27DBE9F628F8BB9100B27850 /* ImageDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBE9F528F8BB9100B27850 /* ImageDetailView.swift */; };
 		27DBEA0628F95E2200B27850 /* MMCQ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0428F95E2200B27850 /* MMCQ.swift */; };
 		27DBEA0728F95E2200B27850 /* ColorThief.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0528F95E2200B27850 /* ColorThief.swift */; };
-		27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */ = {isa = PBXBuildFile; productRef = 27DBEA0928FAEBB600B27850 /* FloatingPanel */; };
 		27DBEA1528FAECB800B27850 /* View+floatingPanelContentMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0D28FAECB700B27850 /* View+floatingPanelContentMode.swift */; };
 		27DBEA1628FAECB800B27850 /* View+floatingPanelGrabberHandlePadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0E28FAECB700B27850 /* View+floatingPanelGrabberHandlePadding.swift */; };
 		27DBEA1728FAECB800B27850 /* UIHostingController+ignoreKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27DBEA0F28FAECB700B27850 /* UIHostingController+ignoreKeyboard.swift */; };
@@ -240,8 +240,8 @@
 			files = (
 				2727683F291EFBFA00A779E2 /* Instabug in Frameworks */,
 				27D99DFC2947F70600ECD31F /* BottomSheet in Frameworks */,
-				27DBEA0A28FAEBB600B27850 /* FloatingPanel in Frameworks */,
 				27D99DE82947885100ECD31F /* Introspect in Frameworks */,
+				27995AE52992FD24009FF325 /* FloatingPanel in Frameworks */,
 				2752035C291876360076C4B5 /* PanModal in Frameworks */,
 				FC3A44D630372F817E4F663D /* Pods_untitled.framework in Frameworks */,
 			);
@@ -543,11 +543,11 @@
 			);
 			name = untitled;
 			packageProductDependencies = (
-				27DBEA0928FAEBB600B27850 /* FloatingPanel */,
 				2752035B291876360076C4B5 /* PanModal */,
 				2727683E291EFBFA00A779E2 /* Instabug */,
 				27D99DE72947885100ECD31F /* Introspect */,
 				27D99DFB2947F70600ECD31F /* BottomSheet */,
+				27995AE42992FD24009FF325 /* FloatingPanel */,
 			);
 			productName = Crate;
 			productReference = 27020DE028F6C49C00C94312 /* untitled.app */;
@@ -642,11 +642,11 @@
 			);
 			mainGroup = 27020DD728F6C49C00C94312;
 			packageReferences = (
-				27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
 				2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */,
 				2727683D291EFBFA00A779E2 /* XCRemoteSwiftPackageReference "Instabug-SP" */,
 				27D99DE62947885100ECD31F /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */,
 				27D99DFA2947F70600ECD31F /* XCRemoteSwiftPackageReference "BottomSheet" */,
+				27995AE32992FD24009FF325 /* XCRemoteSwiftPackageReference "FloatingPanel" */,
 			);
 			productRefGroup = 27020DE128F6C49C00C94312 /* Products */;
 			projectDirPath = "";
@@ -1270,6 +1270,14 @@
 				kind = branch;
 			};
 		};
+		27995AE32992FD24009FF325 /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scenee/FloatingPanel";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		27D99DE62947885100ECD31F /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/siteline/SwiftUI-Introspect";
@@ -1286,14 +1294,6 @@
 				minimumVersion = 3.0.0;
 			};
 		};
-		27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/scenee/FloatingPanel#swift-package-manager";
-			requirement = {
-				branch = master;
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1307,6 +1307,11 @@
 			package = 2752035A291876360076C4B5 /* XCRemoteSwiftPackageReference "PanModal" */;
 			productName = PanModal;
 		};
+		27995AE42992FD24009FF325 /* FloatingPanel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 27995AE32992FD24009FF325 /* XCRemoteSwiftPackageReference "FloatingPanel" */;
+			productName = FloatingPanel;
+		};
 		27D99DE72947885100ECD31F /* Introspect */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 27D99DE62947885100ECD31F /* XCRemoteSwiftPackageReference "SwiftUI-Introspect" */;
@@ -1316,11 +1321,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 27D99DFA2947F70600ECD31F /* XCRemoteSwiftPackageReference "BottomSheet" */;
 			productName = BottomSheet;
-		};
-		27DBEA0928FAEBB600B27850 /* FloatingPanel */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 27DBEA0828FAEBB600B27850 /* XCRemoteSwiftPackageReference "FloatingPanel" */;
-			productName = FloatingPanel;
 		};
 /* End XCSwiftPackageProductDependency section */
 

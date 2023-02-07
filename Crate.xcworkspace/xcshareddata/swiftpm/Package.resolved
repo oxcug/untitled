@@ -10,12 +10,12 @@
       }
     },
     {
-      "identity" : "floatingpanel#swift-package-manager",
+      "identity" : "floatingpanel",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/scenee/FloatingPanel#swift-package-manager",
+      "location" : "https://github.com/scenee/FloatingPanel",
       "state" : {
         "branch" : "master",
-        "revision" : "05813253f95a800caf0a57b5236180e6dfb3fc0c"
+        "revision" : "5949bc88ea8a35ab813bd78a311612f8300e288d"
       }
     },
     {
