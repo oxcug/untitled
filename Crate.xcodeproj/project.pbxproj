@@ -1004,7 +1004,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Crate/Preview Content\"";
-				DEVELOPMENT_TEAM = 7J57M62A98;
+				DEVELOPMENT_TEAM = Y5XZ5Q67BT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "untitled-Info.plist";
@@ -1022,7 +1022,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mjc.Crate;
+				PRODUCT_BUNDLE_IDENTIFIER = ms.jonas.Crate;
 				PRODUCT_NAME = untitled;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1046,7 +1046,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_ASSET_PATHS = "\"Crate/Preview Content\"";
-				DEVELOPMENT_TEAM = 7J57M62A98;
+				DEVELOPMENT_TEAM = Y5XZ5Q67BT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "untitled-Info.plist";
@@ -1064,7 +1064,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 0.1.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mjc.Crate;
+				PRODUCT_BUNDLE_IDENTIFIER = ms.jonas.Crate;
 				PRODUCT_NAME = untitled;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
