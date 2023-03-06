@@ -1157,7 +1157,7 @@
 				CODE_SIGN_ENTITLEMENTS = untitledShareExtension/untitledShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7J57M62A98;
+				DEVELOPMENT_TEAM = Y5XZ5Q67BT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = untitledShareExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = untitledShareExtension;
@@ -1168,7 +1168,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mjc.Crate.untitledShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = ms.jonas.Crate.untitledShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1183,7 +1183,7 @@
 				CODE_SIGN_ENTITLEMENTS = untitledShareExtension/untitledShareExtension.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7J57M62A98;
+				DEVELOPMENT_TEAM = Y5XZ5Q67BT;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = untitledShareExtension/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = untitledShareExtension;
@@ -1194,7 +1194,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mjc.Crate.untitledShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = ms.jonas.Crate.untitledShareExtension;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
